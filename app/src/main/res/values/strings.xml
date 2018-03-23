@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">Smart Cabinet</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    // nav_drawer
+    <string name="cabinet_connection_title">Current Cabinet</string>
+    <string name="cabinet_connection_status">Not connected</string>
+    <string name="cabinet_request_open">Open</string>
+    <string name="cabinet_request_close">Close</string>
+    <string name="group_list_title">Groups</string>
+
+    // nav_header_main
+    <string name="user_setting_button_description">user setting</string>
+    <string name="user_logout_button_description">logout</string>
 </resources>

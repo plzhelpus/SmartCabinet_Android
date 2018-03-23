@@ -11,7 +11,8 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "org.plzhelpus.smartcabinet_android"
-        minSdkVersion 21
+        minSdkVersion 22
+        //noinspection OldTargetApi
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -27,7 +28,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
@@ -45,5 +46,5 @@ dependencies {
     // FirebaseUI for Cloud Storage
     implementation "com.firebaseui:firebase-ui-storage:$firebaseUIVersion"
     // Firebase cloud messaging
-    compile "com.google.firebase:firebase-messaging:$firebaseVersion"
+    implementation "com.google.firebase:firebase-messaging:$firebaseVersion"
 }
