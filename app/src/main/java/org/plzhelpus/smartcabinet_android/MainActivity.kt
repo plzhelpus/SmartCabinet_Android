@@ -1,14 +1,18 @@
 package org.plzhelpus.smartcabinet_android
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 
@@ -16,6 +20,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val auth : FirebaseAuth = FirebaseAuth.getInstance()
+        if (auth.currentUser == null){
+            TODO("not implemented") // 유저가 로그인하지 않았으므로 FirebaseUI 호출 필요.
+            startActivity(Intent(this, AuthUiActivity::class.java))
+            finish()
+            return;
+        }
+
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
