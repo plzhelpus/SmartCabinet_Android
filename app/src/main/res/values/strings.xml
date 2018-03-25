@@ -26,4 +26,5 @@
     // nav_header_main
     <string name="user_setting_button_description">user setting</string>
     <string name="user_sign_out_button_description">sign out</string>
+    <string name="not_sign_in">Not sign in</string>
 </resources>

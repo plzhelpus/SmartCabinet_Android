@@ -8,7 +8,6 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Button
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
@@ -18,36 +17,25 @@ import java.util.*
 import android.support.design.widget.Snackbar
 import android.text.TextUtils
 import android.util.Log
-import android.view.View
-import android.widget.TextView
 import com.firebase.ui.auth.ErrorCodes
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.android.synthetic.main.nav_drawer.*
+import kotlinx.android.synthetic.main.nav_header_main.*
 
 /**
  * Created by Donghwan Kim on 2018-03-23.
  *
- * 앱의 런쳐 액티비티
+ * 앱의 메인 화면 액티비티
 */
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
 
     private val RC_SIGN_IN = 200
-    private val RC_SIGN_IN_FAIL = 403
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val currentUser : FirebaseUser? = FirebaseAuth.getInstance().currentUser
-
-        if (currentUser == null) {
-            startActivityForResult(
-                AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setAvailableProviders(Arrays.asList(
-                                AuthUI.IdpConfig.GoogleBuilder().build()))
-                        .build(),
-                RC_SIGN_IN)
-        }
 
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
@@ -57,41 +45,57 @@ class MainActivity : AppCompatActivity() {
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
 
-        val cabinetRequestButton : Button = findViewById(R.id.cabinet_request_button)
-        cabinetRequestButton.setOnClickListener(CabinetRequestOnClickListener())
+        cabinet_request_button.setOnClickListener(){_ ->
+            Log.d(TAG, "Cabinet request button clicked")
+        }
+
+        if (currentUser == null) {
+            user_email.setText(R.string.not_sign_in)
+            startActivityForResult(
+                    AuthUI.getInstance()
+                            .createSignInIntentBuilder()
+                            .setAvailableProviders(Arrays.asList(
+                                    AuthUI.IdpConfig.GoogleBuilder().build()))
+                            .build(),
+                    RC_SIGN_IN)
+        } else {
+            polulateProfile()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         // RC_SIGN_IN 은 로그인 절차를 시작할 때 당신이 startActivityForResult(...) 안으로 전해준 요청 코드다.
-        var mContentLayout: View = findViewById(R.id.content_layout)
         if (requestCode == RC_SIGN_IN) {
-            var response: IdpResponse
+            val response: IdpResponse
             try{
                 response = IdpResponse.fromResultIntent(data)!!
-            }catch(e: NullPointerException){
-                Snackbar.make(mContentLayout,"sign in cancelled" ,Snackbar.LENGTH_LONG)
+            } catch(e: NullPointerException) {
+                Snackbar.make(content_layout, R.string.sign_in_cancelled ,Snackbar.LENGTH_LONG).show()
                 return
             }
             // 성공적으로 로그인
             if (resultCode == Activity.RESULT_OK){
-                TODO("not implemented") //성공적으로 로그인했을 때의 절차 표시
+                polulateProfile()
             } else {
                 // 로그인 실패
                 if(response.error?.errorCode == ErrorCodes.NO_NETWORK){
-                    Snackbar.make(mContentLayout, "no network", Snackbar.LENGTH_LONG)
+                    Snackbar.make(content_layout, R.string.no_internet_connection, Snackbar.LENGTH_LONG).show()
                     return
                 }
-                Snackbar.make(mContentLayout, "unknown error", Snackbar.LENGTH_LONG)
+                TODO("bug fix") // 왜 이미 기기에 저장된 계정으로 로그인 하면 이 분기가 실행
+                // 되는지 조사해야 함
+                Snackbar.make(content_layout, R.string.unknown_error, Snackbar.LENGTH_LONG).show()
                 Log.e(TAG, "Sign-in error: ", response.error)
             }
+        } else {
+          Snackbar.make(content_layout, R.string.unknown_response, Snackbar.LENGTH_LONG).show()
         }
     }
 
     private fun polulateProfile() {
-        var user: FirebaseUser = FirebaseAuth.getInstance().currentUser ?: return
-        var userEmail:TextView = findViewById(R.id.user_email)
-        userEmail.setText( if (TextUtils.isEmpty(user.email)) "No email" else user.email)
+        val user: FirebaseUser = FirebaseAuth.getInstance().currentUser ?: return
+        user_email.text = if (TextUtils.isEmpty(user.email)) "No email" else user.email
     }
 
     override fun onBackPressed() {
@@ -99,6 +103,23 @@ class MainActivity : AppCompatActivity() {
             drawer_layout.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val currentUser : FirebaseUser? = FirebaseAuth.getInstance().currentUser
+        if (currentUser == null) {
+            user_email.setText(R.string.not_sign_in)
+            startActivityForResult(
+                    AuthUI.getInstance()
+                            .createSignInIntentBuilder()
+                            .setAvailableProviders(Arrays.asList(
+                                    AuthUI.IdpConfig.GoogleBuilder().build()))
+                            .build(),
+                    RC_SIGN_IN)
+        } else {
+            polulateProfile()
         }
     }
 
