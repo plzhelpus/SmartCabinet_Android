@@ -7,6 +7,9 @@
 
     <string name="action_settings">Settings</string>
 
+    // AuthUiActivity
+    <string name="user_sign_in_button_text">Sign in</string>
+
     // Auth UI error messages
     <string name="unknown_response">Unknown response</string>
     <string name="sign_in_cancelled">Sign in cancelled</string>
@@ -22,5 +25,5 @@
 
     // nav_header_main
     <string name="user_setting_button_description">user setting</string>
-    <string name="user_logout_button_description">logout</string>
+    <string name="user_sign_out_button_description">sign out</string>
 </resources>
