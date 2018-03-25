@@ -35,8 +35,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val currentUser : FirebaseUser? = FirebaseAuth.getInstance().currentUser
-
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
@@ -49,6 +47,8 @@ class MainActivity : AppCompatActivity() {
             Log.d(TAG, "Cabinet request button clicked")
         }
 
+        // 유저가 로그인했는지 확인
+        val currentUser : FirebaseUser? = FirebaseAuth.getInstance().currentUser
         if (currentUser == null) {
             user_email.setText(R.string.not_sign_in)
             startActivityForResult(
@@ -93,6 +93,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * 유저가 로그인 했다면 프로필 칸을 채움.
+     */
     private fun polulateProfile() {
         val user: FirebaseUser = FirebaseAuth.getInstance().currentUser ?: return
         user_email.text = if (TextUtils.isEmpty(user.email)) "No email" else user.email
@@ -108,6 +111,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
+        // 유저가 로그인 했는지 확인
         val currentUser : FirebaseUser? = FirebaseAuth.getInstance().currentUser
         if (currentUser == null) {
             user_email.setText(R.string.not_sign_in)
