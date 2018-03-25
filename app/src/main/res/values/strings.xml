@@ -7,6 +7,12 @@
 
     <string name="action_settings">Settings</string>
 
+    // Auth UI error messages
+    <string name="unknown_response">Unknown response</string>
+    <string name="sign_in_cancelled">Sign in cancelled</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="unknown_error">Unknown error</string>
+
     // nav_drawer
     <string name="cabinet_connection_title">Current Cabinet</string>
     <string name="cabinet_connection_status">Not connected</string>

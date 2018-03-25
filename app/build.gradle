@@ -39,6 +39,11 @@ dependencies {
 
     // Firebase analytics
     implementation "com.google.firebase:firebase-core:$firebaseVersion"
+    // Firebase auth
+    implementation "com.google.firebase:firebase-auth:$firebaseVersion"
+    // Firebase cloud messaging
+    implementation "com.google.firebase:firebase-messaging:$firebaseVersion"
+
     // FirebaseUI for Firebase Realtime Database
     implementation "com.firebaseui:firebase-ui-database:$firebaseUIVersion"
     // FirebaseUI for Cloud Firestore
@@ -47,6 +52,6 @@ dependencies {
     implementation "com.firebaseui:firebase-ui-auth:$firebaseUIVersion"
     // FirebaseUI for Cloud Storage
     implementation "com.firebaseui:firebase-ui-storage:$firebaseUIVersion"
-    // Firebase cloud messaging
-    implementation "com.google.firebase:firebase-messaging:$firebaseVersion"
 }
+
+apply plugin: 'com.google.gms.google-services'
