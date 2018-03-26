@@ -13,7 +13,6 @@ class CabinetRequestOnClickListener : View.OnClickListener{
     private val TAG = "CabinetRequestButton"
 
     override fun onClick(v: View?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         Log.d(TAG, "Cabinet request button clicked")
     }
 }

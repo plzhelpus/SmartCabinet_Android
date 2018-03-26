@@ -18,6 +18,7 @@ import java.util.*
 import android.support.design.widget.Snackbar
 import android.text.TextUtils
 import android.util.Log
+import android.widget.ArrayAdapter
 import com.firebase.ui.auth.ErrorCodes
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.nav_drawer.*
@@ -49,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // 유저가 로그인했는지 확인
-        val currentUser : FirebaseUser? = FirebaseAuth.getInstance().currentUser
+        val currentUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
         if (currentUser == null) {
             user_email.setText(R.string.not_sign_in)
             startActivityForResult(
@@ -61,6 +62,10 @@ class MainActivity : AppCompatActivity() {
                     RC_SIGN_IN)
         } else {
             polulateProfile()
+            val values = arrayOf("Group A", "Group B", "Group C", "Group D", "Group E", "Group F",
+                    "Group G", "Group H", "Group I", "Group J", "Group K", "Group L", "Group M", "Group N")
+            val groupsAdapter: ArrayAdapter<String> = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, values)
+            group_list.adapter = groupsAdapter
         }
     }
 
@@ -84,8 +89,6 @@ class MainActivity : AppCompatActivity() {
                     showSnackbar(R.string.no_internet_connection)
                     return
                 }
-                TODO("bug fix") // 왜 이미 기기에 저장된 계정으로 로그인 하면 이 분기가 실행
-                // 되는지 조사해야 함
                 showSnackbar(R.string.unknown_error)
                 Log.e(TAG, "Sign-in error: ", response.error)
             }
