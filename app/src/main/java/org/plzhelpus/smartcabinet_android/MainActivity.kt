@@ -3,6 +3,7 @@ package org.plzhelpus.smartcabinet_android
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.support.annotation.StringRes
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
@@ -71,7 +72,7 @@ class MainActivity : AppCompatActivity() {
             try{
                 response = IdpResponse.fromResultIntent(data)!!
             } catch(e: NullPointerException) {
-                Snackbar.make(content_layout, R.string.sign_in_cancelled ,Snackbar.LENGTH_LONG).show()
+                showSnackbar(R.string.sign_in_cancelled)
                 return
             }
             // 성공적으로 로그인
@@ -80,17 +81,24 @@ class MainActivity : AppCompatActivity() {
             } else {
                 // 로그인 실패
                 if(response.error?.errorCode == ErrorCodes.NO_NETWORK){
-                    Snackbar.make(content_layout, R.string.no_internet_connection, Snackbar.LENGTH_LONG).show()
+                    showSnackbar(R.string.no_internet_connection)
                     return
                 }
                 TODO("bug fix") // 왜 이미 기기에 저장된 계정으로 로그인 하면 이 분기가 실행
                 // 되는지 조사해야 함
-                Snackbar.make(content_layout, R.string.unknown_error, Snackbar.LENGTH_LONG).show()
+                showSnackbar(R.string.unknown_error)
                 Log.e(TAG, "Sign-in error: ", response.error)
             }
         } else {
-          Snackbar.make(content_layout, R.string.unknown_response, Snackbar.LENGTH_LONG).show()
+            showSnackbar(R.string.unknown_response)
         }
+    }
+
+    /**
+     * 스낵바를 띄워줌
+     */
+    private fun showSnackbar(@StringRes content: Int) {
+        Snackbar.make(content_layout, content, Snackbar.LENGTH_LONG).show()
     }
 
     /**
