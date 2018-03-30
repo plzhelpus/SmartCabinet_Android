@@ -21,8 +21,10 @@ import android.util.Log
 import android.widget.ArrayAdapter
 import com.firebase.ui.auth.ErrorCodes
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.nav_drawer.*
 import kotlinx.android.synthetic.main.nav_header_main.*
+import org.plzhelpus.smartcabinet_android.dummy.DummyCabinet
 
 /**
  * Created by Donghwan Kim on 2018-03-23.
@@ -30,9 +32,8 @@ import kotlinx.android.synthetic.main.nav_header_main.*
  * 앱의 메인 화면 액티비티
 */
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), CabinetFragment.OnListFragmentInteractionListener, MemberFragment.OnListFragmentInteractionListener{
     private val TAG = "MainActivity"
-
     private val RC_SIGN_IN = 200
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
 
-        cabinet_request_button.setOnClickListener(){_ ->
+        cabinet_request_button.setOnClickListener{_ ->
             Log.d(TAG, "Cabinet request button clicked")
         }
 
@@ -61,12 +62,15 @@ class MainActivity : AppCompatActivity() {
                             .build(),
                     RC_SIGN_IN)
         } else {
-            polulateProfile()
+            populateProfile()
             val values = arrayOf("Group A", "Group B", "Group C", "Group D", "Group E", "Group F",
                     "Group G", "Group H", "Group I", "Group J", "Group K", "Group L", "Group M", "Group N")
             val groupsAdapter: ArrayAdapter<String> = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, values)
             group_list.adapter = groupsAdapter
         }
+
+        val groupInfoFragmentPagerAdapter = GroupInfoFragmentPagerAdapter(supportFragmentManager)
+        group_pager.adapter = groupInfoFragmentPagerAdapter
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -82,7 +86,7 @@ class MainActivity : AppCompatActivity() {
             }
             // 성공적으로 로그인
             if (resultCode == Activity.RESULT_OK){
-                polulateProfile()
+                populateProfile()
             } else {
                 // 로그인 실패
                 if(response.error?.errorCode == ErrorCodes.NO_NETWORK){
@@ -107,7 +111,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * 유저가 로그인 했다면 프로필 칸을 채움.
      */
-    private fun polulateProfile() {
+    private fun populateProfile() {
         val user: FirebaseUser = FirebaseAuth.getInstance().currentUser ?: return
         user_email.text = if (TextUtils.isEmpty(user.email)) "No email" else user.email
     }
@@ -135,7 +139,7 @@ class MainActivity : AppCompatActivity() {
                             .build(),
                     RC_SIGN_IN)
         } else {
-            polulateProfile()
+            populateProfile()
         }
     }
 
@@ -153,5 +157,9 @@ class MainActivity : AppCompatActivity() {
             R.id.action_settings -> return true
             else -> return super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onListFragmentInteraction(item: DummyCabinet.DummyItem) {
+        // TODO 리스트 프래그먼트(CabinetFragment 또는 MemberFragment)
     }
 }
