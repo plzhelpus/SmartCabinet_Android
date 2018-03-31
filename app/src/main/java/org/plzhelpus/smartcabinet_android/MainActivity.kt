@@ -18,13 +18,11 @@ import android.widget.ArrayAdapter
 import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseUser
-import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.nav_drawer.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 import org.plzhelpus.smartcabinet_android.dummy.DummyCabinet
 import android.support.design.widget.Snackbar
 import android.support.annotation.StringRes
-
 
 
 /**
@@ -105,7 +103,10 @@ class MainActivity : AppCompatActivity(), CabinetFragment.OnListFragmentInteract
         val groupInfoFragmentPagerAdapter = GroupInfoFragmentPagerAdapter(supportFragmentManager)
         group_pager.adapter = groupInfoFragmentPagerAdapter
 
-
+        group_tablayout.setupWithViewPager(group_pager)
+        for ((index, resId) in groupInfoFragmentPagerAdapter.tabIconResId.withIndex()) {
+            group_tablayout.getTabAt(index)?.setIcon(resId)
+        }
     }
 
     private fun handleNotSignIn(){
