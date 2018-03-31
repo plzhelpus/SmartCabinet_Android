@@ -15,11 +15,17 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import android.text.TextUtils
 import android.util.Log
 import android.widget.ArrayAdapter
+import com.firebase.ui.auth.AuthUI
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.nav_drawer.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 import org.plzhelpus.smartcabinet_android.dummy.DummyCabinet
+import android.support.design.widget.Snackbar
+import android.support.annotation.StringRes
+
+
 
 /**
  * Created by Donghwan Kim on 2018-03-23.
@@ -70,6 +76,21 @@ class MainActivity : AppCompatActivity(), CabinetFragment.OnListFragmentInteract
             view ->
             // TODO 구현 시 디버그 값 삭제
             Log.d(TAG, "Cabinet request button clicked")
+        }
+
+        user_sign_out_button.setOnClickListener{
+            view ->
+            AuthUI.getInstance()
+                    .signOut(this)
+                    .addOnCompleteListener(OnCompleteListener {
+                        task -> if(task.isSuccessful()) {
+                            startActivity(AuthUiActivity.createIntent(this))
+                            finish()
+                        } else {
+                            Log.w(TAG, "signOut:failure", task.getException());
+                            showSnackbar(R.string.sign_out_failed)
+                        }
+                    })
         }
 
         // TODO 배포 전에 더미데이터 삭제 필요
@@ -140,5 +161,9 @@ class MainActivity : AppCompatActivity(), CabinetFragment.OnListFragmentInteract
 
     override fun onListFragmentInteraction(item: DummyCabinet.DummyItem) {
         // TODO 리스트 프래그먼트(CabinetFragment 또는 MemberFragment)
+    }
+
+    private fun showSnackbar(@StringRes errorMessageRes: Int) {
+        Snackbar.make(main_root_layout, errorMessageRes, Snackbar.LENGTH_LONG).show()
     }
 }

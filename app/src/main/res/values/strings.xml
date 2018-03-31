@@ -15,6 +15,7 @@
     <string name="sign_in_cancelled">Sign in cancelled</string>
     <string name="no_internet_connection">No internet connection</string>
     <string name="unknown_error">Unknown error</string>
+    <string name="sign_out_failed">Sign out failed</string>
 
     // nav_drawer
     <string name="cabinet_connection_title">Current Cabinet</string>

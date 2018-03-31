@@ -92,6 +92,6 @@ class AuthUiActivity : AppCompatActivity() {
      * 스낵바를 띄워줌
      */
     private fun showSnackbar(@StringRes content: Int) {
-        Snackbar.make(content_layout, content, Snackbar.LENGTH_LONG).show()
+        Snackbar.make(auth_ui_root_layout, content, Snackbar.LENGTH_LONG).show()
     }
 }

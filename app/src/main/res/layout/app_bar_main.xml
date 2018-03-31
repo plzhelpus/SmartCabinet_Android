@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="org.plzhelpus.smartcabinet_android.MainActivity"
-    android:id="@+id/content_layout">
+    android:id="@+id/main_root_layout">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
