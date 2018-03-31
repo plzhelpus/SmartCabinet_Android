@@ -1,5 +1,7 @@
-def firebaseVersion = '11.8.0'
-def firebaseUIVersion = '3.2.2'
+// https://github.com/firebase/FirebaseUI-Android#dependencies 에 따라 반드시 Firebase와 FirebaseUI
+// 는 버전이 같아야 함.
+def firebaseVersion = '12.0.1'
+def firebaseUIVersion = '3.3.0'
 
 apply plugin: 'com.android.application'
 
