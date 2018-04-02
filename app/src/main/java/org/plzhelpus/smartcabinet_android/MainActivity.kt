@@ -121,7 +121,8 @@ class MainActivity : AppCompatActivity(), CabinetFragment.OnListFragmentInteract
     private fun populateProfile() {
         val user: FirebaseUser = FirebaseAuth.getInstance().currentUser ?: return
         val email = if (TextUtils.isEmpty(user.email)) "No email" else user.email!!
-        user_email.text = email.split(limit = 1, delimiters = '@')[0]
+        // TODO 이메일 앞부분만 따서 출력 중
+        user_email.text = (email.split(delimiters = *charArrayOf('@')))[0]
     }
 
     override fun onBackPressed() {
