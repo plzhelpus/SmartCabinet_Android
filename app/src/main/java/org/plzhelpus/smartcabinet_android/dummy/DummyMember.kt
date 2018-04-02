@@ -37,14 +37,17 @@ object DummyMember {
     }
 
     private fun createDummyItem(position: Int): DummyItem {
-        return DummyItem((position).toString(), "Item " + position, makeDetails(position))
+        return DummyItem((position).toString(), "Member " + position, makeDetails(position))
     }
 
     private fun makeDetails(position: Int): String {
         val builder = StringBuilder()
-        builder.append("Details about Item: ").append(position)
-        for (i in 0 until position) {
-            builder.append("\nMore details information here.")
+        if(position == 1){
+            builder.append("Owner")
+        } else if (position in 2..6){
+            builder.append("Admin")
+        } else {
+            builder.append("Member")
         }
         return builder.toString()
     }
@@ -54,7 +57,7 @@ object DummyMember {
      */
     class DummyItem(val id: String, val content: String, val details: String) {
 
-        public override fun toString(): String {
+        override fun toString(): String {
             return content
         }
     }

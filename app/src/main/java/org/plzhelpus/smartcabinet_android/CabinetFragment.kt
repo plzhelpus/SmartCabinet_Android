@@ -11,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 
 import org.plzhelpus.smartcabinet_android.dummy.DummyCabinet
-import org.plzhelpus.smartcabinet_android.dummy.DummyCabinet.DummyItem
 
 /**
  * A fragment representing a list of Items.
@@ -39,7 +38,7 @@ class CabinetFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_cabinet_list, container, false)
+        val view = inflater.inflate(R.layout.cabinet_list, container, false)
 
         // Set the adapter
         if (view is RecyclerView) {
@@ -80,7 +79,7 @@ class CabinetFragment : Fragment() {
      */
     interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        fun onListFragmentInteraction(item: DummyItem)
+        fun onListFragmentInteraction(item: DummyCabinet.DummyItem)
     }
 
     companion object {

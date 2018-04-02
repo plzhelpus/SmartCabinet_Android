@@ -9,9 +9,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
-import org.plzhelpus.smartcabinet_android.dummy.DummyCabinet
-import org.plzhelpus.smartcabinet_android.dummy.DummyCabinet.DummyItem
+import org.plzhelpus.smartcabinet_android.dummy.DummyMember
 
 /**
  * A fragment representing a list of Items.
@@ -39,7 +37,7 @@ class MemberFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_member_list, container, false)
+        val view = inflater.inflate(R.layout.member_list, container, false)
 
         // Set the adapter
         if (view is RecyclerView) {
@@ -49,7 +47,7 @@ class MemberFragment : Fragment() {
             } else {
                 view.layoutManager = GridLayoutManager(context, mColumnCount)
             }
-            view.adapter = MemberRecyclerViewAdapter(DummyCabinet.ITEMS, mListener)
+            view.adapter = MemberRecyclerViewAdapter(DummyMember.ITEMS, mListener)
         }
         return view
     }
@@ -80,7 +78,7 @@ class MemberFragment : Fragment() {
      */
     interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        fun onListFragmentInteraction(item: DummyItem)
+        fun onListFragmentInteraction(item: DummyMember.DummyItem)
     }
 
     companion object {

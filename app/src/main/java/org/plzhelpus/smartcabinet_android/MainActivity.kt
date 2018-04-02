@@ -14,15 +14,17 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import android.text.TextUtils
 import android.util.Log
-import android.widget.ArrayAdapter
 import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.nav_drawer.*
 import kotlinx.android.synthetic.main.nav_header_main.*
-import org.plzhelpus.smartcabinet_android.dummy.DummyCabinet
 import android.support.design.widget.Snackbar
 import android.support.annotation.StringRes
+import android.support.v7.widget.LinearLayoutManager
+import org.plzhelpus.smartcabinet_android.dummy.DummyCabinet
+import org.plzhelpus.smartcabinet_android.dummy.DummyGroup
+import org.plzhelpus.smartcabinet_android.dummy.DummyMember
 
 
 /**
@@ -31,7 +33,9 @@ import android.support.annotation.StringRes
  * 앱의 메인 화면 액티비티
 */
 
-class MainActivity : AppCompatActivity(), CabinetFragment.OnListFragmentInteractionListener, MemberFragment.OnListFragmentInteractionListener{
+class MainActivity : AppCompatActivity(),
+        CabinetFragment.OnListFragmentInteractionListener,
+        MemberFragment.OnListFragmentInteractionListener {
     private var mIdpResponse: IdpResponse? = null
 
     companion object {
@@ -67,7 +71,7 @@ class MainActivity : AppCompatActivity(), CabinetFragment.OnListFragmentInteract
             handleNotSignIn()
         } else {
             populateProfile()
-            mIdpResponse = intent.getParcelableExtra(MainActivity.EXTRA_IDP_RESPONSE);
+            mIdpResponse = intent.getParcelableExtra(MainActivity.EXTRA_IDP_RESPONSE)
         }
 
         cabinet_request_button.setOnClickListener{
@@ -81,28 +85,23 @@ class MainActivity : AppCompatActivity(), CabinetFragment.OnListFragmentInteract
             AuthUI.getInstance()
                     .signOut(this)
                     .addOnCompleteListener(OnCompleteListener {
-                        task -> if(task.isSuccessful()) {
+                        task -> if(task.isSuccessful) {
                             startActivity(AuthUiActivity.createIntent(this))
                             finish()
                         } else {
-                            Log.w(TAG, "signOut:failure", task.getException());
-                            showSnackbar(R.string.sign_out_failed)
+                            Log.w(TAG, "signOut:failure", task.exception)
+                        showSnackbar(R.string.sign_out_failed)
                         }
                     })
         }
 
-        // TODO 배포 전에 더미데이터 삭제 필요
-        val values = arrayOf(
-                "Group A", "Group B", "Group C", "Group D", "Group E", "Group F",
-                "Group G", "Group H", "Group I", "Group J", "Group K", "Group L",
-                "Group M", "Group N")
-        val groupsAdapter: ArrayAdapter<String> = ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, values)
-        group_list.adapter = groupsAdapter
+        group_list.layoutManager = LinearLayoutManager(this)
+        group_list.adapter = GroupRecyclerViewAdapter(DummyGroup.ITEMS, this)
 
         val groupInfoFragmentPagerAdapter = GroupInfoFragmentPagerAdapter(supportFragmentManager)
         group_pager.adapter = groupInfoFragmentPagerAdapter
 
+        // 그룹 탭에 아이콘 삽입
         group_tablayout.setupWithViewPager(group_pager)
         for ((index, resId) in groupInfoFragmentPagerAdapter.tabIconResId.withIndex()) {
             group_tablayout.getTabAt(index)?.setIcon(resId)
@@ -161,8 +160,16 @@ class MainActivity : AppCompatActivity(), CabinetFragment.OnListFragmentInteract
         }
     }
 
+    override fun onListFragmentInteraction(item: DummyMember.DummyItem) {
+        // TODO 리스트 프래그먼트 MemberFragment
+    }
+
     override fun onListFragmentInteraction(item: DummyCabinet.DummyItem) {
-        // TODO 리스트 프래그먼트(CabinetFragment 또는 MemberFragment)
+        // TODO 리스트 프래그먼트 CabinetFragment
+    }
+
+    fun onListFragmentInteraction(item: DummyGroup.DummyItem) {
+        // TODO 그룹 리스트
     }
 
     private fun showSnackbar(@StringRes errorMessageRes: Int) {

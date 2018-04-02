@@ -52,20 +52,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cabinet_connection_status" />
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/group_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_gravity="start"
         android:layout_marginTop="8dp"
-        android:background="#ffffff"
-        android:choiceMode="singleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/nav_header"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/group_list_title" />
+        app:layout_constraintTop_toBottomOf="@+id/group_list_title"
+        tools:context="org.plzhelpus.smartcabinet_android.MainActivity"
+        tools:listitem="@layout/member"/>
 
     <include
         android:id="@+id/nav_header"

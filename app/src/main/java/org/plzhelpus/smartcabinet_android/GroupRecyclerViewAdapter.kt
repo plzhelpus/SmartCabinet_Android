@@ -4,29 +4,28 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import org.plzhelpus.smartcabinet_android.CabinetFragment.OnListFragmentInteractionListener
-import org.plzhelpus.smartcabinet_android.dummy.DummyCabinet.DummyItem
-import kotlinx.android.synthetic.main.cabinet.view.*
+import kotlinx.android.synthetic.main.group.view.*
+import org.plzhelpus.smartcabinet_android.dummy.DummyGroup.DummyItem
 
 /**
  * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
  * specified [OnListFragmentInteractionListener].
  * TODO: Replace the implementation with code for your data type.
  */
-class CabinetRecyclerViewAdapter(private val mValues: List<DummyItem>, private val mListener: OnListFragmentInteractionListener?) : RecyclerView.Adapter<CabinetRecyclerViewAdapter.ViewHolder>() {
+
+class GroupRecyclerViewAdapter(private val mValues: List<DummyItem>, private val mListener: MainActivity?) : RecyclerView.Adapter<GroupRecyclerViewAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.cabinet, parent, false)
+                .inflate(R.layout.group, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.mItem = mValues[position]
-        holder.mView.cabinet_id.text = mValues[position].content
-        holder.mView.cabinet_description.text = mValues[position].details
+        holder.mView.group_name.text = mValues[position].content
 
-        holder.mView.setOnClickListener {
+        holder.mView.setOnClickListener{
             if (null != mListener) {
                 // Notify the active callbacks interface (the activity, if the
                 // fragment is attached to one) that an item has been selected.
@@ -43,7 +42,7 @@ class CabinetRecyclerViewAdapter(private val mValues: List<DummyItem>, private v
         var mItem: DummyItem? = null
 
         override fun toString(): String {
-            return super.toString() + " '" + mView.cabinet_id + "'"
+            return super.toString() + " '" + mView.group_name + "'"
         }
     }
 }

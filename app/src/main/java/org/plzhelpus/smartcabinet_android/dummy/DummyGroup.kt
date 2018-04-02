@@ -10,7 +10,7 @@ import java.util.HashMap
  *
  * TODO: Replace all uses of this class before publishing your app.
  */
-object DummyCabinet {
+object DummyGroup {
 
     /**
      * An array of sample (dummy) items.
@@ -37,19 +37,12 @@ object DummyCabinet {
     }
 
     private fun createDummyItem(position: Int): DummyItem {
-        return DummyItem((position).toString(), "Cabinet " + position, makeDetails(position))
+        return DummyItem((position).toString(), "Group " + position)
     }
-
-    private fun makeDetails(position: Int): String {
-        val builder = StringBuilder()
-        builder.append("Description here ")
-        return builder.toString()
-    }
-
     /**
      * A dummy item representing a piece of content.
      */
-    class DummyItem(val id: String, val content: String, val details: String) {
+    class DummyItem(val id: String, val content: String) {
 
         override fun toString(): String {
             return content

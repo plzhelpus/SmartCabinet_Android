@@ -10,4 +10,4 @@
     android:layout_marginRight="16dp"
     app:layoutManager="android.support.v7.widget.LinearLayoutManager"
     tools:context="org.plzhelpus.smartcabinet_android.CabinetFragment"
-    tools:listitem="@layout/fragment_cabinet" />
+    tools:listitem="@layout/cabinet" />
