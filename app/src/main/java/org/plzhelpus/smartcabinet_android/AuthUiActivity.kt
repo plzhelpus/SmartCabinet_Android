@@ -35,7 +35,7 @@ class AuthUiActivity : AppCompatActivity() {
         setContentView(R.layout.activity_auth_ui)
 
         user_sign_in_button.setOnClickListener{
-            view -> startActivityForResult(
+            startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setAvailableProviders(Arrays.asList(

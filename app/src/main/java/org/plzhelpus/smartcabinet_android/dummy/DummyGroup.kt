@@ -22,7 +22,7 @@ object DummyGroup {
      */
     val ITEM_MAP: MutableMap<String, DummyItem> = HashMap<String, DummyItem>()
 
-    private val COUNT = 25
+    private val COUNT = 3
 
     init {
         // Add some sample items.

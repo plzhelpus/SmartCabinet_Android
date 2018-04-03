@@ -21,6 +21,7 @@
     // nav_drawer
     <string name="cabinet_connection_title">Current Cabinet</string>
     <string name="cabinet_connection_status">Not connected</string>
+    <string name="cabinet_request_connect">Connect</string>
     <string name="cabinet_request_open">Open</string>
     <string name="cabinet_request_close">Close</string>
     <string name="group_list_title">Groups</string>
@@ -30,5 +31,11 @@
     <string name="user_sign_out_button_description">sign out</string>
     <string name="not_sign_in">Not sign in</string>
 
-    <string name="no_group_fragment_text">No paticipated group</string>
+    // activity_no_group
+    <string name="no_group_title">You are not paticipating any group</string>
+    <string name="being_new_owner_text">Are you have new cabinet?</string>
+    <string name="already_member_but_not_found_group_text">Aren\'t your groups visible?</string>
+    <string name="group_list_refresh_button_text">Refresh</string>
+    <string name="delete_account_with_no_group_text">Do you want to delete your account now?</string>
+    <string name="delete_account_with_no_group_button">Delete</string>
 </resources>

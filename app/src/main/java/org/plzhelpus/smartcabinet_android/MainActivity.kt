@@ -72,16 +72,20 @@ class MainActivity : AppCompatActivity(),
         } else {
             populateProfile()
             mIdpResponse = intent.getParcelableExtra(MainActivity.EXTRA_IDP_RESPONSE)
+
+            // TODO 만약 그룹이 있으면 그룹 첫번째를 열어주고 아니면 빈 그룹 열어주기
+            if(DummyGroup.ITEMS.size == 0){
+                startActivity(NoGroupActivity.createIntent(this, mIdpResponse))
+                finish()
+                return
+            }
         }
 
         cabinet_request_button.setOnClickListener{
-            view ->
-            // TODO 구현 시 디버그 값 삭제
             Log.d(TAG, "Cabinet request button clicked")
         }
 
         user_sign_out_button.setOnClickListener{
-            view ->
             AuthUI.getInstance()
                     .signOut(this)
                     .addOnCompleteListener(OnCompleteListener {
@@ -97,8 +101,6 @@ class MainActivity : AppCompatActivity(),
 
         group_list.layoutManager = LinearLayoutManager(this)
         group_list.adapter = GroupRecyclerViewAdapter(DummyGroup.ITEMS, this)
-
-        // TODO 만약 그룹이 있으면 그룹 첫번째를 열어주고 아니면 빈 그룹 열어주기
 
         val groupInfoFragmentPagerAdapter = GroupInfoFragmentPagerAdapter(supportFragmentManager)
         group_pager.adapter = groupInfoFragmentPagerAdapter
