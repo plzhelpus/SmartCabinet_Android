@@ -98,6 +98,8 @@ class MainActivity : AppCompatActivity(),
         group_list.layoutManager = LinearLayoutManager(this)
         group_list.adapter = GroupRecyclerViewAdapter(DummyGroup.ITEMS, this)
 
+        // TODO 만약 그룹이 있으면 그룹 첫번째를 열어주고 아니면 빈 그룹 열어주기
+
         val groupInfoFragmentPagerAdapter = GroupInfoFragmentPagerAdapter(supportFragmentManager)
         group_pager.adapter = groupInfoFragmentPagerAdapter
 
@@ -169,7 +171,8 @@ class MainActivity : AppCompatActivity(),
     }
 
     fun onListFragmentInteraction(item: DummyGroup.DummyItem) {
-        // TODO 그룹 리스트
+        this.title = item.content
+        drawer_layout.closeDrawers()
     }
 
     private fun showSnackbar(@StringRes errorMessageRes: Int) {

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Smart Cabinet</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_auth_ui">Sign in</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
