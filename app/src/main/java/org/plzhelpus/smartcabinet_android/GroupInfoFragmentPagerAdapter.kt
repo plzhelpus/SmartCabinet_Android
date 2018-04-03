@@ -17,8 +17,8 @@ class GroupInfoFragmentPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(
     )
     override fun getItem(position: Int): Fragment =
         when(position){
-            0 -> CabinetFragment.newInstance(1)
-            1 -> MemberFragment.newInstance(1)
+            0 -> CabinetFragment()
+            1 -> MemberFragment()
             else -> throw IllegalArgumentException("Wrong position")
         }
 

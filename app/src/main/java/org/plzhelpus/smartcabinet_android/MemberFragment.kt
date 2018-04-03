@@ -3,7 +3,6 @@ package org.plzhelpus.smartcabinet_android
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -23,17 +22,7 @@ import org.plzhelpus.smartcabinet_android.dummy.DummyMember
  * fragment (e.g. upon screen orientation changes).
  */
 class MemberFragment : Fragment() {
-    // TODO: Customize parameters
-    private var mColumnCount = 1
     private var mListener: OnListFragmentInteractionListener? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        if (arguments != null) {
-            mColumnCount = arguments!!.getInt(ARG_COLUMN_COUNT)
-        }
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -41,12 +30,7 @@ class MemberFragment : Fragment() {
 
         // Set the adapter
         if (view is RecyclerView) {
-            val context = view.getContext()
-            if (mColumnCount <= 1) {
-                view.layoutManager = LinearLayoutManager(context)
-            } else {
-                view.layoutManager = GridLayoutManager(context, mColumnCount)
-            }
+            view.layoutManager = LinearLayoutManager(context)
             view.adapter = MemberRecyclerViewAdapter(DummyMember.ITEMS, mListener)
         }
         return view
@@ -79,20 +63,5 @@ class MemberFragment : Fragment() {
     interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         fun onListFragmentInteraction(item: DummyMember.DummyItem)
-    }
-
-    companion object {
-
-        // TODO: Customize parameter argument names
-        private val ARG_COLUMN_COUNT = "column-count"
-
-        // TODO: Customize parameter initialization
-        fun newInstance(columnCount: Int): MemberFragment {
-            val fragment = MemberFragment()
-            val args = Bundle()
-            args.putInt(ARG_COLUMN_COUNT, columnCount)
-            fragment.arguments = args
-            return fragment
-        }
     }
 }
