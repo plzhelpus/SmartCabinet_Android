@@ -87,7 +87,6 @@ class AuthUiActivity : AppCompatActivity() {
         finish()
     }
 
-
     /**
      * 스낵바를 띄워줌
      */

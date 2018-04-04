@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity(),
         user_sign_out_button.setOnClickListener{
             AuthUI.getInstance()
                     .signOut(this)
-                    .addOnCompleteListener(OnCompleteListener {
+                    .addOnCompleteListener{
                         task -> if(task.isSuccessful) {
                             startActivity(AuthUiActivity.createIntent(this))
                             finish()
@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity(),
                             Log.w(TAG, "signOut:failure", task.exception)
                         showSnackbar(R.string.sign_out_failed)
                         }
-                    })
+                    }
         }
 
         group_list.layoutManager = LinearLayoutManager(this)
