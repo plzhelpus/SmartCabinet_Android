@@ -5,7 +5,7 @@
     android:id="@+id/main_root_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="org.plzhelpus.smartcabinet_android.MainActivity">
+    tools:context="org.plzhelpus.smartcabinet_android.Main.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -36,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="org.plzhelpus.smartcabinet_android.MainActivity"
+        tools:context="org.plzhelpus.smartcabinet_android.Main.MainActivity"
         tools:showIn="@layout/app_bar_main">
 
     </android.support.v4.view.ViewPager>

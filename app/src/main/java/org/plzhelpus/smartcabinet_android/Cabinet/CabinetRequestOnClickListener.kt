@@ -1,4 +1,4 @@
-package org.plzhelpus.smartcabinet_android
+package org.plzhelpus.smartcabinet_android.Cabinet
 
 import android.util.Log
 import android.view.View

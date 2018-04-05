@@ -1,8 +1,9 @@
-package org.plzhelpus.smartcabinet_android
+package org.plzhelpus.smartcabinet_android.GroupInfo
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import org.plzhelpus.smartcabinet_android.R
 import java.lang.IllegalArgumentException
 
 /**

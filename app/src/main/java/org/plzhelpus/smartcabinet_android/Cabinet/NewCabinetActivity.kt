@@ -1,7 +1,8 @@
-package org.plzhelpus.smartcabinet_android
+package org.plzhelpus.smartcabinet_android.Cabinet
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import org.plzhelpus.smartcabinet_android.R
 
 class NewCabinetActivity : AppCompatActivity() {
 

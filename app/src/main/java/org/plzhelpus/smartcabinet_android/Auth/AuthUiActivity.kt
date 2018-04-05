@@ -1,4 +1,4 @@
-package org.plzhelpus.smartcabinet_android
+package org.plzhelpus.smartcabinet_android.Auth
 
 import android.app.Activity
 import android.content.Context
@@ -12,10 +12,10 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
 import kotlinx.android.synthetic.main.activity_auth_ui.*
-import kotlinx.android.synthetic.main.app_bar_main.*
 import java.util.*
 import com.google.firebase.auth.FirebaseAuth
-
+import org.plzhelpus.smartcabinet_android.Main.MainActivity
+import org.plzhelpus.smartcabinet_android.R
 
 
 class AuthUiActivity : AppCompatActivity() {
@@ -41,13 +41,13 @@ class AuthUiActivity : AppCompatActivity() {
                         .setAvailableProviders(Arrays.asList(
                                 AuthUI.IdpConfig.GoogleBuilder().build()))
                         .build(),
-                AuthUiActivity.RC_SIGN_IN)
+                    RC_SIGN_IN)
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == AuthUiActivity.RC_SIGN_IN) {
+        if (requestCode == RC_SIGN_IN) {
             handleSignInResponse(resultCode, data)
         } else {
             showSnackbar(R.string.unknown_response)

@@ -1,4 +1,4 @@
-package org.plzhelpus.smartcabinet_android
+package org.plzhelpus.smartcabinet_android.Main
 
 import android.content.Context
 import android.content.Intent
@@ -11,6 +11,8 @@ import com.firebase.ui.auth.AuthUI
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.util.Log
+import org.plzhelpus.smartcabinet_android.Auth.AuthUiActivity
+import org.plzhelpus.smartcabinet_android.R
 
 
 class NoGroupActivity : AppCompatActivity() {

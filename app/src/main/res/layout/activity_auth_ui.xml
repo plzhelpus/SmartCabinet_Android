@@ -5,7 +5,7 @@
     android:id = "@+id/auth_ui_root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.plzhelpus.smartcabinet_android.AuthUiActivity">
+    tools:context="org.plzhelpus.smartcabinet_android.Auth.AuthUiActivity">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

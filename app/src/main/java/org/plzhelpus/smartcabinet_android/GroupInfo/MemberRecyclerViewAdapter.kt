@@ -1,4 +1,4 @@
-package org.plzhelpus.smartcabinet_android
+package org.plzhelpus.smartcabinet_android.GroupInfo
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -6,7 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.member.view.*
 
-import org.plzhelpus.smartcabinet_android.MemberFragment.OnListFragmentInteractionListener
+import org.plzhelpus.smartcabinet_android.GroupInfo.MemberFragment.OnListFragmentInteractionListener
+import org.plzhelpus.smartcabinet_android.R
 import org.plzhelpus.smartcabinet_android.dummy.DummyMember.DummyItem
 
 /**

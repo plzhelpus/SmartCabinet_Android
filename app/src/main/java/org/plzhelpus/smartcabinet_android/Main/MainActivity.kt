@@ -1,4 +1,4 @@
-package org.plzhelpus.smartcabinet_android
+package org.plzhelpus.smartcabinet_android.Main
 
 import android.content.Context
 import android.content.Intent
@@ -15,13 +15,17 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import android.text.TextUtils
 import android.util.Log
 import com.firebase.ui.auth.AuthUI
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.nav_drawer.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 import android.support.design.widget.Snackbar
 import android.support.annotation.StringRes
 import android.support.v7.widget.LinearLayoutManager
+import org.plzhelpus.smartcabinet_android.Auth.AuthUiActivity
+import org.plzhelpus.smartcabinet_android.GroupInfo.CabinetFragment
+import org.plzhelpus.smartcabinet_android.GroupInfo.GroupInfoFragmentPagerAdapter
+import org.plzhelpus.smartcabinet_android.GroupInfo.MemberFragment
+import org.plzhelpus.smartcabinet_android.R
 import org.plzhelpus.smartcabinet_android.dummy.DummyCabinet
 import org.plzhelpus.smartcabinet_android.dummy.DummyGroup
 import org.plzhelpus.smartcabinet_android.dummy.DummyMember
@@ -71,7 +75,7 @@ class MainActivity : AppCompatActivity(),
             handleNotSignIn()
         } else {
             populateProfile()
-            mIdpResponse = intent.getParcelableExtra(MainActivity.EXTRA_IDP_RESPONSE)
+            mIdpResponse = intent.getParcelableExtra(EXTRA_IDP_RESPONSE)
 
             // TODO 만약 그룹이 있으면 그룹 첫번째를 열어주고 아니면 빈 그룹 열어주기
             if(DummyGroup.ITEMS.size == 0){

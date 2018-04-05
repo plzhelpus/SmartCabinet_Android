@@ -1,4 +1,4 @@
-package org.plzhelpus.smartcabinet_android
+package org.plzhelpus.smartcabinet_android.GroupInfo
 
 import android.content.Context
 import android.os.Bundle
@@ -8,7 +8,9 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import org.plzhelpus.smartcabinet_android.dummy.DummyMember
+import org.plzhelpus.smartcabinet_android.R
+
+import org.plzhelpus.smartcabinet_android.dummy.DummyCabinet
 
 /**
  * A fragment representing a list of Items.
@@ -21,17 +23,18 @@ import org.plzhelpus.smartcabinet_android.dummy.DummyMember
  * Mandatory empty constructor for the fragment manager to instantiate the
  * fragment (e.g. upon screen orientation changes).
  */
-class MemberFragment : Fragment() {
+class CabinetFragment : Fragment() {
     private var mListener: OnListFragmentInteractionListener? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.member_list, container, false)
+        val view = inflater.inflate(R.layout.cabinet_list, container, false)
 
         // Set the adapter
         if (view is RecyclerView) {
+            val context = view.getContext()
             view.layoutManager = LinearLayoutManager(context)
-            view.adapter = MemberRecyclerViewAdapter(DummyMember.ITEMS, mListener)
+            view.adapter = CabinetRecyclerViewAdapter(DummyCabinet.ITEMS, mListener)
         }
         return view
     }
@@ -62,6 +65,6 @@ class MemberFragment : Fragment() {
      */
     interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        fun onListFragmentInteraction(item: DummyMember.DummyItem)
+        fun onListFragmentInteraction(item: DummyCabinet.DummyItem)
     }
 }
