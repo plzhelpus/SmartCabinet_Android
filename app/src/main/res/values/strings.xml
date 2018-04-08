@@ -57,6 +57,10 @@
     <string name="group_name_input">Name</string>
     <string name="cabinet_description_input_text">Cabinet description (optional)</string>
     <string name="cabinet_description_input">Description</string>
-    <string name="create_group_submit_button_text">Submit</string>
+    <string name="create_group_submit_button_text">Create</string>
+
+    // fragment_add_to_group
+    <string name="group_name_spinner_text">Group name</string>
+    <string name="add_to_group_button_text">Add</string>
 
 </resources>
