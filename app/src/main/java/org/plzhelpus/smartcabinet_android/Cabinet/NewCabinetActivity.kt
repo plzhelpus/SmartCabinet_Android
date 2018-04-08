@@ -1,12 +1,18 @@
 package org.plzhelpus.smartcabinet_android.Cabinet
 
+import android.content.Context
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_new_cabinet.*
-import org.plzhelpus.smartcabinet_android.GroupInfo.CabinetFragment
 import org.plzhelpus.smartcabinet_android.R
 
 class NewCabinetActivity : AppCompatActivity(), NewCabinetMenuFragment.NewCabinetMenuListener {
+
+    companion object {
+        fun createIntent(context: Context): Intent{
+            return Intent(context, NewCabinetActivity::class.java)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

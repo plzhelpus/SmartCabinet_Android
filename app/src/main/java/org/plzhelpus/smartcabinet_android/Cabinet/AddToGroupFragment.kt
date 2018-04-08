@@ -26,12 +26,14 @@ class AddToGroupFragment : Fragment() {
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_add_to_group, container, false)
 
-        add_to_group_submit_button.setOnClickListener {
-
-        }
-
         return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        add_to_group_submit_button.setOnClickListener {
+
+        }
+    }
 }

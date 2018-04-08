@@ -22,6 +22,7 @@ import android.support.design.widget.Snackbar
 import android.support.annotation.StringRes
 import android.support.v7.widget.LinearLayoutManager
 import org.plzhelpus.smartcabinet_android.Auth.AuthUiActivity
+import org.plzhelpus.smartcabinet_android.Cabinet.NewCabinetActivity
 import org.plzhelpus.smartcabinet_android.GroupInfo.CabinetFragment
 import org.plzhelpus.smartcabinet_android.GroupInfo.GroupInfoFragmentPagerAdapter
 import org.plzhelpus.smartcabinet_android.GroupInfo.MemberFragment
@@ -86,7 +87,7 @@ class MainActivity : AppCompatActivity(),
         }
 
         cabinet_request_button.setOnClickListener{
-            Log.d(TAG, "Cabinet request button clicked")
+            startActivity(NewCabinetActivity.createIntent(this))
         }
 
         user_sign_out_button.setOnClickListener{

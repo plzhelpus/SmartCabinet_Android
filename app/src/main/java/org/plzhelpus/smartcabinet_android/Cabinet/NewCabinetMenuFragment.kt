@@ -19,7 +19,11 @@ class NewCabinetMenuFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_new_cabinet_menu, container, false)
+        return view
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         add_to_exisetd_group_button.setOnClickListener {
             mListener!!.onAddButtonClicked()
         }
@@ -28,7 +32,6 @@ class NewCabinetMenuFragment : Fragment() {
             mListener!!.onCreateButtonClicked()
         }
 
-        return view
     }
 
     override fun onAttach(context: Context?) {

@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import kotlinx.android.synthetic.main.fragment_create_group.*
 
 import org.plzhelpus.smartcabinet_android.R
@@ -26,12 +27,14 @@ class CreateGroupFragment : Fragment() {
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_create_group, container, false)
 
-        create_group_submit_button.setOnClickListener {
-
-        }
-
         return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        create_group_submit_button.setOnClickListener {
+
+        }
+    }
 }
