@@ -51,4 +51,12 @@
     <string name="add_to_exisetd_group_button">Add</string>
     <string name="create_new_group_text">Are you want to create new group?</string>
     <string name="create_new_group_button">Create</string>
+
+    // fragment_create_group
+    <string name="group_name_input_text">New group name</string>
+    <string name="group_name_input">Name</string>
+    <string name="cabinet_description_input_text">Cabinet description (optional)</string>
+    <string name="cabinet_description_input">Description</string>
+    <string name="create_group_submit_button_text">Submit</string>
+
 </resources>
