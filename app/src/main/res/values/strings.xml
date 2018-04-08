@@ -6,6 +6,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    // Menu
     <string name="action_settings">Settings</string>
     <string name="action_add_member">Add member</string>
 
@@ -63,5 +64,11 @@
     // fragment_add_to_group
     <string name="group_name_spinner_text">Group name</string>
     <string name="add_to_group_button_text">Add</string>
+
+    // dialog_add_member
+    <string name="add_member_dialog_title">Add new member</string>
+    <string name="add_member_input">Email</string>
+    <string name="add_member_alert_positive_button">Add</string>
+    <string name="add_member_alert_negative_button">Cancel</string>
 
 </resources>

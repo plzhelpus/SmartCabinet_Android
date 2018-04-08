@@ -1,6 +1,7 @@
 package org.plzhelpus.smartcabinet_android.Main
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.view.GravityCompat
@@ -20,6 +21,7 @@ import kotlinx.android.synthetic.main.nav_drawer.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 import android.support.design.widget.Snackbar
 import android.support.annotation.StringRes
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import org.plzhelpus.smartcabinet_android.Auth.AuthUiActivity
 import org.plzhelpus.smartcabinet_android.Cabinet.NewCabinetActivity
@@ -84,6 +86,7 @@ class MainActivity : AppCompatActivity(),
                 finish()
                 return
             }
+            // TODO 첫번째 그룹 열어주기
         }
 
         cabinet_request_button.setOnClickListener{
@@ -164,7 +167,20 @@ class MainActivity : AppCompatActivity(),
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         when (item.itemId) {
-            R.id.action_add_member -> return true
+            R.id.action_add_member -> {
+                val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+                builder.setTitle(R.string.add_member_dialog_title)
+                        .setView(R.layout.dialog_add_member)
+                        .setPositiveButton(R.string.add_member_alert_positive_button, {
+                            dialog, id ->
+
+                        })
+                        .setNegativeButton(R.string.add_member_alert_negative_button, {
+                            dialog, id ->
+                        }).show()
+
+                return true
+            }
             R.id.action_settings -> return true
             else -> return super.onOptionsItemSelected(item)
         }
