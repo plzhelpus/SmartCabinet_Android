@@ -23,7 +23,8 @@
             android:name=".Auth.AuthUiActivity"
             android:label="@string/title_activity_auth_ui" />
         <activity android:name=".Main.NoGroupActivity" />
-        <activity android:name=".Cabinet.NewCabinetActivity"></activity>
+        <activity android:name=".Cabinet.NewCabinetActivity" />
+        <activity android:name=".GroupSettingActivity"></activity>
     </application>
 
 </manifest>
