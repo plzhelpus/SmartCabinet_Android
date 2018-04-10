@@ -88,6 +88,7 @@ class MainActivity : AppCompatActivity(),
                 return
             }
             // TODO 첫번째 그룹 열어주기
+            this.title = DummyGroup.ITEMS[0].content
         }
 
         cabinet_request_button.setOnClickListener{
