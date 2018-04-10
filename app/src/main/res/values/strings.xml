@@ -71,4 +71,12 @@
     <string name="add_member_alert_positive_button">Add</string>
     <string name="add_member_alert_negative_button">Cancel</string>
 
+    // settings_group
+    <string name="settings_group_owner_title">Owner</string>
+    <string name="settings_group_admin_title">Admin</string>
+    <string name="settings_group_member_title">Member</string>
+    <string name="settings_delete_group">Delete group</string>
+    <string name="settings_leave_group">Leave group</string>
+    <string name="settings_change_role_to_member">Change role to member</string>
+
 </resources>
