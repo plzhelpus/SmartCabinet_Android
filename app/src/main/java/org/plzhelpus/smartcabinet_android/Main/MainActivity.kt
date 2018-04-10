@@ -28,6 +28,7 @@ import org.plzhelpus.smartcabinet_android.Cabinet.NewCabinetActivity
 import org.plzhelpus.smartcabinet_android.GroupInfo.CabinetFragment
 import org.plzhelpus.smartcabinet_android.GroupInfo.GroupInfoFragmentPagerAdapter
 import org.plzhelpus.smartcabinet_android.GroupInfo.MemberFragment
+import org.plzhelpus.smartcabinet_android.GroupSettingActivity
 import org.plzhelpus.smartcabinet_android.R
 import org.plzhelpus.smartcabinet_android.dummy.DummyCabinet
 import org.plzhelpus.smartcabinet_android.dummy.DummyGroup
@@ -181,7 +182,10 @@ class MainActivity : AppCompatActivity(),
 
                 return true
             }
-            R.id.action_settings -> return true
+            R.id.action_settings -> {
+                startActivity(GroupSettingActivity.createIntent(this))
+                return true
+            }
             else -> return super.onOptionsItemSelected(item)
         }
     }
