@@ -1,5 +1,7 @@
 package org.plzhelpus.smartcabinet_android.Main
 
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -33,13 +35,17 @@ import org.plzhelpus.smartcabinet_android.R
 import org.plzhelpus.smartcabinet_android.dummy.DummyCabinet
 import org.plzhelpus.smartcabinet_android.dummy.DummyGroup
 import org.plzhelpus.smartcabinet_android.dummy.DummyMember
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
+import java.util.*
 
 
 /**
  * Created by Donghwan Kim on 2018-03-23.
  *
  * 앱의 메인 화면 액티비티
-*/
+ */
 
 class MainActivity : AppCompatActivity(),
         CabinetFragment.OnListFragmentInteractionListener,
@@ -50,9 +56,9 @@ class MainActivity : AppCompatActivity(),
         private val TAG = "MainActivity"
         private val EXTRA_IDP_RESPONSE = "extra_idp_response"
 
-        fun createIntent(context: Context, idpResponse: IdpResponse?): Intent{
+        fun createIntent(context: Context, idpResponse: IdpResponse?): Intent {
             val startIntent: Intent = Intent()
-            if(idpResponse != null) {
+            if (idpResponse != null) {
                 startIntent.putExtra(EXTRA_IDP_RESPONSE, idpResponse)
             }
             return startIntent.setClass(context, MainActivity::class.java)
@@ -82,7 +88,7 @@ class MainActivity : AppCompatActivity(),
             mIdpResponse = intent.getParcelableExtra(EXTRA_IDP_RESPONSE)
 
             // TODO 만약 그룹이 있으면 그룹 첫번째를 열어주고 아니면 빈 그룹 열어주기
-            if(DummyGroup.ITEMS.size == 0){
+            if (DummyGroup.ITEMS.size == 0) {
                 startActivity(NoGroupActivity.createIntent(this, mIdpResponse))
                 finish()
                 return
@@ -92,19 +98,49 @@ class MainActivity : AppCompatActivity(),
         }
 
         cabinet_request_button.setOnClickListener{
-            startActivity(NewCabinetActivity.createIntent(this))
+            // startActivity(NewCabinetActivity.createIntent(this))
+            // TODO : Recatoring
+            val RPI3ADDRESS = "B8:27:EB:21:B6:12"
+            val mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+            val MY_UUID_SECURE = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+            val rpiDevice = mBluetoothAdapter.getRemoteDevice(RPI3ADDRESS)
+            val mmSocket: BluetoothSocket
+            val mmInStream: InputStream
+            val mmOutStream: OutputStream
+            var buffer = ByteArray(1024)
+
+            try {
+                mmSocket = rpiDevice.createRfcommSocketToServiceRecord(
+                        MY_UUID_SECURE)
+                mmSocket.connect()
+
+                mmInStream = mmSocket.getInputStream()
+                mmOutStream = mmSocket.getOutputStream()
+
+                mmOutStream.write("TEST".toByteArray())
+
+                val bytes = mmInStream.read(buffer)
+
+                Log.i(TAG, "Get data" + String(buffer))
+
+                mmSocket.close()
+            } catch (e: IOException) {
+                Log.e(TAG, "IOException :", e);
+            }
+
+            Log.d(TAG, "Cabinet request button clicked")
         }
 
-        user_sign_out_button.setOnClickListener{
+        user_sign_out_button.setOnClickListener {
             AuthUI.getInstance()
                     .signOut(this)
-                    .addOnCompleteListener{
-                        task -> if(task.isSuccessful) {
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
                             startActivity(AuthUiActivity.createIntent(this))
                             finish()
                         } else {
                             Log.w(TAG, "signOut:failure", task.exception)
-                        showSnackbar(R.string.sign_out_failed)
+                            showSnackbar(R.string.sign_out_failed)
                         }
                     }
         }
@@ -122,7 +158,7 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    private fun handleNotSignIn(){
+    private fun handleNotSignIn() {
         startActivity(AuthUiActivity.createIntent(this))
         finish()
         return
@@ -150,7 +186,7 @@ class MainActivity : AppCompatActivity(),
         super.onResume()
 
         // 유저가 로그인 했는지 확인
-        val currentUser : FirebaseUser? = FirebaseAuth.getInstance().currentUser
+        val currentUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
         if (currentUser == null) {
             handleNotSignIn()
         } else {
