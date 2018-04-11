@@ -170,8 +170,7 @@ class MainActivity : AppCompatActivity(),
     private fun populateProfile() {
         val user: FirebaseUser = FirebaseAuth.getInstance().currentUser ?: return
         val email = if (TextUtils.isEmpty(user.email)) "No email" else user.email!!
-        // TODO 이메일 앞부분만 따서 출력 중
-        user_email.text = (email.split(delimiters = *charArrayOf('@')))[0]
+        user_email.text = email
     }
 
     override fun onBackPressed() {
