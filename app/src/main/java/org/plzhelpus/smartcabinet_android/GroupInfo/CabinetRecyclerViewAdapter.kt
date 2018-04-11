@@ -1,6 +1,9 @@
 package org.plzhelpus.smartcabinet_android.GroupInfo
 
+import android.content.Context
+import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +17,11 @@ import org.plzhelpus.smartcabinet_android.R
  * specified [OnListFragmentInteractionListener].
  * TODO: Replace the implementation with code for your data type.
  */
-class CabinetRecyclerViewAdapter(private val mValues: List<DummyItem>, private val mListener: OnListFragmentInteractionListener?) : RecyclerView.Adapter<CabinetRecyclerViewAdapter.ViewHolder>() {
+class CabinetRecyclerViewAdapter(private val mValues: List<DummyItem>, private val mListener: OnListFragmentInteractionListener?, private val mContext: Context?) : RecyclerView.Adapter<CabinetRecyclerViewAdapter.ViewHolder>() {
+
+    companion object {
+        private val TAG = "CabinetRecyclerView"
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -27,11 +34,24 @@ class CabinetRecyclerViewAdapter(private val mValues: List<DummyItem>, private v
         holder.mView.cabinet_id.text = mValues[position].content
         holder.mView.cabinet_description.text = mValues[position].details
 
-        holder.mView.setOnClickListener {
-            if (null != mListener) {
-                // Notify the active callbacks interface (the activity, if the
-                // fragment is attached to one) that an item has been selected.
-                mListener.onListFragmentInteraction(holder.mItem!!)
+        holder.mView.cabinet_popup_memu_button.setOnClickListener {
+            if (mContext != null){
+                val popupMenu =  PopupMenu(mContext, holder.mView.cabinet_popup_memu_button)
+                popupMenu.inflate(R.menu.cabinet)
+                popupMenu.setOnMenuItemClickListener {
+                    when(it.itemId){
+                        R.id.cabinet_menu_delete -> {
+                            Log.d(TAG, "cabinet_menu_delete")
+                            true
+                        }
+                        R.id.cabinet_menu_edit_description -> {
+                            Log.d(TAG, "cabinet_menu_edit_description")
+                            true
+                        }
+                        else -> false
+                    }
+                }
+                popupMenu.show()
             }
         }
     }

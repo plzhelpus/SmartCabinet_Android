@@ -32,7 +32,7 @@ class MemberFragment : Fragment() {
         // Set the adapter
         if (view is RecyclerView) {
             view.layoutManager = LinearLayoutManager(context)
-            view.adapter = MemberRecyclerViewAdapter(DummyMember.ITEMS, mListener)
+            view.adapter = MemberRecyclerViewAdapter(DummyMember.ITEMS, mListener, context)
         }
         return view
     }

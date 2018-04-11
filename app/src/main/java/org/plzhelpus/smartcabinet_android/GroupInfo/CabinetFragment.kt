@@ -34,7 +34,8 @@ class CabinetFragment : Fragment() {
         if (view is RecyclerView) {
             val context = view.getContext()
             view.layoutManager = LinearLayoutManager(context)
-            view.adapter = CabinetRecyclerViewAdapter(DummyCabinet.ITEMS, mListener)
+            view.adapter = CabinetRecyclerViewAdapter(DummyCabinet.ITEMS, mListener, context)
+            view.setHasFixedSize(true)
         }
         return view
     }

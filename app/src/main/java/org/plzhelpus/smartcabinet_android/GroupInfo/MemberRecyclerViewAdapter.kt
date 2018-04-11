@@ -1,6 +1,9 @@
 package org.plzhelpus.smartcabinet_android.GroupInfo
 
+import android.content.Context
+import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +18,11 @@ import org.plzhelpus.smartcabinet_android.dummy.DummyMember.DummyItem
  * specified [OnListFragmentInteractionListener].
  * TODO: Replace the implementation with code for your data type.
  */
-class MemberRecyclerViewAdapter(private val mValues: List<DummyItem>, private val mListener: OnListFragmentInteractionListener?) : RecyclerView.Adapter<MemberRecyclerViewAdapter.ViewHolder>() {
+class MemberRecyclerViewAdapter(private val mValues: List<DummyItem>, private val mListener: OnListFragmentInteractionListener?, private val mContext: Context?) : RecyclerView.Adapter<MemberRecyclerViewAdapter.ViewHolder>() {
+
+    companion object {
+        private val TAG = "MemberRecyclerView"
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -28,15 +35,30 @@ class MemberRecyclerViewAdapter(private val mValues: List<DummyItem>, private va
         holder.mView.member_email.text = mValues[position].content
         holder.mView.member_role.text = mValues[position].details
 
-        holder.mView.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem!!)
+        holder.mView.member_popup_menu_button.setOnClickListener {
+            if(mContext != null){
+                val popupMenu =  PopupMenu(mContext, holder.mView.member_popup_menu_button)
+                popupMenu.inflate(R.menu.member)
+                popupMenu.setOnMenuItemClickListener {
+                    when(it.itemId){
+                        R.id.member_menu_change_role -> {
+                            Log.d(TAG, "member_menu_change_role")
+                            true
+                        }
+                        R.id.member_menu_delegate_owner -> {
+                            Log.d(TAG, "member_menu_delegate_owner")
+                            true
+                        }
+                        R.id.member_menu_delete -> {
+                            Log.d(TAG, "member_menu_delete")
+                            true
+                        }
+                        else -> false
+                    }
                 }
+                popupMenu.show()
             }
-        })
+        }
     }
 
     override fun getItemCount(): Int {
