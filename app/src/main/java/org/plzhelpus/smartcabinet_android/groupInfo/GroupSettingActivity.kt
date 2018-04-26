@@ -1,4 +1,4 @@
-package org.plzhelpus.smartcabinet_android
+package org.plzhelpus.smartcabinet_android.groupInfo
 
 import android.content.Context
 import android.content.Intent
@@ -8,6 +8,7 @@ import android.util.Log
 import kotlinx.android.synthetic.main.settings_group_admin.*
 import kotlinx.android.synthetic.main.settings_group_member.*
 import kotlinx.android.synthetic.main.settings_group_owner.*
+import org.plzhelpus.smartcabinet_android.R
 
 class GroupSettingActivity : AppCompatActivity() {
 

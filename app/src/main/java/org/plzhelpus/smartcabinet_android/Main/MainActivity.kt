@@ -27,7 +27,7 @@ import android.support.v7.widget.LinearLayoutManager
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
-import org.plzhelpus.smartcabinet_android.GroupSettingActivity
+import org.plzhelpus.smartcabinet_android.groupInfo.GroupSettingActivity
 import org.plzhelpus.smartcabinet_android.R
 import org.plzhelpus.smartcabinet_android.auth.AuthUiActivity
 import org.plzhelpus.smartcabinet_android.dummy.DummyCabinet
@@ -71,6 +71,7 @@ class MainActivity : AppCompatActivity(),
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
+        // 네이게이션 드로어 설정
         val toggle = ActionBarDrawerToggle(
                 this,
                 drawer_layout,

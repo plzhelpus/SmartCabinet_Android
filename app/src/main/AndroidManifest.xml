@@ -23,7 +23,7 @@
             android:label="@string/title_activity_auth_ui" />
         <activity android:name=".main.NoGroupActivity" />
         <activity android:name=".cabinet.NewCabinetActivity" />
-        <activity android:name=".GroupSettingActivity"/>
+        <activity android:name=".groupInfo.GroupSettingActivity"/>
     </application>
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
