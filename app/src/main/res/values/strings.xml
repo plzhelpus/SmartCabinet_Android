@@ -82,10 +82,12 @@
     // menu.cabinet
     <string name="cabinet_menu_edit_description">Edit description</string>
     <string name="cabinet_menu_delete">Delete</string>
+    <string name="cabinet_popup_memu_button">Menu</string>
 
     // menu.member
     <string name="member_menu_delete">Delete</string>
     <string name="member_menu_change_role">Change role</string>
     <string name="member_menu_delegate_owner">Delegate owner</string>
+    <string name="member_popup_menu_button">Menu</string>
 
 </resources>
