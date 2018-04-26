@@ -1,20 +1,15 @@
-package org.plzhelpus.smartcabinet_android.Main
+package org.plzhelpus.smartcabinet_android.main
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.android.synthetic.main.group.view.*
 import org.plzhelpus.smartcabinet_android.R
-import org.plzhelpus.smartcabinet_android.dummy.DummyGroup.DummyItem
 
-/**
- * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
- * specified [OnListFragmentInteractionListener].
- * TODO: Replace the implementation with code for your data type.
- */
 
-class GroupRecyclerViewAdapter(private val mValues: List<DummyItem>, private val mListener: MainActivity?) : RecyclerView.Adapter<GroupRecyclerViewAdapter.ViewHolder>(){
+class GroupRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>, private val mListener: MainActivity?) : RecyclerView.Adapter<GroupRecyclerViewAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -24,7 +19,7 @@ class GroupRecyclerViewAdapter(private val mValues: List<DummyItem>, private val
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.mItem = mValues[position]
-        holder.mView.group_name.text = mValues[position].content
+        holder.mView.group_name.text = mValues[position].id
 
         holder.mView.setOnClickListener{
             if (null != mListener) {
@@ -40,7 +35,7 @@ class GroupRecyclerViewAdapter(private val mValues: List<DummyItem>, private val
     }
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        var mItem: DummyItem? = null
+        var mItem: DocumentSnapshot? = null
 
         override fun toString(): String {
             return super.toString() + " '" + mView.group_name + "'"

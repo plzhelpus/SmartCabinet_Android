@@ -1,9 +1,8 @@
-package org.plzhelpus.smartcabinet_android.Main
+package org.plzhelpus.smartcabinet_android.main
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothSocket
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.view.GravityCompat
@@ -25,16 +24,17 @@ import android.support.design.widget.Snackbar
 import android.support.annotation.StringRes
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
-import org.plzhelpus.smartcabinet_android.Auth.AuthUiActivity
-import org.plzhelpus.smartcabinet_android.Cabinet.NewCabinetActivity
-import org.plzhelpus.smartcabinet_android.GroupInfo.CabinetFragment
-import org.plzhelpus.smartcabinet_android.GroupInfo.GroupInfoFragmentPagerAdapter
-import org.plzhelpus.smartcabinet_android.GroupInfo.MemberFragment
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import org.plzhelpus.smartcabinet_android.GroupSettingActivity
 import org.plzhelpus.smartcabinet_android.R
+import org.plzhelpus.smartcabinet_android.auth.AuthUiActivity
 import org.plzhelpus.smartcabinet_android.dummy.DummyCabinet
-import org.plzhelpus.smartcabinet_android.dummy.DummyGroup
 import org.plzhelpus.smartcabinet_android.dummy.DummyMember
+import org.plzhelpus.smartcabinet_android.groupInfo.CabinetFragment
+import org.plzhelpus.smartcabinet_android.groupInfo.GroupInfoFragmentPagerAdapter
+import org.plzhelpus.smartcabinet_android.groupInfo.MemberFragment
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity(),
         CabinetFragment.OnListFragmentInteractionListener,
         MemberFragment.OnListFragmentInteractionListener {
     private var mIdpResponse: IdpResponse? = null
+    private var mGroupListenerRegistration: ListenerRegistration? = null
 
     companion object {
         private val TAG = "MainActivity"
@@ -87,14 +88,25 @@ class MainActivity : AppCompatActivity(),
             populateProfile()
             mIdpResponse = intent.getParcelableExtra(EXTRA_IDP_RESPONSE)
 
-            // TODO 만약 그룹이 있으면 그룹 첫번째를 열어주고 아니면 빈 그룹 열어주기
-            if (DummyGroup.ITEMS.size == 0) {
-                startActivity(NoGroupActivity.createIntent(this, mIdpResponse))
-                finish()
-                return
+            val db = FirebaseFirestore.getInstance()
+            val collectionReference = db.collection("users").document(currentUser!!.uid).collection("participated_group")
+            collectionReference.get().addOnCompleteListener {
+                if(it.isSuccessful){
+                    val querySnapshot = it.result
+                    if(querySnapshot.isEmpty){
+                        startActivity(NoGroupActivity.createIntent(this, mIdpResponse))
+                        finish()
+                        return@addOnCompleteListener
+                    } else {
+                        val documentSnapshots = querySnapshot.documents
+                        group_list.adapter = GroupRecyclerViewAdapter(documentSnapshots, this)
+                        this.title = documentSnapshots[0].id
+                        // TODO 그룹 정보 UI도 갱신 필요
+                    }
+                } else {
+                    Log.d(TAG, "get group list failed - ", it.exception)
+                }
             }
-            // TODO 첫번째 그룹 열어주기
-            this.title = DummyGroup.ITEMS[0].content
         }
 
         cabinet_request_button.setOnClickListener{
@@ -146,7 +158,6 @@ class MainActivity : AppCompatActivity(),
         }
 
         group_list.layoutManager = LinearLayoutManager(this)
-        group_list.adapter = GroupRecyclerViewAdapter(DummyGroup.ITEMS, this)
 
         val groupInfoFragmentPagerAdapter = GroupInfoFragmentPagerAdapter(supportFragmentManager)
         group_pager.adapter = groupInfoFragmentPagerAdapter
@@ -156,6 +167,33 @@ class MainActivity : AppCompatActivity(),
         for ((index, resId) in groupInfoFragmentPagerAdapter.tabIconResId.withIndex()) {
             group_tablayout.getTabAt(index)?.setIcon(resId)
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        /*val user = FirebaseAuth.getInstance().currentUser
+        val db = FirebaseFirestore.getInstance()
+        if(user != null){
+            val participatedGroup = db.collection("users").document(user.uid).collection("participated_group")
+            mGroupListenerRegistration = participatedGroup.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                if (firebaseFirestoreException != null){
+                    Log.w(TAG, "Participated group - Listen failed.", firebaseFirestoreException)
+                    return@addSnapshotListener
+                }
+
+                if (querySnapshot != null && !querySnapshot.isEmpty){
+                    Log.d(TAG, "Participated group - data found")
+                    querySnapshot.documents
+                } else {
+                    Log.d(TAG, "Participated group - data null")
+                }
+            }
+        }*/
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mGroupListenerRegistration?.remove()
     }
 
     private fun handleNotSignIn() {
@@ -234,8 +272,8 @@ class MainActivity : AppCompatActivity(),
         // TODO 리스트 프래그먼트 CabinetFragment
     }
 
-    fun onListFragmentInteraction(item: DummyGroup.DummyItem) {
-        this.title = item.content
+    fun onListFragmentInteraction(item: DocumentSnapshot) {
+        this.title = item.id
         drawer_layout.closeDrawers()
     }
 

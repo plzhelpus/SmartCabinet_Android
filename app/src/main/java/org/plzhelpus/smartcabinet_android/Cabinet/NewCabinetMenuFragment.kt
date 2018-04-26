@@ -1,4 +1,4 @@
-package org.plzhelpus.smartcabinet_android.Cabinet
+package org.plzhelpus.smartcabinet_android.cabinet
 
 
 import android.content.Context
@@ -18,8 +18,7 @@ class NewCabinetMenuFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        var view = inflater.inflate(R.layout.fragment_new_cabinet_menu, container, false)
-        return view
+        return inflater.inflate(R.layout.fragment_new_cabinet_menu, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

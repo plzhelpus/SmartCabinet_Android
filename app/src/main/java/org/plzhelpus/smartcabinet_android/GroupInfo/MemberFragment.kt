@@ -1,4 +1,4 @@
-package org.plzhelpus.smartcabinet_android.GroupInfo
+package org.plzhelpus.smartcabinet_android.groupInfo
 
 import android.content.Context
 import android.os.Bundle

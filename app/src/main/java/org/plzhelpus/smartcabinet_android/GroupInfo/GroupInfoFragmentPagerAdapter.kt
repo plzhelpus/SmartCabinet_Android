@@ -1,4 +1,4 @@
-package org.plzhelpus.smartcabinet_android.GroupInfo
+package org.plzhelpus.smartcabinet_android.groupInfo
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager

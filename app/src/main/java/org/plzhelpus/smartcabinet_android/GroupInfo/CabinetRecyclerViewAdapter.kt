@@ -1,4 +1,4 @@
-package org.plzhelpus.smartcabinet_android.GroupInfo
+package org.plzhelpus.smartcabinet_android.groupInfo
 
 import android.content.Context
 import android.support.v7.widget.PopupMenu
@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import org.plzhelpus.smartcabinet_android.GroupInfo.CabinetFragment.OnListFragmentInteractionListener
 import org.plzhelpus.smartcabinet_android.dummy.DummyCabinet.DummyItem
 import kotlinx.android.synthetic.main.cabinet.view.*
 import org.plzhelpus.smartcabinet_android.R
@@ -17,7 +16,7 @@ import org.plzhelpus.smartcabinet_android.R
  * specified [OnListFragmentInteractionListener].
  * TODO: Replace the implementation with code for your data type.
  */
-class CabinetRecyclerViewAdapter(private val mValues: List<DummyItem>, private val mListener: OnListFragmentInteractionListener?, private val mContext: Context?) : RecyclerView.Adapter<CabinetRecyclerViewAdapter.ViewHolder>() {
+class CabinetRecyclerViewAdapter(private val mValues: List<DummyItem>, private val mListener: CabinetFragment.OnListFragmentInteractionListener?, private val mContext: Context?) : RecyclerView.Adapter<CabinetRecyclerViewAdapter.ViewHolder>() {
 
     companion object {
         private val TAG = "CabinetRecyclerView"

@@ -1,4 +1,4 @@
-package org.plzhelpus.smartcabinet_android.Auth
+package org.plzhelpus.smartcabinet_android.auth
 
 import android.app.Activity
 import android.content.Context
@@ -14,8 +14,8 @@ import com.firebase.ui.auth.IdpResponse
 import kotlinx.android.synthetic.main.activity_auth_ui.*
 import java.util.*
 import com.google.firebase.auth.FirebaseAuth
-import org.plzhelpus.smartcabinet_android.Main.MainActivity
 import org.plzhelpus.smartcabinet_android.R
+import org.plzhelpus.smartcabinet_android.main.MainActivity
 
 
 class AuthUiActivity : AppCompatActivity() {

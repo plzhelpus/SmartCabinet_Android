@@ -15,12 +15,12 @@ object DummyGroup {
     /**
      * An array of sample (dummy) items.
      */
-    val ITEMS: MutableList<DummyItem> = ArrayList<DummyItem>()
+    val ITEMS: MutableList<DummyItem> = ArrayList()
 
     /**
      * A map of sample (dummy) items, by ID.
      */
-    val ITEM_MAP: MutableMap<String, DummyItem> = HashMap<String, DummyItem>()
+    val ITEM_MAP: MutableMap<String, DummyItem> = HashMap()
 
     private val COUNT = 10
 
@@ -37,7 +37,7 @@ object DummyGroup {
     }
 
     private fun createDummyItem(position: Int): DummyItem {
-        return DummyItem((position).toString(), "Group " + position)
+        return DummyItem((position).toString(), "Group $position")
     }
     /**
      * A dummy item representing a piece of content.

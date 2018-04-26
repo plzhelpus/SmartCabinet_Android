@@ -15,12 +15,12 @@ object DummyMember {
     /**
      * An array of sample (dummy) items.
      */
-    val ITEMS: MutableList<DummyItem> = ArrayList<DummyItem>()
+    val ITEMS: MutableList<DummyItem> = ArrayList()
 
     /**
      * A map of sample (dummy) items, by ID.
      */
-    val ITEM_MAP: MutableMap<String, DummyItem> = HashMap<String, DummyItem>()
+    val ITEM_MAP: MutableMap<String, DummyItem> = HashMap()
 
     private val COUNT = 25
 
@@ -37,7 +37,7 @@ object DummyMember {
     }
 
     private fun createDummyItem(position: Int): DummyItem {
-        return DummyItem((position).toString(), "Member " + position, makeDetails(position))
+        return DummyItem((position).toString(), "Member $position", makeDetails(position))
     }
 
     private fun makeDetails(position: Int): String {

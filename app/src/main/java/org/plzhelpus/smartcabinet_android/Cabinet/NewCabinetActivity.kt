@@ -1,4 +1,4 @@
-package org.plzhelpus.smartcabinet_android.Cabinet
+package org.plzhelpus.smartcabinet_android.cabinet
 
 import android.content.Context
 import android.content.Intent

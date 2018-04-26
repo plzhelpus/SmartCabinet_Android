@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Main.MainActivity"
+            android:name=".main.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,10 +19,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Auth.AuthUiActivity"
+            android:name=".auth.AuthUiActivity"
             android:label="@string/title_activity_auth_ui" />
-        <activity android:name=".Main.NoGroupActivity" />
-        <activity android:name=".Cabinet.NewCabinetActivity" />
+        <activity android:name=".main.NoGroupActivity" />
+        <activity android:name=".cabinet.NewCabinetActivity" />
         <activity android:name=".GroupSettingActivity"/>
     </application>
 

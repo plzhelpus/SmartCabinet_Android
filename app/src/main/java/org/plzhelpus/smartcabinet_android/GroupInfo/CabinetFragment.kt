@@ -1,4 +1,4 @@
-package org.plzhelpus.smartcabinet_android.GroupInfo
+package org.plzhelpus.smartcabinet_android.groupInfo
 
 import android.content.Context
 import android.os.Bundle
@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import org.plzhelpus.smartcabinet_android.R
-
 import org.plzhelpus.smartcabinet_android.dummy.DummyCabinet
 
 /**
