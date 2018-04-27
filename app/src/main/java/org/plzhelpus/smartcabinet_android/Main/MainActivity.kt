@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity(),
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        // 네이게이션 드로어 설정
+        // 네비게이션 드로어 설정
         val toggle = ActionBarDrawerToggle(
                 this,
                 drawer_layout,
@@ -110,40 +110,13 @@ class MainActivity : AppCompatActivity(),
             }
         }
 
+        // 사물함 요청 버튼 구현
         cabinet_request_button.setOnClickListener{
             // startActivity(NewCabinetActivity.createIntent(this))
-            // TODO : Recatoring
-            val RPI3ADDRESS = "B8:27:EB:21:B6:12"
-            val mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-            val MY_UUID_SECURE = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
-            val rpiDevice = mBluetoothAdapter.getRemoteDevice(RPI3ADDRESS)
-            val mmSocket: BluetoothSocket
-            val mmInStream: InputStream
-            val mmOutStream: OutputStream
-            var buffer = ByteArray(1024)
-
-            try {
-                mmSocket = rpiDevice.createRfcommSocketToServiceRecord(
-                        MY_UUID_SECURE)
-                mmSocket.connect()
-
-                mmInStream = mmSocket.getInputStream()
-                mmOutStream = mmSocket.getOutputStream()
-
-                mmOutStream.write("TEST".toByteArray())
-
-                val bytes = mmInStream.read(buffer)
-
-                Log.i(TAG, "Get data" + String(buffer))
-
-                mmSocket.close()
-            } catch (e: IOException) {
-                Log.e(TAG, "IOException :", e);
-            }
-
-            Log.d(TAG, "Cabinet request button clicked")
+            requestCabinet()
         }
 
+        // 사용자 로그아웃 버튼 구현
         user_sign_out_button.setOnClickListener {
             AuthUI.getInstance()
                     .signOut(this)
@@ -160,6 +133,7 @@ class MainActivity : AppCompatActivity(),
 
         group_list.layoutManager = LinearLayoutManager(this)
 
+        // 그룹 정보에 뷰페이저 적용
         val groupInfoFragmentPagerAdapter = GroupInfoFragmentPagerAdapter(supportFragmentManager)
         group_pager.adapter = groupInfoFragmentPagerAdapter
 
@@ -195,6 +169,42 @@ class MainActivity : AppCompatActivity(),
     override fun onStop() {
         super.onStop()
         mGroupListenerRegistration?.remove()
+    }
+
+    /**
+     * 사물함에 요청
+     */
+    private fun requestCabinet() {
+        // TODO : Recatoring
+        val RPI3ADDRESS = "B8:27:EB:21:B6:12"
+        val mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        val MY_UUID_SECURE = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+        val rpiDevice = mBluetoothAdapter.getRemoteDevice(RPI3ADDRESS)
+        val mmSocket: BluetoothSocket
+        val mmInStream: InputStream
+        val mmOutStream: OutputStream
+        var buffer = ByteArray(1024)
+
+        try {
+            mmSocket = rpiDevice.createRfcommSocketToServiceRecord(
+                    MY_UUID_SECURE)
+            mmSocket.connect()
+
+            mmInStream = mmSocket.getInputStream()
+            mmOutStream = mmSocket.getOutputStream()
+
+            mmOutStream.write("TEST".toByteArray())
+
+            val bytes = mmInStream.read(buffer)
+
+            Log.i(TAG, "Get data" + String(buffer))
+
+            mmSocket.close()
+        } catch (e: IOException) {
+            Log.e(TAG, "IOException :", e);
+        }
+
+        Log.d(TAG, "Cabinet request button clicked")
     }
 
     private fun handleNotSignIn() {
@@ -239,9 +249,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // TODO 메뉴 관리를 다른 프레그먼트에게 넘길 수 있는지 조사
         when (item.itemId) {
             R.id.action_add_member -> {
                 val builder: AlertDialog.Builder = AlertDialog.Builder(this)
@@ -274,10 +282,14 @@ class MainActivity : AppCompatActivity(),
     }
 
     fun onListFragmentInteraction(item: DocumentSnapshot) {
+        // TODO 그룹 정보도 표시해야 함
         this.title = item.id
         drawer_layout.closeDrawers()
     }
 
+    /**
+     * 스낵바 출력
+     */
     private fun showSnackbar(@StringRes errorMessageRes: Int) {
         Snackbar.make(main_root_layout, errorMessageRes, Snackbar.LENGTH_LONG).show()
     }
