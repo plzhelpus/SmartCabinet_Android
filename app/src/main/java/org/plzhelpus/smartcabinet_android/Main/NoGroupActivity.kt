@@ -12,6 +12,7 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import org.plzhelpus.smartcabinet_android.R
 import org.plzhelpus.smartcabinet_android.auth.AuthUiActivity
@@ -97,6 +98,20 @@ class NoGroupActivity : AppCompatActivity() {
                         showSnackbar(R.string.delete_account_failed)
                     }
                 }
+    }
+
+    private fun handleNotSignIn() {
+        startActivity(AuthUiActivity.createIntent(this))
+        finish()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // 유저가 로그인 했는지 확인
+        val currentUser : FirebaseUser? = FirebaseAuth.getInstance().currentUser
+        if (currentUser == null) {
+            handleNotSignIn()
+        }
     }
 
     /**
