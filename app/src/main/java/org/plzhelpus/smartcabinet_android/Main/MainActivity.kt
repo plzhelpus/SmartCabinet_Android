@@ -218,6 +218,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     private fun registerGroupList(user: FirebaseUser) {
+        if(group_list.adapter == null) return
         // 기존에 있다면 지워야 함.
         mGroupListenerRegistration?.remove()
         // 그룹 목록이 Firestore의 변경 사항을 받게 등록함.
@@ -264,16 +265,13 @@ class MainActivity : AppCompatActivity(),
         val currentUser : FirebaseUser? = FirebaseAuth.getInstance().currentUser
         if (currentUser == null) {
             handleNotSignIn()
+        } else {
+            registerGroupList(currentUser)
         }
     }
 
-    override fun onRestart() {
-        super.onRestart()
-        FirebaseAuth.getInstance().currentUser?.let{ registerGroupList(it) }
-    }
-
-    override fun onStop() {
-        super.onStop()
+    override fun onPause() {
+        super.onPause()
         mGroupListenerRegistration?.remove()
     }
 
