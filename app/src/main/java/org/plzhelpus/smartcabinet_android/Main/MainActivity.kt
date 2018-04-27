@@ -23,7 +23,6 @@ import kotlinx.android.synthetic.main.nav_header_main.*
 import android.support.design.widget.Snackbar
 import android.support.annotation.StringRes
 import android.support.v7.app.AlertDialog
-import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -198,7 +197,6 @@ class MainActivity : AppCompatActivity(),
     private fun handleNotSignIn() {
         startActivity(AuthUiActivity.createIntent(this))
         finish()
-        return
     }
 
     /**
