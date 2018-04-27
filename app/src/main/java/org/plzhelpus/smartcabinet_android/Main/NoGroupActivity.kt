@@ -11,6 +11,8 @@ import com.firebase.ui.auth.AuthUI
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.util.Log
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import org.plzhelpus.smartcabinet_android.R
 import org.plzhelpus.smartcabinet_android.auth.AuthUiActivity
 
@@ -41,7 +43,24 @@ class NoGroupActivity : AppCompatActivity() {
         }
 
         already_member_but_not_found_group_button.setOnClickListener{
-            // TODO 그룹 리스트 갱신 + 그룹 리스트 존재하는지만 쿼리 할 수 있는지 찾아봐야함
+            val currentUser = FirebaseAuth.getInstance().currentUser
+            val db = FirebaseFirestore.getInstance()
+            val collectionReference = db.collection("users").document(currentUser!!.uid).collection("participated_group")
+            collectionReference.get().addOnCompleteListener {
+                if (it.isSuccessful) {
+                    val querySnapshot = it.result
+                    // 그룹 목록이 없다면
+                    if (querySnapshot.isEmpty) {
+                        showSnackbar(R.string.group_list_is_empty)
+                    } else {
+                        startActivity(MainActivity.createIntent(this, mIdpResponse))
+                        finish()
+                    }
+                } else {
+                        Log.d(TAG, "get group list failed - ", it.exception)
+                        showSnackbar(R.string.group_list_refresh_failed)
+                }
+            }
         }
 
         no_group_sign_out_button.setOnClickListener{

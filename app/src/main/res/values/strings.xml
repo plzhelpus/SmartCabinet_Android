@@ -6,6 +6,9 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    // MainActivity
+    <string name="group_not_visible">This group is not visible now.</string>
+
     // Menu
     <string name="action_settings">Settings</string>
     <string name="action_add_member">Add member</string>
@@ -46,6 +49,10 @@
     <string name="delete_account_alert_positive_button">Yes</string>
     <string name="delete_account_alert_negative_button">No</string>
     <string name="delete_account_failed">Delete account failed</string>
+
+    // NoGroupActivity
+    <string name="group_list_is_empty">Group list is empty</string>
+    <string name="group_list_refresh_failed">Refreshing group list failed</string>
 
     // activity_new_cabinet
     <string name="new_cabinet_title">You have a new cabinet</string>
