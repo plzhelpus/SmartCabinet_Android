@@ -1,5 +1,6 @@
 package org.plzhelpus.smartcabinet_android.main
 
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +10,8 @@ import kotlinx.android.synthetic.main.group.view.*
 import org.plzhelpus.smartcabinet_android.R
 
 
-class GroupRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>, private val mListener: MainActivity?) : RecyclerView.Adapter<GroupRecyclerViewAdapter.ViewHolder>(){
+class GroupRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>,
+                               private val mListener: MainActivity?) : RecyclerView.Adapter<GroupRecyclerViewAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -32,6 +34,11 @@ class GroupRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>, priv
 
     override fun getItemCount(): Int {
         return mValues.size
+    }
+
+    fun updateList(newGroups : List<DocumentSnapshot>){
+        val diffResult : DiffUtil.DiffResult = DiffUtil.calculateDiff(GroupListDiffUtilCallback(this.mValues, newGroups))
+        diffResult.dispatchUpdatesTo(this)
     }
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
