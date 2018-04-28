@@ -204,7 +204,6 @@ class MainActivity : AppCompatActivity(),
      * 보여주고 있는 그룹을 변경함.
      */
     private fun changeGroupInfo(newGroup : DocumentSnapshot) {
-        this.title = newGroup.id
         mCurrentShowingGroup = newGroup.id
         // TODO 그룹 정보도 표시해야 함
     }

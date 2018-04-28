@@ -6,11 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import org.plzhelpus.smartcabinet_android.R
-
-
-import org.plzhelpus.smartcabinet_android.groupInfo.AdminFragment.OnListFragmentInteractionListener
 import org.plzhelpus.smartcabinet_android.dummy.DummyAdmin.DummyItem
-
 import kotlinx.android.synthetic.main.admin.view.*
 
 /**
@@ -19,20 +15,8 @@ import kotlinx.android.synthetic.main.admin.view.*
  * TODO: Replace the implementation with code for your data type.
  */
 class AdminRecyclerViewAdapter(
-        private val mValues: List<DummyItem>,
-        private val mListener: OnListFragmentInteractionListener?)
+        private val mValues: List<DummyItem>)
     : RecyclerView.Adapter<AdminRecyclerViewAdapter.ViewHolder>() {
-
-    private val mOnClickListener: View.OnClickListener
-
-    init {
-        mOnClickListener = View.OnClickListener { v ->
-            val item = v.tag as DummyItem
-            // Notify the active callbacks interface (the activity, if the fragment is attached to
-            // one) that an item has been selected.
-            mListener?.onListFragmentInteraction(item)
-        }
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -47,7 +31,6 @@ class AdminRecyclerViewAdapter(
 
         with(holder.mView) {
             tag = item
-            setOnClickListener(mOnClickListener)
         }
     }
 
