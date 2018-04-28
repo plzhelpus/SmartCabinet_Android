@@ -11,7 +11,7 @@ import org.plzhelpus.smartcabinet_android.R
 import org.plzhelpus.smartcabinet_android.groupInfo.AdminFragment.OnListFragmentInteractionListener
 import org.plzhelpus.smartcabinet_android.dummy.DummyAdmin.DummyItem
 
-import kotlinx.android.synthetic.main.fragment_admin.view.*
+import kotlinx.android.synthetic.main.admin.view.*
 
 /**
  * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
@@ -36,7 +36,7 @@ class AdminRecyclerViewAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.fragment_admin, parent, false)
+                .inflate(R.layout.admin, parent, false)
         return ViewHolder(view)
     }
 
