@@ -18,8 +18,9 @@ import org.plzhelpus.smartcabinet_android.R
 import org.plzhelpus.smartcabinet_android.auth.AuthUiActivity
 
 
-class NoGroupActivity : AppCompatActivity() {
+class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
 
+    private lateinit var mAuth : FirebaseAuth
     private var mIdpResponse: IdpResponse? = null
 
     companion object {
@@ -39,12 +40,14 @@ class NoGroupActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_no_group)
 
+        mAuth = FirebaseAuth.getInstance()
+
         being_new_owner_button.setOnClickListener{
             // TODO 연결 버튼과 같이 설정
         }
 
         already_member_but_not_found_group_button.setOnClickListener{
-            val currentUser = FirebaseAuth.getInstance().currentUser
+            val currentUser = mAuth.currentUser
             val db = FirebaseFirestore.getInstance()
             val collectionReference = db.collection("users").document(currentUser!!.uid).collection("participated_group")
             collectionReference.get().addOnCompleteListener {
@@ -65,6 +68,8 @@ class NoGroupActivity : AppCompatActivity() {
         }
 
         no_group_sign_out_button.setOnClickListener{
+            // AuthUI가 로그아웃하는 중에 리스너를 트리거할 수 있기 때문에 미리 해제함.
+            mAuth.removeAuthStateListener(this)
             AuthUI.getInstance()
                     .signOut(this)
                     .addOnCompleteListener { task ->
@@ -88,6 +93,8 @@ class NoGroupActivity : AppCompatActivity() {
     }
 
     private fun deleteAccount() {
+        // AuthUI가 계정을 삭제하는 중에 리스너를 트리거할 수 있기 때문에 미리 해제함.
+        mAuth.removeAuthStateListener(this)
         AuthUI.getInstance()
                 .delete(this)
                 .addOnCompleteListener { task ->
@@ -105,12 +112,24 @@ class NoGroupActivity : AppCompatActivity() {
         finish()
     }
 
-    override fun onResume() {
-        super.onResume()
+
+    override fun onStart() {
+        super.onStart()
         // 유저가 로그인 했는지 확인
-        val currentUser : FirebaseUser? = FirebaseAuth.getInstance().currentUser
-        if (currentUser == null) {
+        mAuth.addAuthStateListener(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mAuth.removeAuthStateListener(this)
+    }
+
+    override fun onAuthStateChanged(firebaseAuth: FirebaseAuth) {
+        val user = firebaseAuth.currentUser
+        Log.d(TAG, "login - " + (user?.uid ?: "null"))
+        if(user == null){
             handleNotSignIn()
+            return
         }
     }
 

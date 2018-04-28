@@ -20,6 +20,8 @@ import org.plzhelpus.smartcabinet_android.main.MainActivity
 
 class AuthUiActivity : AppCompatActivity() {
 
+    private lateinit var mAuth : FirebaseAuth
+
     companion object {
         private val TAG = "AuthUiActivity"
         // startActivityForResult의 결과 코드
@@ -33,6 +35,8 @@ class AuthUiActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth_ui)
+
+        mAuth = FirebaseAuth.getInstance()
 
         user_sign_in_button.setOnClickListener{
             startActivityForResult(
@@ -76,8 +80,7 @@ class AuthUiActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val auth = FirebaseAuth.getInstance()
-        if (auth.currentUser != null) {
+        if (mAuth.currentUser != null) {
             backToMainActivity(null)
         }
     }
