@@ -8,6 +8,7 @@
 
     // MainActivity
     <string name="group_not_visible">This group is not visible now.</string>
+    <string name="no_email">No email</string>
 
     // Menu
     <string name="action_settings">Settings</string>

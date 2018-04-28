@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity(),
         if (currentUser == null) {
             handleNotSignIn()
         } else {
-            updateUserInfoUI()
+            updateUserInfoUI(currentUser)
             mIdpResponse = intent.getParcelableExtra(EXTRA_IDP_RESPONSE)
             // 그룹 목록 적용
             val db = FirebaseFirestore.getInstance()
@@ -217,10 +217,12 @@ class MainActivity : AppCompatActivity(),
     /**
      * 유저가 로그인 했다면 프로필 칸을 채움.
      */
-    private fun updateUserInfoUI() {
-        val user: FirebaseUser = mAuth.currentUser ?: return
-        val email = if (TextUtils.isEmpty(user.email)) "No email" else user.email!!
-        user_email.text = email
+    private fun updateUserInfoUI(user : FirebaseUser?) {
+        if(user == null || TextUtils.isEmpty(user.email)){
+            user_email.setText(R.string.no_email)
+        } else {
+            user_email.text = user.email
+        }
     }
 
     private fun registerGroupList(user: FirebaseUser) {
@@ -271,6 +273,7 @@ class MainActivity : AppCompatActivity(),
             handleNotSignIn()
         } else {
             registerGroupList(user)
+            updateUserInfoUI(user)
         }
     }
 
