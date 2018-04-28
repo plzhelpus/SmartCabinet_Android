@@ -32,12 +32,14 @@
             app:layout_scrollFlags="scroll|enterAlways|snap">
 
             <TextView
+                android:id="@+id/group_info_group_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" 
                 android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
                 android:text="Group name"
                 tools:text="Group name"/>
             <TextView
+                android:id="@+id/group_info_owner_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"

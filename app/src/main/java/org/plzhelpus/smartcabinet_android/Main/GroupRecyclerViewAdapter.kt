@@ -21,7 +21,7 @@ class GroupRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.mItem = mValues[position]
-        holder.mView.group_name.text = mValues[position].id
+        holder.mView.group_list_group_name.text = mValues[position].id
 
         holder.mView.setOnClickListener{
             if (null != mListener) {
@@ -45,7 +45,7 @@ class GroupRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>,
         var mItem: DocumentSnapshot? = null
 
         override fun toString(): String {
-            return super.toString() + " '" + mView.group_name + "'"
+            return super.toString() + " '" + mView.group_list_group_name + "'"
         }
     }
 }
