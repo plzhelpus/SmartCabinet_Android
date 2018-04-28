@@ -131,6 +131,7 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
             handleNotSignIn()
             return
         }
+
     }
 
     /**
