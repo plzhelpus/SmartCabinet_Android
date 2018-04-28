@@ -48,11 +48,13 @@ import java.util.*
  */
 
 class MainActivity : AppCompatActivity(),
+        FirebaseAuth.AuthStateListener,
         CabinetFragment.OnListFragmentInteractionListener,
         MemberFragment.OnListFragmentInteractionListener {
     private var mIdpResponse : IdpResponse? = null
     private var mGroupListenerRegistration : ListenerRegistration? = null
-    private var currentShowingGroup : String? = null
+    private var mCurrentShowingGroup : String? = null
+    private lateinit var mAuth : FirebaseAuth
 
     companion object {
         private val TAG = "MainActivity"
@@ -72,6 +74,8 @@ class MainActivity : AppCompatActivity(),
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
+        mAuth = FirebaseAuth.getInstance()
+
         // 네비게이션 드로어 설정
         val toggle = ActionBarDrawerToggle(
                 this,
@@ -83,15 +87,15 @@ class MainActivity : AppCompatActivity(),
         toggle.syncState()
 
         // 유저가 로그인했는지 확인
-        val currentUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+        val currentUser: FirebaseUser? = mAuth.currentUser
         if (currentUser == null) {
             handleNotSignIn()
         } else {
-            populateProfile()
+            updateUserInfoUI()
             mIdpResponse = intent.getParcelableExtra(EXTRA_IDP_RESPONSE)
             // 그룹 목록 적용
             val db = FirebaseFirestore.getInstance()
-            val collectionReference = db.collection("users").document(currentUser!!.uid).collection("participated_group")
+            val collectionReference = db.collection("users").document(currentUser.uid).collection("participated_group")
             collectionReference.get().addOnCompleteListener {
                 if(it.isSuccessful){
                     val querySnapshot = it.result
@@ -114,12 +118,13 @@ class MainActivity : AppCompatActivity(),
 
         // 사물함 요청 버튼 구현
         cabinet_request_button.setOnClickListener{
-            // startActivity(NewCabinetActivity.createIntent(this))
             requestCabinet()
         }
 
         // 사용자 로그아웃 버튼 구현
         user_sign_out_button.setOnClickListener {
+            // AuthUI가 로그아웃하는 중에 리스너를 트리거할 수 있기 때문에 미리 해제함.
+            mAuth.removeAuthStateListener(this)
             AuthUI.getInstance()
                     .signOut(this)
                     .addOnCompleteListener { task ->
@@ -150,6 +155,7 @@ class MainActivity : AppCompatActivity(),
      * 사물함에 요청
      */
     private fun requestCabinet() {
+        // startActivity(NewCabinetActivity.createIntent(this))
         // TODO : Recatoring
         val RPI3ADDRESS = "B8:27:EB:21:B6:12"
         val mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
@@ -204,15 +210,15 @@ class MainActivity : AppCompatActivity(),
      */
     private fun changeGroupInfo(newGroup : DocumentSnapshot) {
         this.title = newGroup.id
-        currentShowingGroup = newGroup.id
+        mCurrentShowingGroup = newGroup.id
         // TODO 그룹 정보도 표시해야 함
     }
 
     /**
      * 유저가 로그인 했다면 프로필 칸을 채움.
      */
-    private fun populateProfile() {
-        val user: FirebaseUser = FirebaseAuth.getInstance().currentUser ?: return
+    private fun updateUserInfoUI() {
+        val user: FirebaseUser = mAuth.currentUser ?: return
         val email = if (TextUtils.isEmpty(user.email)) "No email" else user.email!!
         user_email.text = email
     }
@@ -238,7 +244,7 @@ class MainActivity : AppCompatActivity(),
                 } else {
                     // 만약 보고 있던 그룹이 삭제되었다면, 첫 번째 그룹으로 변경해줌.
                     if(querySnapshot.documents.none{
-                                currentShowingGroup == it.id
+                                mCurrentShowingGroup == it.id
                             }){
                         Log.d(TAG, "Group that you was watching is not visible now")
                         changeGroupInfo(querySnapshot.documents[0])
@@ -259,20 +265,25 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        // 유저가 로그인 했는지 확인
-        val currentUser : FirebaseUser? = FirebaseAuth.getInstance().currentUser
-        if (currentUser == null) {
+    override fun onAuthStateChanged(firebaseAuth: FirebaseAuth) {
+        val user = firebaseAuth.currentUser
+        if(user == null){
             handleNotSignIn()
         } else {
-            registerGroupList(currentUser)
+            registerGroupList(user)
         }
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onStart() {
+        super.onStart()
+        // 유저가 로그인 했는지 확인
+        mAuth.addAuthStateListener(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
         mGroupListenerRegistration?.remove()
+        mAuth.removeAuthStateListener(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
