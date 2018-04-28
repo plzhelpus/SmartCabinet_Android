@@ -23,7 +23,6 @@ import org.plzhelpus.smartcabinet_android.dummy.DummyMember
  * fragment (e.g. upon screen orientation changes).
  */
 class MemberFragment : Fragment() {
-    private var mListener: OnListFragmentInteractionListener? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -32,37 +31,8 @@ class MemberFragment : Fragment() {
         // Set the adapter
         if (view is RecyclerView) {
             view.layoutManager = LinearLayoutManager(context)
-            view.adapter = MemberRecyclerViewAdapter(DummyMember.ITEMS, mListener, context)
+            view.adapter = MemberRecyclerViewAdapter(DummyMember.ITEMS, context)
         }
         return view
-    }
-
-
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        if (context is OnListFragmentInteractionListener) {
-            mListener = context
-        } else {
-            throw RuntimeException(context!!.toString() + " must implement OnListFragmentInteractionListener")
-        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        mListener = null
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html) for more information.
-     */
-    interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onListFragmentInteraction(item: DummyMember.DummyItem)
     }
 }

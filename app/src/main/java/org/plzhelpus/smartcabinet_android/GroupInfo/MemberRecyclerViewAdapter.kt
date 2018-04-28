@@ -16,7 +16,7 @@ import org.plzhelpus.smartcabinet_android.dummy.DummyMember.DummyItem
  * specified [OnListFragmentInteractionListener].
  * TODO: Replace the implementation with code for your data type.
  */
-class MemberRecyclerViewAdapter(private val mValues: List<DummyItem>, private val mListener: MemberFragment.OnListFragmentInteractionListener?, private val mContext: Context?) : RecyclerView.Adapter<MemberRecyclerViewAdapter.ViewHolder>() {
+class MemberRecyclerViewAdapter(private val mValues: List<DummyItem>, private val mContext: Context?) : RecyclerView.Adapter<MemberRecyclerViewAdapter.ViewHolder>() {
 
     companion object {
         private val TAG = "MemberRecyclerView"

@@ -48,9 +48,7 @@ import java.util.*
  */
 
 class MainActivity : AppCompatActivity(),
-        FirebaseAuth.AuthStateListener,
-        CabinetFragment.OnListFragmentInteractionListener,
-        MemberFragment.OnListFragmentInteractionListener {
+        FirebaseAuth.AuthStateListener {
     private var mIdpResponse : IdpResponse? = null
     private var mGroupListenerRegistration : ListenerRegistration? = null
     private var mCurrentShowingGroup : String? = null
@@ -318,14 +316,6 @@ class MainActivity : AppCompatActivity(),
             }
             else -> return super.onOptionsItemSelected(item)
         }
-    }
-
-    override fun onListFragmentInteraction(item: DummyMember.DummyItem) {
-        // TODO 리스트 프래그먼트 MemberFragment
-    }
-
-    override fun onListFragmentInteraction(item: DummyCabinet.DummyItem) {
-        // TODO 리스트 프래그먼트 CabinetFragment
     }
 
     fun onListFragmentInteraction(item: DocumentSnapshot) {
