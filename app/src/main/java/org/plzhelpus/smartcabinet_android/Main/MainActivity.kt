@@ -30,11 +30,7 @@ import com.google.firebase.firestore.ListenerRegistration
 import org.plzhelpus.smartcabinet_android.groupInfo.GroupSettingActivity
 import org.plzhelpus.smartcabinet_android.R
 import org.plzhelpus.smartcabinet_android.auth.AuthUiActivity
-import org.plzhelpus.smartcabinet_android.dummy.DummyCabinet
-import org.plzhelpus.smartcabinet_android.dummy.DummyMember
-import org.plzhelpus.smartcabinet_android.groupInfo.CabinetFragment
 import org.plzhelpus.smartcabinet_android.groupInfo.GroupInfoFragmentPagerAdapter
-import org.plzhelpus.smartcabinet_android.groupInfo.MemberFragment
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
@@ -50,9 +46,11 @@ import java.util.*
 class MainActivity : AppCompatActivity(),
         FirebaseAuth.AuthStateListener {
     private var mIdpResponse : IdpResponse? = null
-    private var mGroupListenerRegistration : ListenerRegistration? = null
-    private var mCurrentShowingGroup : String? = null
+    private var mGroupListListenerRegistration : ListenerRegistration? = null
+    private var mCurrentGroupListenerRegistration : ListenerRegistration? = null
+    private lateinit var mCurrentGroup : DocumentSnapshot
     private lateinit var mAuth : FirebaseAuth
+    private lateinit var mDb : FirebaseFirestore
 
     companion object {
         private val TAG = "MainActivity"
@@ -73,6 +71,7 @@ class MainActivity : AppCompatActivity(),
         setSupportActionBar(toolbar)
 
         mAuth = FirebaseAuth.getInstance()
+        mDb = FirebaseFirestore.getInstance()
 
         // 네비게이션 드로어 설정
         val toggle = ActionBarDrawerToggle(
@@ -92,8 +91,7 @@ class MainActivity : AppCompatActivity(),
             updateUserInfoUI(currentUser)
             mIdpResponse = intent.getParcelableExtra(EXTRA_IDP_RESPONSE)
             // 그룹 목록 적용
-            val db = FirebaseFirestore.getInstance()
-            val collectionReference = db.collection("users").document(currentUser.uid).collection("participated_group")
+            val collectionReference = mDb.collection("users").document(currentUser.uid).collection("participated_group")
             collectionReference.get().addOnCompleteListener {
                 if(it.isSuccessful){
                     val querySnapshot = it.result
@@ -204,8 +202,10 @@ class MainActivity : AppCompatActivity(),
      * 보여주고 있는 그룹을 변경함.
      */
     private fun changeGroupInfo(newGroup : DocumentSnapshot) {
-        mCurrentShowingGroup = newGroup.id
-        // TODO 그룹 정보도 표시해야 함
+        mCurrentGroup = newGroup
+        group_info_group_name.text = newGroup.id
+        registerCurrentGroup()
+        // TODO 그룹 내의 회원/사물함 목록 갱신
     }
 
     /**
@@ -219,14 +219,48 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
+    private fun registerCurrentGroup() {
+        // 기존에 있다면 지워야 함.
+        mCurrentGroupListenerRegistration?.remove()
+        // 그룹 문서의 변경사항을 받게 함.
+        mCurrentGroupListenerRegistration = mCurrentGroup.reference.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+            if (firebaseFirestoreException != null) {
+                Log.w(TAG, "Current group - Listen failed.", firebaseFirestoreException)
+                return@addSnapshotListener
+            }
+
+            if (documentSnapshot != null && documentSnapshot.exists()){
+                Log.d(TAG, "Current group - data found")
+                documentSnapshot.getDocumentReference("owner_ref").get().addOnCompleteListener {
+                    if(it.isSuccessful) {
+                        val groupOwnerDocument = it.result
+                        if (groupOwnerDocument != null && groupOwnerDocument.exists()){
+                            Log.d(TAG, "Group owner found")
+                            group_info_owner_email.text = groupOwnerDocument.getString("email")
+                        } else {
+                            Log.d(TAG, "Can't find group owner's document")
+                        }
+                    } else {
+                        Log.d(TAG, "current group owner get failed with ", it.exception)
+                    }
+                }
+            } else {
+                Log.d(TAG, "Current data: null")
+            }
+        }
+    }
+
+
+    /**
+     * 그룹 목록의 변경을 듣는 리스너를 등록함
+     */
     private fun registerGroupList(user: FirebaseUser) {
         if(group_list.adapter == null) return
         // 기존에 있다면 지워야 함.
-        mGroupListenerRegistration?.remove()
+        mGroupListListenerRegistration?.remove()
         // 그룹 목록이 Firestore의 변경 사항을 받게 등록함.
-        val db = FirebaseFirestore.getInstance()
-        val participatedGroup = db.collection("users").document(user.uid).collection("participated_group")
-        mGroupListenerRegistration = participatedGroup.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+        val participatedGroup = mDb.collection("users").document(user.uid).collection("participated_group")
+        mGroupListListenerRegistration = participatedGroup.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
             if (firebaseFirestoreException != null){
                 Log.w(TAG, "Participated group - Listen failed.", firebaseFirestoreException)
                 return@addSnapshotListener
@@ -240,7 +274,7 @@ class MainActivity : AppCompatActivity(),
                 } else {
                     // 만약 보고 있던 그룹이 삭제되었다면, 첫 번째 그룹으로 변경해줌.
                     if(querySnapshot.documents.none{
-                                mCurrentShowingGroup == it.id
+                                mCurrentGroup?.id == it.id
                             }){
                         Log.d(TAG, "Group that you was watching is not visible now")
                         changeGroupInfo(querySnapshot.documents[0])
@@ -279,8 +313,9 @@ class MainActivity : AppCompatActivity(),
 
     override fun onStop() {
         super.onStop()
-        mGroupListenerRegistration?.remove()
         mAuth.removeAuthStateListener(this)
+        mGroupListListenerRegistration?.remove()
+        mCurrentGroupListenerRegistration?.remove()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
