@@ -98,4 +98,9 @@
     <string name="member_menu_delegate_owner">Delegate owner</string>
     <string name="member_popup_menu_button">Menu</string>
 
+    // GroupInfoFragmentPagerAdapter
+    <string name="title_admin">Admin</string>
+    <string name="title_member">Member</string>
+    <string name="title_cabinet">Cabinet</string>
+
 </resources>

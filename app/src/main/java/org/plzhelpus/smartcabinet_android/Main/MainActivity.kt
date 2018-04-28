@@ -139,14 +139,11 @@ class MainActivity : AppCompatActivity(),
         group_list.layoutManager = LinearLayoutManager(this)
 
         // 그룹 정보에 뷰페이저 적용
-        val groupInfoFragmentPagerAdapter = GroupInfoFragmentPagerAdapter(supportFragmentManager)
+        val groupInfoFragmentPagerAdapter = GroupInfoFragmentPagerAdapter(this, supportFragmentManager)
         group_pager.adapter = groupInfoFragmentPagerAdapter
 
         // 그룹 탭에 아이콘 삽입
         group_tablayout.setupWithViewPager(group_pager)
-        for ((index, resId) in groupInfoFragmentPagerAdapter.tabIconResId.withIndex()) {
-            group_tablayout.getTabAt(index)?.setIcon(resId)
-        }
     }
 
     /**
