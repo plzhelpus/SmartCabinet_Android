@@ -24,6 +24,7 @@ import android.support.design.widget.Snackbar
 import android.support.annotation.StringRes
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -48,7 +49,7 @@ class MainActivity : AppCompatActivity(),
     private var mIdpResponse : IdpResponse? = null
     private var mGroupListListenerRegistration : ListenerRegistration? = null
     private var mCurrentGroupListenerRegistration : ListenerRegistration? = null
-    private lateinit var mCurrentGroup : DocumentSnapshot
+    private lateinit var mCurrentGroup : DocumentReference
     private lateinit var mAuth : FirebaseAuth
     private lateinit var mDb : FirebaseFirestore
 
@@ -201,11 +202,17 @@ class MainActivity : AppCompatActivity(),
     /**
      * 보여주고 있는 그룹을 변경함.
      */
-    private fun changeGroupInfo(newGroup : DocumentSnapshot) {
-        mCurrentGroup = newGroup
-        group_info_group_name.text = newGroup.id
-        registerCurrentGroup()
-        // TODO 그룹 내의 회원/사물함 목록 갱신
+    private fun changeGroupInfo(groupListItemDocumentSnapshot : DocumentSnapshot) {
+        if(groupListItemDocumentSnapshot.contains("group_ref")){
+            Log.d(TAG, "Changing group now")
+            val newGroupDocumentReference = groupListItemDocumentSnapshot.getDocumentReference("group_ref")
+            mCurrentGroup = newGroupDocumentReference
+            group_info_group_name.text = newGroupDocumentReference.id
+            registerCurrentGroup()
+            // TODO 그룹 내의 회원/사물함 목록 갱신
+        } else {
+            Log.w(TAG, "Changing group failed - no group reference")
+        }
     }
 
     /**
@@ -223,7 +230,7 @@ class MainActivity : AppCompatActivity(),
         // 기존에 있다면 지워야 함.
         mCurrentGroupListenerRegistration?.remove()
         // 그룹 문서의 변경사항을 받게 함.
-        mCurrentGroupListenerRegistration = mCurrentGroup.reference.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+        mCurrentGroupListenerRegistration = mCurrentGroup.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
             if (firebaseFirestoreException != null) {
                 Log.w(TAG, "Current group - Listen failed.", firebaseFirestoreException)
                 return@addSnapshotListener
@@ -231,21 +238,25 @@ class MainActivity : AppCompatActivity(),
 
             if (documentSnapshot != null && documentSnapshot.exists()){
                 Log.d(TAG, "Current group - data found")
-                documentSnapshot.getDocumentReference("owner_ref").get().addOnCompleteListener {
-                    if(it.isSuccessful) {
-                        val groupOwnerDocument = it.result
-                        if (groupOwnerDocument != null && groupOwnerDocument.exists()){
-                            Log.d(TAG, "Group owner found")
-                            group_info_owner_email.text = groupOwnerDocument.getString("email")
+                if(documentSnapshot.contains("owner_ref")){
+                    documentSnapshot.getDocumentReference("owner_ref").get().addOnCompleteListener {
+                        if(it.isSuccessful) {
+                            val groupOwnerDocumentSnapshot = it.result
+                            if (groupOwnerDocumentSnapshot != null && groupOwnerDocumentSnapshot.exists()){
+                                Log.d(TAG, "Group owner found")
+                                if(groupOwnerDocumentSnapshot.contains("email")) {
+                                    group_info_owner_email.text = groupOwnerDocumentSnapshot.getString("email")
+                                }
+                            } else {
+                                Log.d(TAG, "Can't find group owner's document")
+                            }
                         } else {
-                            Log.d(TAG, "Can't find group owner's document")
+                            Log.w(TAG, "current group owner get failed with ", it.exception)
                         }
-                    } else {
-                        Log.d(TAG, "current group owner get failed with ", it.exception)
                     }
                 }
             } else {
-                Log.d(TAG, "Current data: null")
+                Log.d(TAG, "Current group data: null")
             }
         }
     }
@@ -274,7 +285,7 @@ class MainActivity : AppCompatActivity(),
                 } else {
                     // 만약 보고 있던 그룹이 삭제되었다면, 첫 번째 그룹으로 변경해줌.
                     if(querySnapshot.documents.none{
-                                mCurrentGroup?.id == it.id
+                                mCurrentGroup.id == it.id
                             }){
                         Log.d(TAG, "Group that you was watching is not visible now")
                         changeGroupInfo(querySnapshot.documents[0])
@@ -349,7 +360,10 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    fun onListFragmentInteraction(item: DocumentSnapshot) {
+    /**
+     * 그룹 목록에서 한 그룹을 선택했을 때, 호출
+     */
+    fun onGroupListItemClicked(item: DocumentSnapshot) {
         changeGroupInfo(item)
         drawer_layout.closeDrawers()
     }
