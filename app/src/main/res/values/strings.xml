@@ -87,6 +87,11 @@
     <string name="settings_leave_group">Leave group</string>
     <string name="settings_change_role_to_member">Change role to member</string>
 
+    // menu.admin
+    <string name="admin_menu_delete">Delete</string>
+    <string name="admin_menu_delegate_owner">Delegate owner</string>
+    <string name="admin_popup_menu_button">Menu</string>
+
     // menu.cabinet
     <string name="cabinet_menu_edit_description">Edit description</string>
     <string name="cabinet_menu_delete">Delete</string>
