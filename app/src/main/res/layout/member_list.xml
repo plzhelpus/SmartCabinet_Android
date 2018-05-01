@@ -9,5 +9,5 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-    tools:context="org.plzhelpus.smartcabinet_android.groupInfo.MemberFragment"
+    tools:context=".groupInfo.MemberFragment"
     tools:listitem="@layout/member" />

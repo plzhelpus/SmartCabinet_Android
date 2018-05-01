@@ -1,12 +1,14 @@
 package org.plzhelpus.smartcabinet_android.groupInfo
 
 import android.content.Context
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.firebase.firestore.DocumentSnapshot
 import org.plzhelpus.smartcabinet_android.dummy.DummyCabinet.DummyItem
 import kotlinx.android.synthetic.main.cabinet.view.*
 import org.plzhelpus.smartcabinet_android.R
@@ -16,7 +18,7 @@ import org.plzhelpus.smartcabinet_android.R
  * specified [OnListFragmentInteractionListener].
  * TODO: Replace the implementation with code for your data type.
  */
-class CabinetRecyclerViewAdapter(private val mValues: List<DummyItem>, private val mContext: Context?) : RecyclerView.Adapter<CabinetRecyclerViewAdapter.ViewHolder>() {
+class CabinetRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>) : RecyclerView.Adapter<CabinetRecyclerViewAdapter.ViewHolder>() {
 
     companion object {
         private val TAG = "CabinetRecyclerView"
@@ -29,38 +31,50 @@ class CabinetRecyclerViewAdapter(private val mValues: List<DummyItem>, private v
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.mItem = mValues[position]
-        holder.mView.cabinet_id.text = mValues[position].content
-        holder.mView.cabinet_description.text = mValues[position].details
 
-        holder.mView.cabinet_popup_memu_button.setOnClickListener {
-            if (mContext != null){
-                val popupMenu =  PopupMenu(mContext, holder.mView.cabinet_popup_memu_button)
-                popupMenu.inflate(R.menu.cabinet)
-                popupMenu.setOnMenuItemClickListener {
-                    when(it.itemId){
-                        R.id.cabinet_menu_delete -> {
-                            Log.d(TAG, "cabinet_menu_delete")
-                            true
+        mValues[position].let{ item ->
+            holder.mView.run{
+                tag = item
+                holder.mView.cabinet_id.text = item.id
+                holder.mView.cabinet_description.text = item.getString("description")
+                cabinet_popup_memu_button.setOnClickListener {
+                    val popupMenu =  PopupMenu(context, cabinet_popup_memu_button)
+                    popupMenu.inflate(R.menu.cabinet)
+                    popupMenu.setOnMenuItemClickListener {
+                        when(it.itemId){
+                            R.id.cabinet_menu_open -> {
+                                Log.d(TAG, "cabinet_menu_open")
+                                true
+                            }
+                            R.id.cabinet_menu_delete -> {
+                                Log.d(TAG, "cabinet_menu_delete")
+                                true
+                            }
+                            R.id.cabinet_menu_edit_description -> {
+                                Log.d(TAG, "cabinet_menu_edit_description")
+                                true
+                            }
+                            else -> false
                         }
-                        R.id.cabinet_menu_edit_description -> {
-                            Log.d(TAG, "cabinet_menu_edit_description")
-                            true
-                        }
-                        else -> false
                     }
+                    popupMenu.show()
                 }
-                popupMenu.show()
             }
         }
     }
 
-    override fun getItemCount(): Int {
-        return mValues.size
+    override fun getItemCount(): Int = mValues.size
+
+    fun updateList(newGroups : List<DocumentSnapshot>){
+        val diffResult : DiffUtil.DiffResult = DiffUtil.calculateDiff(CabinetListDiffUtilCallback(mValues, newGroups))
+        (mValues as ArrayList).run{
+            clear()
+            addAll(newGroups)
+        }
+        diffResult.dispatchUpdatesTo(this)
     }
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        var mItem: DummyItem? = null
 
         override fun toString(): String {
             return super.toString() + " '" + mView.cabinet_id + "'"

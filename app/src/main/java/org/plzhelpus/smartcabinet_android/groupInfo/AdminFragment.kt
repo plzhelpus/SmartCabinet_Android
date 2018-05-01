@@ -1,18 +1,17 @@
 package org.plzhelpus.smartcabinet_android.groupInfo
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.ListenerRegistration
+import kotlinx.android.synthetic.main.admin_list.*
 import org.plzhelpus.smartcabinet_android.R
-
-import org.plzhelpus.smartcabinet_android.dummy.DummyAdmin
-import org.plzhelpus.smartcabinet_android.dummy.DummyAdmin.DummyItem
 
 /**
  * A fragment representing a list of Items.
@@ -20,13 +19,17 @@ import org.plzhelpus.smartcabinet_android.dummy.DummyAdmin.DummyItem
  * [AdminFragment.OnListFragmentInteractionListener] interface.
  */
 class AdminFragment : Fragment() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
-        arguments?.let {
-            //columnCount = it.getInt(ARG_COLUMN_COUNT)
-        }
+    companion object {
+        private var TAG = "AdminFragment"
     }
+
+    var mCurrentAdminListReference : CollectionReference? = null
+        set(value) {
+            field = value
+            registerAdminListListener()
+        }
+    private var mListenerRegistration : ListenerRegistration? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -34,26 +37,41 @@ class AdminFragment : Fragment() {
 
         // Set the adapter
         if (view is RecyclerView) {
-            with(view) {
+            view.run {
                 layoutManager = LinearLayoutManager(context)
-                adapter = AdminRecyclerViewAdapter(DummyAdmin.ITEMS)
+                adapter = AdminRecyclerViewAdapter(ArrayList())
+                setHasFixedSize(true)
             }
         }
         return view
     }
 
-    companion object {
-
-        // TODO: Customize parameter argument names
-        const val ARG_COLUMN_COUNT = "column-count"
-
-        // TODO: Customize parameter initialization
-        @JvmStatic
-        fun newInstance(columnCount: Int) =
-                AdminFragment().apply {
-                    arguments = Bundle().apply {
-                        putInt(ARG_COLUMN_COUNT, columnCount)
-                    }
+    private fun registerAdminListListener() {
+        mCurrentAdminListReference?.let{ currentAdminListReference ->
+            mListenerRegistration?.remove()
+            mListenerRegistration = currentAdminListReference.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                firebaseFirestoreException?.run{
+                    Log.w(TAG, "Admin list - Listen failed.", this)
+                    return@addSnapshotListener
                 }
+
+                querySnapshot?.run{
+                    Log.d(TAG, "Admin list found")
+                    (admin_list.adapter as AdminRecyclerViewAdapter).updateList(documents)
+                }?.let{
+                    Log.d(TAG, "Admin list null")
+                }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        registerAdminListListener()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mListenerRegistration?.remove()
     }
 }

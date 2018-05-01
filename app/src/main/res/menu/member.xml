@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item android:title="@string/member_menu_delete"
-        android:id="@+id/member_menu_delete"/>
-    <item android:title="@string/member_menu_change_role"
-        android:id="@+id/member_menu_change_role"/>
+    <item android:title="@string/member_menu_promote_to_admin"
+        android:id="@+id/member_menu_promote_to_admin"/>
     <item android:title="@string/member_menu_delegate_owner"
         android:id="@+id/member_menu_delegate_owner"/>
+    <item android:title="@string/member_menu_delete"
+        android:id="@+id/member_menu_delete"/>
 </menu>

@@ -32,12 +32,14 @@ class GroupRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>,
         }
     }
 
-    override fun getItemCount(): Int {
-        return mValues.size
-    }
+    override fun getItemCount(): Int = mValues.size
 
     fun updateList(newGroups : List<DocumentSnapshot>){
-        val diffResult : DiffUtil.DiffResult = DiffUtil.calculateDiff(GroupListDiffUtilCallback(this.mValues, newGroups))
+        val diffResult : DiffUtil.DiffResult = DiffUtil.calculateDiff(GroupListDiffUtilCallback(mValues, newGroups))
+        (mValues as ArrayList).run{
+            clear()
+            addAll(newGroups)
+        }
         diffResult.dispatchUpdatesTo(this)
     }
 

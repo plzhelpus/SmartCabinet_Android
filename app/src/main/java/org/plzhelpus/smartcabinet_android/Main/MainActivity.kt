@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity(),
     private var mIdpResponse : IdpResponse? = null
     private var mGroupListListenerRegistration : ListenerRegistration? = null
     private var mCurrentGroupListenerRegistration : ListenerRegistration? = null
-    private lateinit var mCurrentGroup : DocumentReference
+    private var mCurrentGroup : DocumentReference? = null
     private lateinit var mAuth : FirebaseAuth
     private lateinit var mDb : FirebaseFirestore
 
@@ -58,11 +58,9 @@ class MainActivity : AppCompatActivity(),
         private val EXTRA_IDP_RESPONSE = "extra_idp_response"
 
         fun createIntent(context: Context, idpResponse: IdpResponse?): Intent {
-            val startIntent: Intent = Intent()
-            if (idpResponse != null) {
-                startIntent.putExtra(EXTRA_IDP_RESPONSE, idpResponse)
-            }
-            return startIntent.setClass(context, MainActivity::class.java)
+            return Intent()
+                    .putExtra(EXTRA_IDP_RESPONSE, idpResponse)
+                    .setClass(context, MainActivity::class.java)
         }
     }
 
@@ -70,48 +68,35 @@ class MainActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-
         mAuth = FirebaseAuth.getInstance()
         mDb = FirebaseFirestore.getInstance()
 
         // 네비게이션 드로어 설정
-        val toggle = ActionBarDrawerToggle(
+        ActionBarDrawerToggle(
                 this,
                 drawer_layout,
                 toolbar,
                 R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close)
-        drawer_layout.addDrawerListener(toggle)
-        toggle.syncState()
+                R.string.navigation_drawer_close).apply {
+            drawer_layout.addDrawerListener(this)
+        }.syncState()
+
+        // 그룹 정보에 뷰페이저 적용
+        group_tablayout.setupWithViewPager(group_pager)
+        group_pager.adapter = GroupInfoFragmentPagerAdapter(null, this, supportFragmentManager)
 
         // 유저가 로그인했는지 확인
-        val currentUser: FirebaseUser? = mAuth.currentUser
-        if (currentUser == null) {
-            handleNotSignIn()
-        } else {
+        mAuth.currentUser?.let { currentUser ->
             updateUserInfoUI(currentUser)
             mIdpResponse = intent.getParcelableExtra(EXTRA_IDP_RESPONSE)
             // 그룹 목록 적용
-            val collectionReference = mDb.collection("users").document(currentUser.uid).collection("participated_group")
-            collectionReference.get().addOnCompleteListener {
-                if(it.isSuccessful){
-                    val querySnapshot = it.result
-
-                    // 그룹 목록이 없다면
-                    if(querySnapshot.isEmpty){
-                        handleNoGroups()
-                        return@addOnCompleteListener
-                    } else {
-                        val documentSnapshots = querySnapshot.documents
-                        group_list.adapter = GroupRecyclerViewAdapter(documentSnapshots, this)
-                        changeGroupInfo(documentSnapshots[0])
-                        registerGroupList(currentUser)
-                    }
-                } else {
-                    Log.d(TAG, "get group list failed - ", it.exception)
-                }
+            group_list.run{
+                layoutManager = LinearLayoutManager(this@MainActivity)
+                adapter = GroupRecyclerViewAdapter(ArrayList(), this@MainActivity)
+                setHasFixedSize(true)
             }
-        }
+            registerGroupList(currentUser)
+        } ?: run { handleNotSignIn() }
 
         // 사물함 요청 버튼 구현
         cabinet_request_button.setOnClickListener{
@@ -134,15 +119,6 @@ class MainActivity : AppCompatActivity(),
                         }
                     }
         }
-
-        group_list.layoutManager = LinearLayoutManager(this)
-
-        // 그룹 정보에 뷰페이저 적용
-        val groupInfoFragmentPagerAdapter = GroupInfoFragmentPagerAdapter(this, supportFragmentManager)
-        group_pager.adapter = groupInfoFragmentPagerAdapter
-
-        // 그룹 탭에 아이콘 삽입
-        group_tablayout.setupWithViewPager(group_pager)
     }
 
     /**
@@ -203,60 +179,47 @@ class MainActivity : AppCompatActivity(),
      * 보여주고 있는 그룹을 변경함.
      */
     private fun changeGroupInfo(groupListItemDocumentSnapshot : DocumentSnapshot) {
-        if(groupListItemDocumentSnapshot.contains("group_ref")){
-            Log.d(TAG, "Changing group now")
-            val newGroupDocumentReference = groupListItemDocumentSnapshot.getDocumentReference("group_ref")
-            mCurrentGroup = newGroupDocumentReference
-            group_info_group_name.text = newGroupDocumentReference.id
-            registerCurrentGroup()
-            // TODO 그룹 내의 회원/사물함 목록 갱신
-        } else {
-            Log.w(TAG, "Changing group failed - no group reference")
+        Log.d(TAG, "Changing group now")
+        Log.d(TAG, "document snapshot - ${groupListItemDocumentSnapshot.data}")
+        val newGroupDocumentReference = groupListItemDocumentSnapshot.getDocumentReference("group_ref")
+        mCurrentGroup = newGroupDocumentReference.apply {
+            (group_pager.adapter as GroupInfoFragmentPagerAdapter).updateGroupInfo(this)
         }
+        group_info_group_name.text = newGroupDocumentReference.id
+        registerCurrentGroup()
     }
 
     /**
      * 유저가 로그인 했다면 프로필 칸을 채움.
      */
     private fun updateUserInfoUI(user : FirebaseUser?) {
-        if(user == null || TextUtils.isEmpty(user.email)){
+        if(TextUtils.isEmpty(user?.email)){
             user_email.setText(R.string.no_email)
         } else {
-            user_email.text = user.email
+            user_email.text = user!!.email // TextUtils.isEmpty가 user.email의 null 확인도 함.
         }
     }
 
     private fun registerCurrentGroup() {
-        // 기존에 있다면 지워야 함.
-        mCurrentGroupListenerRegistration?.remove()
-        // 그룹 문서의 변경사항을 받게 함.
-        mCurrentGroupListenerRegistration = mCurrentGroup.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-            if (firebaseFirestoreException != null) {
-                Log.w(TAG, "Current group - Listen failed.", firebaseFirestoreException)
-                return@addSnapshotListener
-            }
-
-            if (documentSnapshot != null && documentSnapshot.exists()){
-                Log.d(TAG, "Current group - data found")
-                if(documentSnapshot.contains("owner_ref")){
-                    documentSnapshot.getDocumentReference("owner_ref").get().addOnCompleteListener {
-                        if(it.isSuccessful) {
-                            val groupOwnerDocumentSnapshot = it.result
-                            if (groupOwnerDocumentSnapshot != null && groupOwnerDocumentSnapshot.exists()){
-                                Log.d(TAG, "Group owner found")
-                                if(groupOwnerDocumentSnapshot.contains("email")) {
-                                    group_info_owner_email.text = groupOwnerDocumentSnapshot.getString("email")
-                                }
-                            } else {
-                                Log.d(TAG, "Can't find group owner's document")
-                            }
-                        } else {
-                            Log.w(TAG, "current group owner get failed with ", it.exception)
-                        }
-                    }
+        mCurrentGroup?.let{ currentGroup ->
+            // 기존에 있다면 지워야 함.
+            mCurrentGroupListenerRegistration?.remove()
+            // 그룹 문서의 변경사항을 받게 함.
+            mCurrentGroupListenerRegistration = currentGroup.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                firebaseFirestoreException?.run {
+                    Log.w(TAG, "Current group - Listen failed.", this)
+                    return@addSnapshotListener
                 }
-            } else {
-                Log.d(TAG, "Current group data: null")
+
+                // 문서스냅샷이 엉뚱한 곳을 가리키지 않았을 경우,
+                if (documentSnapshot.exists()){
+                    Log.d(TAG, "Current group - data found")
+                    if(documentSnapshot.contains("owner_email")){
+                        group_info_owner_email.text = documentSnapshot.getString("owner_email")
+                    }
+                } else {
+                    Log.d(TAG, "Current group data: null")
+                }
             }
         }
     }
@@ -266,36 +229,41 @@ class MainActivity : AppCompatActivity(),
      * 그룹 목록의 변경을 듣는 리스너를 등록함
      */
     private fun registerGroupList(user: FirebaseUser) {
-        if(group_list.adapter == null) return
         // 기존에 있다면 지워야 함.
         mGroupListListenerRegistration?.remove()
         // 그룹 목록이 Firestore의 변경 사항을 받게 등록함.
-        val participatedGroup = mDb.collection("users").document(user.uid).collection("participated_group")
-        mGroupListListenerRegistration = participatedGroup.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-            if (firebaseFirestoreException != null){
-                Log.w(TAG, "Participated group - Listen failed.", firebaseFirestoreException)
-                return@addSnapshotListener
-            }
-
-            if (querySnapshot != null){
-                Log.d(TAG, "Participated group - data found")
-                (group_list.adapter as GroupRecyclerViewAdapter).updateList(querySnapshot.documents)
-                if(querySnapshot.isEmpty){
-                    handleNoGroups()
-                } else {
-                    // 만약 보고 있던 그룹이 삭제되었다면, 첫 번째 그룹으로 변경해줌.
-                    if(querySnapshot.documents.none{
-                                mCurrentGroup.id == it.id
-                            }){
-                        Log.d(TAG, "Group that you was watching is not visible now")
-                        changeGroupInfo(querySnapshot.documents[0])
-                        showSnackbar(R.string.group_not_visible)
-                    }
+        mDb.collection("users").document(user.uid).collection("participated_group").run{
+            mGroupListListenerRegistration = addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                firebaseFirestoreException?.run{
+                    Log.w(TAG, "Participated group - Listen failed.", this)
+                    return@addSnapshotListener
                 }
-            } else {
-                Log.d(TAG, "Participated group - data null")
+
+                querySnapshot?.run {
+                    Log.d(TAG, "Participated group - data found")
+                    (group_list.adapter as GroupRecyclerViewAdapter).updateList(documents)
+                    if (isEmpty) {
+                        handleNoGroups()
+                    } else {
+                        mCurrentGroup?.let{ currentGroup ->
+                            // 만약 보고 있던 그룹이 삭제되었다면, 첫 번째 그룹으로 변경해줌.
+                            if (documents.none { document ->
+                                        currentGroup.id == document.id
+                                    }) {
+                                Log.d(TAG, "Group that you was watching is not visible now")
+                                changeGroupInfo(documents[0])
+                                showSnackbar(R.string.group_not_visible)
+                            }
+                        } ?: let {
+                            changeGroupInfo(documents[0])
+                        }
+                    }
+                }?. let {
+                    Log.d(TAG, "Participated group - data null")
+                }
             }
         }
+
     }
 
     override fun onBackPressed() {
@@ -307,12 +275,14 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onAuthStateChanged(firebaseAuth: FirebaseAuth) {
-        val user = firebaseAuth.currentUser
-        if(user == null){
+        // 주의: UI쓰레드에서 작동함.
+        // 현재는 단일 firebaseAuth로 동작하므로 굳이 어떤 firebaseAuth 인스턴스가 상태가 바뀌었는지
+        // 확인할 필요가 없음.
+        firebaseAuth.currentUser?.let{
+            registerGroupList(it)
+            updateUserInfoUI(it)
+        } ?: run {
             handleNotSignIn()
-        } else {
-            registerGroupList(user)
-            updateUserInfoUI(user)
         }
     }
 

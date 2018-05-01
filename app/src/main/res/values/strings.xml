@@ -87,21 +87,23 @@
     <string name="settings_leave_group">Leave group</string>
     <string name="settings_change_role_to_member">Change role to member</string>
 
-    // menu.admin
-    <string name="admin_menu_delete">Delete</string>
-    <string name="admin_menu_delegate_owner">Delegate owner</string>
-    <string name="admin_popup_menu_button">Menu</string>
-
     // menu.cabinet
+    <string name="cabinet_menu_open">Open</string>
     <string name="cabinet_menu_edit_description">Edit description</string>
     <string name="cabinet_menu_delete">Delete</string>
     <string name="cabinet_popup_memu_button">Menu</string>
 
     // menu.member
     <string name="member_menu_delete">Delete</string>
-    <string name="member_menu_change_role">Change role</string>
+    <string name="member_menu_promote_to_admin">Promote</string>
     <string name="member_menu_delegate_owner">Delegate owner</string>
     <string name="member_popup_menu_button">Menu</string>
+
+    // menu.admin
+    <string name="admin_menu_delete">Delete</string>
+    <string name="admin_menu_delegate_owner">Delegate owner</string>
+    <string name="admin_menu_demote_to_member">Demote</string>
+    <string name="admin_popup_menu_button">Menu</string>
 
     // GroupInfoFragmentPagerAdapter
     <string name="title_admin">Admin</string>
