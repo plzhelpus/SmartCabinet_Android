@@ -11,6 +11,9 @@ import kotlinx.android.synthetic.main.fragment_new_cabinet_menu.*
 
 import org.plzhelpus.smartcabinet_android.R
 
+/**
+ * 새 사물함으로 어떤 등록과정을 거칠 것인지 사용자에게 물어보는 프래그먼트
+ */
 class NewCabinetMenuFragment : Fragment() {
     private var mListener: NewCabinetMenuListener? = null
 

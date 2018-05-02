@@ -6,12 +6,14 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import kotlinx.android.synthetic.main.fragment_create_group.*
 
 import org.plzhelpus.smartcabinet_android.R
 
 
+/**
+ * 가지고 있는 사물함으로 새로운 그룹을 만들기 위한 입력폼을 보여주는 프래그먼트
+ */
 class CreateGroupFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

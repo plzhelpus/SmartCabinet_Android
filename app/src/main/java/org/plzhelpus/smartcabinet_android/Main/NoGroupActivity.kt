@@ -12,12 +12,13 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import org.plzhelpus.smartcabinet_android.R
 import org.plzhelpus.smartcabinet_android.auth.AuthUiActivity
 
-
+/**
+ * 속한 그룹이 없을 때, 메인 액티비티 대신 띄워지는 액티비티
+ */
 class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
 
     private lateinit var mAuth : FirebaseAuth

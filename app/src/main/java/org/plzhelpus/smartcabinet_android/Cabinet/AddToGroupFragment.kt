@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.fragment_add_to_group.*
 import org.plzhelpus.smartcabinet_android.R
 
 /**
- * A simple [Fragment] subclass.
+ * 사물함을 그룹에 등록하기 위한 입력폼을 보여주는 프래그먼트
  *
  */
 class AddToGroupFragment : Fragment() {

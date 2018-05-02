@@ -9,7 +9,9 @@ import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.android.synthetic.main.group.view.*
 import org.plzhelpus.smartcabinet_android.R
 
-
+/**
+ * 그룹 목록을 관리하는 어뎁터
+ */
 class GroupRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>,
                                private val mListener: MainActivity?) : RecyclerView.Adapter<GroupRecyclerViewAdapter.ViewHolder>(){
 

@@ -6,6 +6,9 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import org.plzhelpus.smartcabinet_android.R
 
+/**
+ * 새 사물함을 등록할 때, 사용자의 입력을 받는 액티비티
+ */
 class NewCabinetActivity : AppCompatActivity(), NewCabinetMenuFragment.NewCabinetMenuListener {
 
     companion object {

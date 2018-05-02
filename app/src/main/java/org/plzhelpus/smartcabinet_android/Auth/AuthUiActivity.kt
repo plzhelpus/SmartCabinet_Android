@@ -17,7 +17,9 @@ import com.google.firebase.auth.FirebaseAuth
 import org.plzhelpus.smartcabinet_android.R
 import org.plzhelpus.smartcabinet_android.main.MainActivity
 
-
+/**
+ * 사용자 로그인을 위한 액티비티
+ */
 class AuthUiActivity : AppCompatActivity() {
 
     private lateinit var mAuth : FirebaseAuth
