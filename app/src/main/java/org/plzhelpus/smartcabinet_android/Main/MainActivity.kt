@@ -336,7 +336,7 @@ class MainActivity : AppCompatActivity(),
                 return true
             }
             R.id.action_settings -> {
-                startActivity(GroupSettingActivity.createIntent(this))
+                mCurrentGroup?.let{startActivity(GroupSettingActivity.createIntent(this, it.path))}
                 return true
             }
             else -> return super.onOptionsItemSelected(item)

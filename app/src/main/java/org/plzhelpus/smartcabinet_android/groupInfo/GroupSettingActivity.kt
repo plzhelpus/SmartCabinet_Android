@@ -5,6 +5,8 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.settings_group_admin.*
 import kotlinx.android.synthetic.main.settings_group_member.*
 import kotlinx.android.synthetic.main.settings_group_owner.*
@@ -16,11 +18,15 @@ import org.plzhelpus.smartcabinet_android.R
  */
 class GroupSettingActivity : AppCompatActivity() {
 
+    private var mGroupRef : DocumentReference? = null
+
     companion object {
         private val TAG = "GroupSettingsActivity"
+        private val GROUP_REF = "GROUP_REF"
 
-        fun createIntent(context: Context): Intent{
+        fun createIntent(context: Context, groupRef : String): Intent{
             val startIntent: Intent = Intent()
+            startIntent.putExtra(GROUP_REF, groupRef)
             return startIntent.setClass(context, GroupSettingActivity::class.java)
         }
     }
@@ -28,6 +34,7 @@ class GroupSettingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group_setting)
+        intent.getStringExtra(GROUP_REF)?.let{ mGroupRef = FirebaseFirestore.getInstance().document(it) }
 
         settings_leave_group.setOnClickListener {
             Log.d(TAG, "leave group clicked")
