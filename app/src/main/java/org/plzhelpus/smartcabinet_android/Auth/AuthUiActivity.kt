@@ -68,7 +68,7 @@ class AuthUiActivity : AppCompatActivity() {
         }
         // 성공적으로 로그인
         if (resultCode == Activity.RESULT_OK){
-            backToMainActivity(response)
+            backToMainActivity()
         } else {
             // 로그인 실패
             if(response.error?.errorCode == ErrorCodes.NO_NETWORK) {
@@ -83,12 +83,12 @@ class AuthUiActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (mAuth.currentUser != null) {
-            backToMainActivity(null)
+            backToMainActivity()
         }
     }
 
-    private fun backToMainActivity(response: IdpResponse?){
-        startActivity(MainActivity.createIntent(this, response))
+    private fun backToMainActivity(){
+        startActivity(MainActivity.createIntent(this))
         finish()
     }
 

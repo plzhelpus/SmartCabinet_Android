@@ -5,7 +5,6 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.annotation.StringRes
-import com.firebase.ui.auth.IdpResponse
 import kotlinx.android.synthetic.main.activity_no_group.*
 import com.firebase.ui.auth.AuthUI
 import android.support.design.widget.Snackbar
@@ -22,18 +21,12 @@ import org.plzhelpus.smartcabinet_android.auth.AuthUiActivity
 class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
 
     private lateinit var mAuth : FirebaseAuth
-    private var mIdpResponse: IdpResponse? = null
 
     companion object {
         private val TAG = "NoGroupActivity"
-        private val EXTRA_IDP_RESPONSE = "extra_idp_response"
 
-        fun createIntent(context: Context, idpResponse: IdpResponse?): Intent {
-            val startIntent: Intent = Intent()
-            if(idpResponse != null) {
-                startIntent.putExtra(EXTRA_IDP_RESPONSE, idpResponse)
-            }
-            return startIntent.setClass(context, NoGroupActivity::class.java)
+        fun createIntent(context: Context): Intent {
+            return Intent().setClass(context, NoGroupActivity::class.java)
         }
     }
 
@@ -58,7 +51,7 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
                     if (querySnapshot.isEmpty) {
                         showSnackbar(R.string.group_list_is_empty)
                     } else {
-                        startActivity(MainActivity.createIntent(this, mIdpResponse))
+                        startActivity(MainActivity.createIntent(this))
                         finish()
                     }
                 } else {

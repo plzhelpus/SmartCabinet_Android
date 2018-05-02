@@ -4,13 +4,13 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.content.Intent
+import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -46,7 +46,6 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(),
         FirebaseAuth.AuthStateListener {
-    private var mIdpResponse : IdpResponse? = null
     private var mGroupListListenerRegistration : ListenerRegistration? = null
     private var mCurrentGroupListenerRegistration : ListenerRegistration? = null
     private var mCurrentGroup : DocumentReference? = null
@@ -55,11 +54,11 @@ class MainActivity : AppCompatActivity(),
 
     companion object {
         private val TAG = "MainActivity"
-        private val EXTRA_IDP_RESPONSE = "extra_idp_response"
+        private val FIRST_SEEN_GROUP= "FIRST_SEEN_GROUP"
 
-        fun createIntent(context: Context, idpResponse: IdpResponse?): Intent {
+        fun createIntent(context: Context, firstSeenGroupName: String? = null): Intent {
             return Intent()
-                    .putExtra(EXTRA_IDP_RESPONSE, idpResponse)
+                    .putExtra(FIRST_SEEN_GROUP, firstSeenGroupName)
                     .setClass(context, MainActivity::class.java)
         }
     }
@@ -88,14 +87,13 @@ class MainActivity : AppCompatActivity(),
         // 유저가 로그인했는지 확인
         mAuth.currentUser?.let { currentUser ->
             updateUserInfoUI(currentUser)
-            mIdpResponse = intent.getParcelableExtra(EXTRA_IDP_RESPONSE)
             // 그룹 목록 적용
             group_list.run{
                 layoutManager = LinearLayoutManager(this@MainActivity)
                 adapter = GroupRecyclerViewAdapter(ArrayList(), this@MainActivity)
                 setHasFixedSize(true)
             }
-            registerGroupList(currentUser)
+            registerGroupList(currentUser, intent.getStringExtra(FIRST_SEEN_GROUP))
         } ?: run { handleNotSignIn() }
 
         // 사물함 요청 버튼 구현
@@ -163,7 +161,7 @@ class MainActivity : AppCompatActivity(),
      * 속한 그룹이 없는 유저일 때를 처리하는 메서드
      */
     private fun handleNoGroups() {
-        startActivity(NoGroupActivity.createIntent(this, mIdpResponse))
+        startActivity(NoGroupActivity.createIntent(this))
         finish()
     }
 
@@ -224,11 +222,10 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-
     /**
      * 그룹 목록의 변경을 듣는 리스너를 등록함
      */
-    private fun registerGroupList(user: FirebaseUser) {
+    private fun registerGroupList(user: FirebaseUser, firstSeenGroupName: String? = null) {
         // 기존에 있다면 지워야 함.
         mGroupListListenerRegistration?.remove()
         // 그룹 목록이 Firestore의 변경 사항을 받게 등록함.
@@ -245,18 +242,35 @@ class MainActivity : AppCompatActivity(),
                     if (isEmpty) {
                         handleNoGroups()
                     } else {
-                        mCurrentGroup?.let{ currentGroup ->
-                            // 만약 보고 있던 그룹이 삭제되었다면, 첫 번째 그룹으로 변경해줌.
-                            if (documents.none { document ->
-                                        currentGroup.id == document.id
-                                    }) {
-                                Log.d(TAG, "Group that you was watching is not visible now")
-                                changeGroupInfo(documents[0])
-                                showSnackbar(R.string.group_not_visible)
+                        // 어느 그룹을 보여줄 지 정해줘야 함.
+                        object : AsyncTask<DocumentSnapshot, Unit, DocumentSnapshot>() {
+                            override fun doInBackground(vararg param: DocumentSnapshot): DocumentSnapshot {
+                                mCurrentGroup?.let{ currentGroup ->
+                                    // 만약 보고 있던 그룹이 삭제되었다면, 첫 번째 그룹으로 변경해줌.
+                                    if (param.none { document ->
+                                                currentGroup.id == document.id
+                                            }) {
+                                        Log.d(TAG, "Group that you was watching is not visible now")
+                                        return param[0]
+                                    }
+                                } ?: let{
+                                    // 만약 처음 보여주어야 할 그룹이 지정되어 있다면 해당 그룹을 보여줌.
+                                    firstSeenGroupName?.let{
+                                        param.find { document ->
+                                            document.getString("group_name") == it
+                                        }?.run{
+                                            return this
+                                        }
+                                    }
+                                }
+                                return param[0]
                             }
-                        } ?: let {
-                            changeGroupInfo(documents[0])
-                        }
+
+                            override fun onPostExecute(result: DocumentSnapshot) {
+                                super.onPostExecute(result)
+                                changeGroupInfo(result)
+                            }
+                        }.execute(*(documents.toTypedArray()))
                     }
                 }?. let {
                     Log.d(TAG, "Participated group - data null")
