@@ -183,7 +183,7 @@ class MainActivity : AppCompatActivity(),
         mCurrentGroup = newGroupDocumentReference.apply {
             (group_pager.adapter as GroupInfoFragmentPagerAdapter).updateGroupInfo(this)
         }
-        group_info_group_name.text = newGroupDocumentReference.id
+        group_info_group_name.text = groupListItemDocumentSnapshot.getString("group_name")
         registerCurrentGroup()
     }
 
