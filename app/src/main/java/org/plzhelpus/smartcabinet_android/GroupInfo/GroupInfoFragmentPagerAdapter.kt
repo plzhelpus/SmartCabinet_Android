@@ -8,6 +8,9 @@ import android.util.Log
 import android.view.ViewGroup
 import com.google.firebase.firestore.DocumentReference
 import org.plzhelpus.smartcabinet_android.R
+import org.plzhelpus.smartcabinet_android.groupInfo.admin.AdminFragment
+import org.plzhelpus.smartcabinet_android.groupInfo.cabinet.CabinetFragment
+import org.plzhelpus.smartcabinet_android.groupInfo.member.MemberFragment
 import java.lang.IllegalArgumentException
 
 /**
