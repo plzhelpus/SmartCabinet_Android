@@ -1,9 +1,9 @@
-package org.plzhelpus.smartcabinet_android.groupInfo
+package org.plzhelpus.smartcabinet_android.groupInfo.admin
 
 import android.support.v7.util.DiffUtil
 import com.google.firebase.firestore.DocumentSnapshot
 
-class MemberListDiffUtilCallback (
+class AdminListDiffUtilCallback (
         private val mOldDocuments: List<DocumentSnapshot>,
         private val mNewDocuments : List<DocumentSnapshot>) : DiffUtil.Callback() {
 

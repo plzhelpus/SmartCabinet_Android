@@ -1,4 +1,4 @@
-package org.plzhelpus.smartcabinet_android.groupInfo
+package org.plzhelpus.smartcabinet_android.groupInfo.member
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -12,7 +12,6 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.android.synthetic.main.member_list.*
 import org.plzhelpus.smartcabinet_android.R
-import org.plzhelpus.smartcabinet_android.dummy.DummyMember
 
 /**
  * A fragment representing a list of Items.

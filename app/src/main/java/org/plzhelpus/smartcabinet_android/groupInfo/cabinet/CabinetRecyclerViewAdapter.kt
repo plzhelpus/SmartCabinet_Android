@@ -1,6 +1,5 @@
-package org.plzhelpus.smartcabinet_android.groupInfo
+package org.plzhelpus.smartcabinet_android.groupInfo.cabinet
 
-import android.content.Context
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
@@ -9,47 +8,49 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.firestore.DocumentSnapshot
-import kotlinx.android.synthetic.main.member.view.*
+import org.plzhelpus.smartcabinet_android.dummy.DummyCabinet.DummyItem
+import kotlinx.android.synthetic.main.cabinet.view.*
 import org.plzhelpus.smartcabinet_android.R
-import org.plzhelpus.smartcabinet_android.dummy.DummyMember.DummyItem
 
 /**
  * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
  * specified [OnListFragmentInteractionListener].
  * TODO: Replace the implementation with code for your data type.
  */
-class MemberRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>) : RecyclerView.Adapter<MemberRecyclerViewAdapter.ViewHolder>() {
+class CabinetRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>) : RecyclerView.Adapter<CabinetRecyclerViewAdapter.ViewHolder>() {
 
     companion object {
-        private val TAG = "MemberRecyclerView"
+        private val TAG = "CabinetRecyclerView"
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.member, parent, false)
+                .inflate(R.layout.cabinet, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
         mValues[position].let{ item ->
             holder.mView.run{
                 tag = item
-                member_email.text = mValues[position].getString("email")
-                member_popup_menu_button.setOnClickListener {
-                    val popupMenu =  PopupMenu(context, member_popup_menu_button)
-                    popupMenu.inflate(R.menu.member)
+                holder.mView.cabinet_id.text = item.id
+                holder.mView.cabinet_description.text = item.getString("description")
+                cabinet_popup_memu_button.setOnClickListener {
+                    val popupMenu =  PopupMenu(context, cabinet_popup_memu_button)
+                    popupMenu.inflate(R.menu.cabinet)
                     popupMenu.setOnMenuItemClickListener {
                         when(it.itemId){
-                            R.id.member_menu_promote_to_admin -> {
-                                Log.d(TAG, "member_menu_promote_to_admin")
+                            R.id.cabinet_menu_open -> {
+                                Log.d(TAG, "cabinet_menu_open")
                                 true
                             }
-                            R.id.member_menu_delegate_owner -> {
-                                Log.d(TAG, "member_menu_delegate_owner")
+                            R.id.cabinet_menu_delete -> {
+                                Log.d(TAG, "cabinet_menu_delete")
                                 true
                             }
-                            R.id.member_menu_delete -> {
-                                Log.d(TAG, "member_menu_delete")
+                            R.id.cabinet_menu_edit_description -> {
+                                Log.d(TAG, "cabinet_menu_edit_description")
                                 true
                             }
                             else -> false
@@ -64,7 +65,7 @@ class MemberRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>) : R
     override fun getItemCount(): Int = mValues.size
 
     fun updateList(newGroups : List<DocumentSnapshot>){
-        val diffResult : DiffUtil.DiffResult = DiffUtil.calculateDiff(MemberListDiffUtilCallback(mValues, newGroups))
+        val diffResult : DiffUtil.DiffResult = DiffUtil.calculateDiff(CabinetListDiffUtilCallback(mValues, newGroups))
         (mValues as ArrayList).run{
             clear()
             addAll(newGroups)
@@ -75,7 +76,7 @@ class MemberRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>) : R
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
 
         override fun toString(): String {
-            return super.toString() + " '" + mView.member_email.text + "'"
+            return super.toString() + " '" + mView.cabinet_id + "'"
         }
     }
 }

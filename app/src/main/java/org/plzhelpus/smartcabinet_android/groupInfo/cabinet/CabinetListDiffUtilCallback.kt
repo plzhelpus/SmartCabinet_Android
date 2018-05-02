@@ -1,9 +1,9 @@
-package org.plzhelpus.smartcabinet_android.groupInfo
+package org.plzhelpus.smartcabinet_android.groupInfo.cabinet
 
 import android.support.v7.util.DiffUtil
 import com.google.firebase.firestore.DocumentSnapshot
 
-class AdminListDiffUtilCallback (
+class CabinetListDiffUtilCallback(
         private val mOldDocuments: List<DocumentSnapshot>,
         private val mNewDocuments : List<DocumentSnapshot>) : DiffUtil.Callback() {
 
@@ -20,7 +20,7 @@ class AdminListDiffUtilCallback (
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return (mOldDocuments[oldItemPosition].get("email") == mNewDocuments[newItemPosition].get("email")) &&
-                (mOldDocuments[oldItemPosition].get("user_ref") == mNewDocuments[newItemPosition].get("user_ref"))
+        return (mOldDocuments[oldItemPosition].get("description") == mNewDocuments[newItemPosition].get("description") &&
+                (mOldDocuments[oldItemPosition].get("cabinet_ref") == mNewDocuments[newItemPosition].get("cabinet_ref")))
     }
 }
