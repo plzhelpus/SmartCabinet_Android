@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.firestore.DocumentReference
 import org.plzhelpus.smartcabinet_android.R
@@ -26,7 +27,9 @@ class GroupInfoFragmentPagerAdapter(
         private val TAG = "GroupInfoPager"
     }
 
-    private var currentFragment : Fragment? = null
+    private var cabinetFragment : CabinetFragment? = null
+    private var adminFragment : AdminFragment? = null
+    private var memberFragment : MemberFragment? = null
 
     private val tabTitleResId: Array<Int> = arrayOf(
             R.string.title_cabinet,
@@ -34,18 +37,23 @@ class GroupInfoFragmentPagerAdapter(
             R.string.title_member
     )
 
-    override fun getItem(position: Int): Fragment =
+    override fun getItem(position: Int): Fragment {
+        Log.d(TAG, "pagerAdapter.getItem - $position")
         when(position){
-            0 -> CabinetFragment().apply { mCurrentCabinetListReference = currentGroupDocumentReference?.collection("cabinet_refs") }
-            1 -> AdminFragment().apply { mCurrentAdminListReference = currentGroupDocumentReference?.collection("admin_refs") }
-            2 -> MemberFragment().apply { mCurrentMemberListReference = currentGroupDocumentReference?.collection("member_refs") }
+            0 -> return CabinetFragment().apply {
+                cabinetFragment = this
+                mCurrentCabinetListReference = currentGroupDocumentReference?.collection("cabinet_ref")
+            }
+            1 -> return AdminFragment().apply {
+                adminFragment = this
+                mCurrentAdminListReference = currentGroupDocumentReference?.collection("admin_ref")
+            }
+            2 -> return MemberFragment().apply {
+                memberFragment = this
+                mCurrentMemberListReference = currentGroupDocumentReference?.collection("member_ref")
+            }
             else -> throw IllegalArgumentException("Wrong position")
         }
-
-    override fun setPrimaryItem(container: ViewGroup, position: Int, `object`: Any) {
-        super.setPrimaryItem(container, position, `object`)
-        currentFragment = `object` as Fragment
-        Log.d(TAG, "new view pager position - $position")
     }
 
     override fun getCount(): Int {
@@ -57,12 +65,11 @@ class GroupInfoFragmentPagerAdapter(
     }
 
     fun updateGroupInfo(newGroupDocumentReference: DocumentReference){
-        currentFragment?.let {
-            currentGroupDocumentReference = newGroupDocumentReference.apply {
-                if(it is CabinetFragment) it.mCurrentCabinetListReference = collection("cabinet_ref")
-                else if(it is AdminFragment)  it.mCurrentAdminListReference = collection("admin_ref")
-                else if(it is MemberFragment)  it.mCurrentMemberListReference = collection("member_ref")
-            }
+        Log.d(TAG, "update group info now")
+        currentGroupDocumentReference = newGroupDocumentReference.apply {
+            cabinetFragment?.apply { mCurrentCabinetListReference = collection("cabinet_ref") }
+            adminFragment?.apply { mCurrentAdminListReference = collection("admin_ref") }
+            memberFragment?.apply { mCurrentMemberListReference = collection("member_ref") }
         }
     }
 }

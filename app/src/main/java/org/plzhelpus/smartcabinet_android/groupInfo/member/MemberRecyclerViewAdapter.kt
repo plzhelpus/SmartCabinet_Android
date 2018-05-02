@@ -30,7 +30,7 @@ class MemberRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>) : R
         mValues[position].let{ item ->
             holder.mView.run{
                 tag = item
-                member_email.text = mValues[position].getString("email")
+                member_email.text = item.getString("email")
                 member_popup_menu_button.setOnClickListener {
                     val popupMenu =  PopupMenu(context, member_popup_menu_button)
                     popupMenu.inflate(R.menu.member)

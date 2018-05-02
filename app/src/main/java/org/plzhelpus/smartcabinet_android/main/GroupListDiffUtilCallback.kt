@@ -23,6 +23,7 @@ class GroupListDiffUtilCallback(
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return mOldDocuments[oldItemPosition].get("group_ref") == mNewDocuments[newItemPosition].get("group_ref")
+        return (mOldDocuments[oldItemPosition].get("email") == mNewDocuments[newItemPosition].get("email")) &&
+                (mOldDocuments[oldItemPosition].get("group_ref") == mNewDocuments[newItemPosition].get("group_ref"))
     }
 }

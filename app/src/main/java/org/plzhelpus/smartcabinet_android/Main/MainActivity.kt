@@ -179,8 +179,7 @@ class MainActivity : AppCompatActivity(),
     private fun changeGroupInfo(groupListItemDocumentSnapshot : DocumentSnapshot) {
         Log.d(TAG, "Changing group now")
         Log.d(TAG, "document snapshot - ${groupListItemDocumentSnapshot.data}")
-        val newGroupDocumentReference = groupListItemDocumentSnapshot.getDocumentReference("group_ref")
-        mCurrentGroup = newGroupDocumentReference.apply {
+        mCurrentGroup = groupListItemDocumentSnapshot.getDocumentReference("group_ref").apply {
             (group_pager.adapter as GroupInfoFragmentPagerAdapter).updateGroupInfo(this)
         }
         group_info_group_name.text = groupListItemDocumentSnapshot.getString("group_name")

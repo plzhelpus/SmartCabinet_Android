@@ -18,11 +18,13 @@
                 android:id="@+id/admin_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:textColor="#000"
                 android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/admin_popup_menu_button"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -33,13 +35,15 @@
                 android:id="@+id/admin_popup_menu_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginTop="8dp"
+                android:contentDescription="@string/admin_popup_menu_button"
                 android:padding="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_more_vert_black_24dp"
-                android:contentDescription="@string/admin_popup_menu_button" />
+                app:srcCompat="@drawable/ic_more_vert_black_24dp" />
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>

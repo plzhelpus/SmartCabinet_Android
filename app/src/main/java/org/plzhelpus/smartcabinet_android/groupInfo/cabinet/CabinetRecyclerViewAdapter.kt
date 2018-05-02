@@ -31,8 +31,8 @@ class CabinetRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>) : 
         mValues[position].let{ item ->
             holder.mView.run{
                 tag = item
-                holder.mView.cabinet_id.text = item.id
-                holder.mView.cabinet_description.text = item.getString("description")
+                cabinet_id.text = item.id
+                cabinet_description.text = item.getString("description")
                 cabinet_popup_memu_button.setOnClickListener {
                     val popupMenu =  PopupMenu(context, cabinet_popup_memu_button)
                     popupMenu.inflate(R.menu.cabinet)
