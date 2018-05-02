@@ -14,15 +14,7 @@ import kotlinx.android.synthetic.main.member_list.*
 import org.plzhelpus.smartcabinet_android.R
 
 /**
- * A fragment representing a list of Items.
- *
- *
- * Activities containing this fragment MUST implement the [OnListFragmentInteractionListener]
- * interface.
- */
-/**
- * Mandatory empty constructor for the fragment manager to instantiate the
- * fragment (e.g. upon screen orientation changes).
+ * 그룹 일반 회원 목록을 보여주는 프래그먼트
  */
 class MemberFragment : Fragment(){
 

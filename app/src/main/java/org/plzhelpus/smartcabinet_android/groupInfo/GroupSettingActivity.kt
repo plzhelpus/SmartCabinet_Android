@@ -10,6 +10,10 @@ import kotlinx.android.synthetic.main.settings_group_member.*
 import kotlinx.android.synthetic.main.settings_group_owner.*
 import org.plzhelpus.smartcabinet_android.R
 
+
+/**
+ * 그룹 설정을 보여주는 액티비티
+ */
 class GroupSettingActivity : AppCompatActivity() {
 
     companion object {

@@ -12,9 +12,7 @@ import org.plzhelpus.smartcabinet_android.R
 import kotlinx.android.synthetic.main.admin.view.*
 
 /**
- * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
- * specified [OnListFragmentInteractionListener].
- * TODO: Replace the implementation with code for your data type.
+ * 그룹 관리자 목록을 관리하는 어뎁터
  */
 class AdminRecyclerViewAdapter(
         private val mValues: List<DocumentSnapshot>)

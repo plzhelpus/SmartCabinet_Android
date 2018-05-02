@@ -3,6 +3,10 @@ package org.plzhelpus.smartcabinet_android.groupInfo.member
 import android.support.v7.util.DiffUtil
 import com.google.firebase.firestore.DocumentSnapshot
 
+/**
+ * 일반 회원 목록을 관리하는 RecyclerView를 갱신해주는 DiffUtil.Callback
+ */
+
 class MemberListDiffUtilCallback (
         private val mOldDocuments: List<DocumentSnapshot>,
         private val mNewDocuments : List<DocumentSnapshot>) : DiffUtil.Callback() {

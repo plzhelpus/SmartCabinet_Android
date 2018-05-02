@@ -10,12 +10,9 @@ import android.view.ViewGroup
 import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.android.synthetic.main.member.view.*
 import org.plzhelpus.smartcabinet_android.R
-import org.plzhelpus.smartcabinet_android.dummy.DummyMember.DummyItem
 
 /**
- * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
- * specified [OnListFragmentInteractionListener].
- * TODO: Replace the implementation with code for your data type.
+ * 그룹 일반 회원 목록을 관리하는 어뎁터
  */
 class MemberRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>) : RecyclerView.Adapter<MemberRecyclerViewAdapter.ViewHolder>() {
 

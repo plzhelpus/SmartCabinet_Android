@@ -8,14 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.firestore.DocumentSnapshot
-import org.plzhelpus.smartcabinet_android.dummy.DummyCabinet.DummyItem
 import kotlinx.android.synthetic.main.cabinet.view.*
 import org.plzhelpus.smartcabinet_android.R
 
 /**
- * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
- * specified [OnListFragmentInteractionListener].
- * TODO: Replace the implementation with code for your data type.
+ * 그룹 사물함 목록을 관리하는 어뎁터
  */
 class CabinetRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>) : RecyclerView.Adapter<CabinetRecyclerViewAdapter.ViewHolder>() {
 

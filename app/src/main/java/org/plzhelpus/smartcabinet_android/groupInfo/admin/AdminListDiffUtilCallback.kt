@@ -3,6 +3,10 @@ package org.plzhelpus.smartcabinet_android.groupInfo.admin
 import android.support.v7.util.DiffUtil
 import com.google.firebase.firestore.DocumentSnapshot
 
+
+/**
+ * 관리자 목록을 관리하는 RecyclerView를 갱신해주는 DiffUtil.Callback
+ */
 class AdminListDiffUtilCallback (
         private val mOldDocuments: List<DocumentSnapshot>,
         private val mNewDocuments : List<DocumentSnapshot>) : DiffUtil.Callback() {

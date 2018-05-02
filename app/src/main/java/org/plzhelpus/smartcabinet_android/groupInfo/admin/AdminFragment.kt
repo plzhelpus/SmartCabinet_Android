@@ -14,9 +14,7 @@ import kotlinx.android.synthetic.main.admin_list.*
 import org.plzhelpus.smartcabinet_android.R
 
 /**
- * A fragment representing a list of Items.
- * Activities containing this fragment MUST implement the
- * [AdminFragment.OnListFragmentInteractionListener] interface.
+ * 그룹 관리자 목록을 보여주는 프래그먼트
  */
 class AdminFragment : Fragment() {
 

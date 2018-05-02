@@ -3,6 +3,9 @@ package org.plzhelpus.smartcabinet_android.groupInfo.cabinet
 import android.support.v7.util.DiffUtil
 import com.google.firebase.firestore.DocumentSnapshot
 
+/**
+ * 사물함 목록을 관리하는 RecyclerView를 갱신해주는 DiffUtil.Callback
+ */
 class CabinetListDiffUtilCallback(
         private val mOldDocuments: List<DocumentSnapshot>,
         private val mNewDocuments : List<DocumentSnapshot>) : DiffUtil.Callback() {
