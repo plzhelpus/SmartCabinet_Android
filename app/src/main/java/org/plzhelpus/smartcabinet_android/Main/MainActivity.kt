@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity(),
 
     companion object {
         private val TAG = "MainActivity"
+        // 액티비티가 실행되자 마자 정보를 보여줘야 되는 그룹
         private val FIRST_SEEN_GROUP= "FIRST_SEEN_GROUP"
 
         fun createIntent(context: Context, firstSeenGroupName: String? = null): Intent {
@@ -95,14 +96,14 @@ class MainActivity : AppCompatActivity(),
                 setHasFixedSize(true)
             }
             registerGroupList(currentUser, intent.getStringExtra(FIRST_SEEN_GROUP))
-        } ?: run { handleNotSignIn() }
+        } ?: run { switchToSignInUI() }
 
         // 사물함 요청 버튼 구현
         cabinet_request_button.setOnClickListener{
             requestCabinet()
         }
 
-        // 사용자 로그아웃 버튼 구현
+        // 네비게이션 드로어에 사용자 로그아웃 버튼 구현
         user_sign_out_button.setOnClickListener {
             // AuthUI가 로그아웃하는 중에 리스너를 트리거할 수 있기 때문에 미리 해제함.
             mAuth.removeAuthStateListener(this)
@@ -167,9 +168,9 @@ class MainActivity : AppCompatActivity(),
     }
 
     /**
-     * 가입한 적 없는 계정일 때를 처리하는 메서드
+     * 로그인 화면으로 전환함.
      */
-    private fun handleNotSignIn() {
+    private fun switchToSignInUI() {
         startActivity(AuthUiActivity.createIntent(this))
         finish()
     }
@@ -188,7 +189,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     /**
-     * 유저가 로그인 했다면 프로필 칸을 채움.
+     * 유저가 로그인 했다면 네비게이션 드로어의 프로필 칸을 채움.
      */
     private fun updateUserInfoUI(user : FirebaseUser?) {
         if(TextUtils.isEmpty(user?.email)){
@@ -198,14 +199,17 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
+    /**
+     * 현재 보고 있는 그룹에 대한 정보의 변경사항을 계속 받아오게 함.
+     */
     private fun registerCurrentGroup() {
         mCurrentGroup?.let{ currentGroup ->
-            // 기존에 있다면 지워야 함.
+            // 다른 그룹에 대한 변경사항 리스너 등록을 해제해야 함.
             mCurrentGroupListenerRegistration?.remove()
             // 그룹 문서의 변경사항을 받게 함.
             mCurrentGroupListenerRegistration = currentGroup.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                firebaseFirestoreException?.run {
-                    Log.w(TAG, "Current group - Listen failed.", this)
+                firebaseFirestoreException?.let {
+                    Log.w(TAG, "Current group - Listen failed.", it)
                     return@addSnapshotListener
                 }
 
@@ -231,38 +235,39 @@ class MainActivity : AppCompatActivity(),
         // 그룹 목록이 Firestore의 변경 사항을 받게 등록함.
         mDb.collection("users").document(user.uid).collection("participated_group").run{
             mGroupListListenerRegistration = addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                firebaseFirestoreException?.run{
-                    Log.w(TAG, "Participated group - Listen failed.", this)
+                firebaseFirestoreException?.let{
+                    Log.w(TAG, "Participated group - Listen failed.", it)
                     return@addSnapshotListener
                 }
 
-                querySnapshot?.run {
+                querySnapshot?.let { participatedGroupsSnapshot ->
                     Log.d(TAG, "Participated group - data found")
-                    (group_list.adapter as GroupRecyclerViewAdapter).updateList(documents)
-                    if (isEmpty) {
+                    (group_list.adapter as GroupRecyclerViewAdapter).updateList(participatedGroupsSnapshot.documents)
+                    if (participatedGroupsSnapshot.isEmpty) {
                         handleNoGroups()
                     } else {
                         // 어느 그룹을 보여줄 지 정해줘야 함.
                         object : AsyncTask<DocumentSnapshot, Unit, DocumentSnapshot>() {
                             override fun doInBackground(vararg param: DocumentSnapshot): DocumentSnapshot {
+                                // 만약 화면으로 보고 있던 그룹이 있다면
                                 mCurrentGroup?.let{ currentGroup ->
-                                    // 만약 보고 있던 그룹이 삭제되었다면, 첫 번째 그룹으로 변경해줌.
-                                    if (param.none { document ->
-                                                currentGroup.id == document.id
-                                            }) {
+                                    // 만약 보고 있던 그룹이 삭제되었다면, 그룹 목록의 첫 번째 그룹으로 변경함
+                                    if (param.none { document -> currentGroup.id == document.id }) {
                                         Log.d(TAG, "Group that you was watching is not visible now")
                                         return param[0]
                                     }
                                 } ?: let{
-                                    // 만약 처음 보여주어야 할 그룹이 지정되어 있다면 해당 그룹을 보여줌.
+                                    // 만약 처음 보여주어야 할 그룹이 정해져 있다면 해당 그룹으로 변경함
                                     firstSeenGroupName?.let{
+                                        // 만약 해당 그룹이 그룹 목록에 존재하면 그 그룹으로 변경함
                                         param.find { document ->
                                             document.getString("group_name") == it
-                                        }?.run{
-                                            return this
+                                        }?.let{ findResult ->
+                                            return findResult
                                         }
                                     }
                                 }
+                                // 어떠한 조건에도 해당하지 않으면 그룹 목록의 첫 번째 그룹으로 변경함
                                 return param[0]
                             }
 
@@ -270,9 +275,9 @@ class MainActivity : AppCompatActivity(),
                                 super.onPostExecute(result)
                                 changeGroupInfo(result)
                             }
-                        }.execute(*(documents.toTypedArray()))
+                        }.execute(*(participatedGroupsSnapshot.documents.toTypedArray()))
                     }
-                }?. let {
+                }?. run {
                     Log.d(TAG, "Participated group - data null")
                 }
             }
@@ -292,11 +297,11 @@ class MainActivity : AppCompatActivity(),
         // 주의: UI쓰레드에서 작동함.
         // 현재는 단일 firebaseAuth로 동작하므로 굳이 어떤 firebaseAuth 인스턴스가 상태가 바뀌었는지
         // 확인할 필요가 없음.
-        firebaseAuth.currentUser?.let{
-            registerGroupList(it)
-            updateUserInfoUI(it)
+        firebaseAuth.currentUser?.let{ currentUser ->
+            registerGroupList(currentUser)
+            updateUserInfoUI(currentUser)
         } ?: run {
-            handleNotSignIn()
+            switchToSignInUI()
         }
     }
 
@@ -320,7 +325,6 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // TODO 메뉴 관리를 다른 프레그먼트에게 넘길 수 있는지 조사
         when (item.itemId) {
             R.id.action_add_member -> {
                 val builder: AlertDialog.Builder = AlertDialog.Builder(this)
