@@ -5,14 +5,15 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.util.Log
-import android.view.View
-import android.view.ViewGroup
 import com.google.firebase.firestore.DocumentReference
+import org.plzhelpus.smartcabinet_android.ADMIN_REF
 import org.plzhelpus.smartcabinet_android.R
 import org.plzhelpus.smartcabinet_android.groupInfo.admin.AdminFragment
 import org.plzhelpus.smartcabinet_android.groupInfo.cabinet.CabinetFragment
 import org.plzhelpus.smartcabinet_android.groupInfo.member.MemberFragment
 import java.lang.IllegalArgumentException
+import org.plzhelpus.smartcabinet_android.CABINET_REF
+import org.plzhelpus.smartcabinet_android.MEMBER_REF
 
 /**
  * Created by Donghwan Kim on 2018-03-26.
@@ -27,9 +28,9 @@ class GroupInfoFragmentPagerAdapter(
         private val TAG = "GroupInfoPager"
     }
 
-    private var cabinetFragment : CabinetFragment? = null
-    private var adminFragment : AdminFragment? = null
-    private var memberFragment : MemberFragment? = null
+    private var mCabinetFragment : CabinetFragment? = null
+    private var mAdminFragment : AdminFragment? = null
+    private var mMemberFragment : MemberFragment? = null
 
     private val tabTitleResId: Array<Int> = arrayOf(
             R.string.title_cabinet,
@@ -41,16 +42,16 @@ class GroupInfoFragmentPagerAdapter(
         Log.d(TAG, "pagerAdapter.getItem - $position")
         when(position){
             0 -> return CabinetFragment().apply {
-                cabinetFragment = this
-                mCurrentCabinetListReference = currentGroupDocumentReference?.collection("cabinet_ref")
+                mCabinetFragment = this
+                mCurrentCabinetListReference = currentGroupDocumentReference?.collection(CABINET_REF)
             }
             1 -> return AdminFragment().apply {
-                adminFragment = this
-                mCurrentAdminListReference = currentGroupDocumentReference?.collection("admin_ref")
+                mAdminFragment = this
+                mCurrentAdminListReference = currentGroupDocumentReference?.collection(ADMIN_REF)
             }
             2 -> return MemberFragment().apply {
-                memberFragment = this
-                mCurrentMemberListReference = currentGroupDocumentReference?.collection("member_ref")
+                mMemberFragment = this
+                mCurrentMemberListReference = currentGroupDocumentReference?.collection(MEMBER_REF)
             }
             else -> throw IllegalArgumentException("Wrong position")
         }
@@ -67,9 +68,9 @@ class GroupInfoFragmentPagerAdapter(
     fun updateGroupInfo(newGroupDocumentReference: DocumentReference){
         Log.d(TAG, "update group info now")
         currentGroupDocumentReference = newGroupDocumentReference.apply {
-            cabinetFragment?.apply { mCurrentCabinetListReference = collection("cabinet_ref") }
-            adminFragment?.apply { mCurrentAdminListReference = collection("admin_ref") }
-            memberFragment?.apply { mCurrentMemberListReference = collection("member_ref") }
+            mCabinetFragment?.apply { mCurrentCabinetListReference = collection(CABINET_REF) }
+            mAdminFragment?.apply { mCurrentAdminListReference = collection(ADMIN_REF) }
+            mMemberFragment?.apply { mCurrentMemberListReference = collection(MEMBER_REF) }
         }
     }
 }

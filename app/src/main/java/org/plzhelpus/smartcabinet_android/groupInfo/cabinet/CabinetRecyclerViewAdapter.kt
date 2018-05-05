@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.android.synthetic.main.cabinet.view.*
+import org.plzhelpus.smartcabinet_android.DESCRIPTION
 import org.plzhelpus.smartcabinet_android.R
 
 /**
@@ -32,7 +33,7 @@ class CabinetRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>) : 
             holder.mView.run{
                 tag = item
                 cabinet_id.text = item.id
-                cabinet_description.text = item.getString("description")
+                cabinet_description.text = item.getString(DESCRIPTION)
                 cabinet_popup_memu_button.setOnClickListener {
                     val popupMenu =  PopupMenu(context, cabinet_popup_memu_button)
                     popupMenu.inflate(R.menu.cabinet)

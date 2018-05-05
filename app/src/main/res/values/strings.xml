@@ -85,7 +85,7 @@
     <string name="settings_group_member_title">Member</string>
     <string name="settings_delete_group">Delete group</string>
     <string name="settings_leave_group">Leave group</string>
-    <string name="settings_change_role_to_member">Change role to member</string>
+    <string name="settings_demote_self">Demote self</string>
 
     // menu.cabinet
     <string name="cabinet_menu_open">Open</string>

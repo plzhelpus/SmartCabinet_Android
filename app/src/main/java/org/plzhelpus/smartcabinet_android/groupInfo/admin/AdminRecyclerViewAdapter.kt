@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import com.google.firebase.firestore.DocumentSnapshot
 import org.plzhelpus.smartcabinet_android.R
 import kotlinx.android.synthetic.main.admin.view.*
+import org.plzhelpus.smartcabinet_android.EMAIL
 
 /**
  * 그룹 관리자 목록을 관리하는 어뎁터
@@ -32,7 +33,7 @@ class AdminRecyclerViewAdapter(
         mValues[position].let{ item ->
             holder.mView.run {
                 tag = item
-                admin_email.text = item.getString("email")
+                admin_email.text = item.getString(EMAIL)
                 admin_popup_menu_button.setOnClickListener{
                     val popupMenu =  PopupMenu(context, admin_popup_menu_button)
                     popupMenu.inflate(R.menu.member)

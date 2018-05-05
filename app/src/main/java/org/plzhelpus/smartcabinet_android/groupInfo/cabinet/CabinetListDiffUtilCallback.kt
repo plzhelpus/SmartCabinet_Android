@@ -2,6 +2,8 @@ package org.plzhelpus.smartcabinet_android.groupInfo.cabinet
 
 import android.support.v7.util.DiffUtil
 import com.google.firebase.firestore.DocumentSnapshot
+import org.plzhelpus.smartcabinet_android.CABINET_REF
+import org.plzhelpus.smartcabinet_android.DESCRIPTION
 
 /**
  * 사물함 목록을 관리하는 RecyclerView를 갱신해주는 DiffUtil.Callback
@@ -23,7 +25,7 @@ class CabinetListDiffUtilCallback(
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return (mOldDocuments[oldItemPosition].get("description") == mNewDocuments[newItemPosition].get("description") &&
-                (mOldDocuments[oldItemPosition].get("cabinet_ref") == mNewDocuments[newItemPosition].get("cabinet_ref")))
+        return (mOldDocuments[oldItemPosition].get(DESCRIPTION) == mNewDocuments[newItemPosition].get(DESCRIPTION) &&
+                (mOldDocuments[oldItemPosition].get(CABINET_REF) == mNewDocuments[newItemPosition].get(CABINET_REF)))
     }
 }

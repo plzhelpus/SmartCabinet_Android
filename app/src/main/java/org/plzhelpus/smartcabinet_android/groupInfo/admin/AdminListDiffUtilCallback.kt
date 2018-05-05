@@ -2,6 +2,8 @@ package org.plzhelpus.smartcabinet_android.groupInfo.admin
 
 import android.support.v7.util.DiffUtil
 import com.google.firebase.firestore.DocumentSnapshot
+import org.plzhelpus.smartcabinet_android.EMAIL
+import org.plzhelpus.smartcabinet_android.USER_REF
 
 
 /**
@@ -24,7 +26,7 @@ class AdminListDiffUtilCallback (
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return (mOldDocuments[oldItemPosition].get("email") == mNewDocuments[newItemPosition].get("email")) &&
-                (mOldDocuments[oldItemPosition].get("user_ref") == mNewDocuments[newItemPosition].get("user_ref"))
+        return (mOldDocuments[oldItemPosition].get(EMAIL) == mNewDocuments[newItemPosition].get(EMAIL)) &&
+                (mOldDocuments[oldItemPosition].get(USER_REF) == mNewDocuments[newItemPosition].get(USER_REF))
     }
 }

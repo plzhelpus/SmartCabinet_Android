@@ -12,7 +12,9 @@ import android.support.v7.app.AlertDialog
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import org.plzhelpus.smartcabinet_android.PARTICIPATED_GROUP
 import org.plzhelpus.smartcabinet_android.R
+import org.plzhelpus.smartcabinet_android.USERS
 import org.plzhelpus.smartcabinet_android.auth.AuthUiActivity
 
 /**
@@ -43,7 +45,7 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
         already_member_but_not_found_group_button.setOnClickListener{
             val currentUser = mAuth.currentUser
             val db = FirebaseFirestore.getInstance()
-            val collectionReference = db.collection("users").document(currentUser!!.uid).collection("participated_group")
+            val collectionReference = db.collection(USERS).document(currentUser!!.uid).collection(PARTICIPATED_GROUP)
             collectionReference.get().addOnCompleteListener {
                 if (it.isSuccessful) {
                     val querySnapshot = it.result

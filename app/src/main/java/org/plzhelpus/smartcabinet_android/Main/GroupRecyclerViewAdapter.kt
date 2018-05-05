@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.android.synthetic.main.group.view.*
+import org.plzhelpus.smartcabinet_android.GROUP_NAME
 import org.plzhelpus.smartcabinet_android.R
 
 /**
@@ -25,7 +26,7 @@ class GroupRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>,
         mValues[position].let { item ->
             holder.mView.run {
                 tag = item
-                group_list_group_name.text = item.id
+                group_list_group_name.text = item.getString(GROUP_NAME)
                 setOnClickListener{
                     mListener?.run{
                         onListItemClicked(item)

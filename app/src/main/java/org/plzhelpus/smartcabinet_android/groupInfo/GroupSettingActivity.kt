@@ -10,6 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.settings_group_admin.*
 import kotlinx.android.synthetic.main.settings_group_member.*
 import kotlinx.android.synthetic.main.settings_group_owner.*
+import org.plzhelpus.smartcabinet_android.GROUP_REF
 import org.plzhelpus.smartcabinet_android.R
 
 
@@ -22,7 +23,6 @@ class GroupSettingActivity : AppCompatActivity() {
 
     companion object {
         private val TAG = "GroupSettingsActivity"
-        private val GROUP_REF = "GROUP_REF"
 
         fun createIntent(context: Context, groupRef : String): Intent{
             val startIntent: Intent = Intent()
@@ -38,9 +38,10 @@ class GroupSettingActivity : AppCompatActivity() {
 
         settings_leave_group.setOnClickListener {
             Log.d(TAG, "leave group clicked")
+            // TODO 서버에서 해야 함.
         }
-        settings_change_role_to_member.setOnClickListener {
-            Log.d(TAG, "change role to member clicked")
+        settings_demote_self.setOnClickListener {
+            Log.d(TAG, "demote self clicked")
         }
         settings_delete_group.setOnClickListener {
             Log.d(TAG, "delete group clicked")

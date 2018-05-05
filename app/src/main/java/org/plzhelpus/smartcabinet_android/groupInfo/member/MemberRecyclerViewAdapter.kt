@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.android.synthetic.main.member.view.*
+import org.plzhelpus.smartcabinet_android.EMAIL
 import org.plzhelpus.smartcabinet_android.R
 
 /**
@@ -30,7 +31,7 @@ class MemberRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>) : R
         mValues[position].let{ item ->
             holder.mView.run{
                 tag = item
-                member_email.text = item.getString("email")
+                member_email.text = item.getString(EMAIL)
                 member_popup_menu_button.setOnClickListener {
                     val popupMenu =  PopupMenu(context, member_popup_menu_button)
                     popupMenu.inflate(R.menu.member)

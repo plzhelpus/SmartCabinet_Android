@@ -28,8 +28,8 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import org.plzhelpus.smartcabinet_android.*
 import org.plzhelpus.smartcabinet_android.groupInfo.GroupSettingActivity
-import org.plzhelpus.smartcabinet_android.R
 import org.plzhelpus.smartcabinet_android.auth.AuthUiActivity
 import org.plzhelpus.smartcabinet_android.groupInfo.GroupInfoFragmentPagerAdapter
 import java.io.IOException
@@ -181,10 +181,10 @@ class MainActivity : AppCompatActivity(),
     private fun changeGroupInfo(groupListItemDocumentSnapshot : DocumentSnapshot) {
         Log.d(TAG, "Changing group now")
         Log.d(TAG, "document snapshot - ${groupListItemDocumentSnapshot.data}")
-        mCurrentGroup = groupListItemDocumentSnapshot.getDocumentReference("group_ref").apply {
+        mCurrentGroup = groupListItemDocumentSnapshot.getDocumentReference(GROUP_REF).apply {
             (group_pager.adapter as GroupInfoFragmentPagerAdapter).updateGroupInfo(this)
         }
-        group_info_group_name.text = groupListItemDocumentSnapshot.getString("group_name")
+        group_info_group_name.text = groupListItemDocumentSnapshot.getString(GROUP_NAME)
         registerCurrentGroup()
     }
 
@@ -216,9 +216,7 @@ class MainActivity : AppCompatActivity(),
                 // 문서스냅샷이 엉뚱한 곳을 가리키지 않았을 경우,
                 if (documentSnapshot.exists()){
                     Log.d(TAG, "Current group - data found")
-                    if(documentSnapshot.contains("owner_email")){
-                        group_info_owner_email.text = documentSnapshot.getString("owner_email")
-                    }
+                    group_info_owner_email.text = documentSnapshot.getString(OWNER_EMAIL)
                 } else {
                     Log.d(TAG, "Current group data: null")
                 }
@@ -233,7 +231,7 @@ class MainActivity : AppCompatActivity(),
         // 기존에 있다면 지워야 함.
         mGroupListListenerRegistration?.remove()
         // 그룹 목록이 Firestore의 변경 사항을 받게 등록함.
-        mDb.collection("users").document(user.uid).collection("participated_group").run{
+        mDb.collection(USERS).document(user.uid).collection(PARTICIPATED_GROUP).run{
             mGroupListListenerRegistration = addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                 firebaseFirestoreException?.let{
                     Log.w(TAG, "Participated group - Listen failed.", it)
@@ -261,7 +259,7 @@ class MainActivity : AppCompatActivity(),
                                     firstSeenGroupName?.let{
                                         // 만약 해당 그룹이 그룹 목록에 존재하면 그 그룹으로 변경함
                                         param.find { document ->
-                                            document.getString("group_name") == it
+                                            document.getString(GROUP_NAME) == it
                                         }?.let{ findResult ->
                                             return findResult
                                         }
