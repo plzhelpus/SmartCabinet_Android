@@ -46,7 +46,7 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(),
         FirebaseAuth.AuthStateListener,
-        RecyclerViewOnClickListener<DocumentSnapshot> {
+        RecyclerViewOnListItemClickListener<DocumentSnapshot> {
     private var mGroupListListenerRegistration : ListenerRegistration? = null
     private var mCurrentGroupListenerRegistration : ListenerRegistration? = null
     private var mCurrentGroup : DocumentReference? = null

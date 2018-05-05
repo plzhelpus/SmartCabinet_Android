@@ -13,7 +13,7 @@ import org.plzhelpus.smartcabinet_android.R
  * 그룹 목록을 관리하는 어뎁터
  */
 class GroupRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>,
-                               private val mListener: RecyclerViewOnClickListener<DocumentSnapshot>?) : RecyclerView.Adapter<GroupRecyclerViewAdapter.ViewHolder>(){
+                               private val mListener: RecyclerViewOnListItemClickListener<DocumentSnapshot>?) : RecyclerView.Adapter<GroupRecyclerViewAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
