@@ -86,6 +86,8 @@
     <string name="settings_delete_group">Delete group</string>
     <string name="settings_leave_group">Leave group</string>
     <string name="settings_demote_self">Demote self</string>
+    <string name="delete_group_failed">Delete group failed</string>
+    <string name="leave_group_failed">Leave group failed</string>
 
     // menu.cabinet
     <string name="cabinet_menu_open">Open</string>

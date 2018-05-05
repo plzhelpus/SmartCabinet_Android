@@ -4,14 +4,17 @@ import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.annotation.StringRes
+import android.support.design.widget.Snackbar
 import android.util.Log
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.activity_group_setting.*
 import kotlinx.android.synthetic.main.settings_group_admin.*
 import kotlinx.android.synthetic.main.settings_group_member.*
 import kotlinx.android.synthetic.main.settings_group_owner.*
-import org.plzhelpus.smartcabinet_android.GROUP_REF
-import org.plzhelpus.smartcabinet_android.R
+import org.plzhelpus.smartcabinet_android.*
 
 
 /**
@@ -38,13 +41,55 @@ class GroupSettingActivity : AppCompatActivity() {
 
         settings_leave_group.setOnClickListener {
             Log.d(TAG, "leave group clicked")
-            // TODO 서버에서 해야 함.
+            FirebaseAuth.getInstance().currentUser?.let{ user ->
+                mGroupRef?.let{ groupRef ->
+                    FirebaseFirestore.getInstance()
+                            .collection(USERS)
+                            .document(user.uid)
+                            .collection(PARTICIPATED_GROUP)
+                            .document(groupRef.id).let{ groupDocInParticipatedGroup ->
+                        groupDocInParticipatedGroup.delete()
+                                .addOnSuccessListener {
+                                    Log.d(TAG, "Leave group successfully")
+                                    finish()
+                                }
+                                .addOnFailureListener {
+                                    Log.d(TAG, "Leave group failed")
+                                    showSnackbar(R.string.leave_group_failed)
+                                }
+                    }
+                }
+
+            }
+
+
+
         }
         settings_demote_self.setOnClickListener {
             Log.d(TAG, "demote self clicked")
+            // TODO 서버에서 해야 함
         }
         settings_delete_group.setOnClickListener {
             Log.d(TAG, "delete group clicked")
+            mGroupRef?.let{ groupRef ->
+                    groupRef.delete()
+                            .addOnSuccessListener {
+                                Log.d(TAG, "Delete group successfully")
+                                finish()
+                            }
+                            .addOnFailureListener { exception ->
+                                Log.d(TAG, "Error deleting document", exception)
+                                showSnackbar(R.string.delete_group_failed)
+                            }
+            }
+
         }
+    }
+
+    /**
+     * 스낵바를 띄워줌
+     */
+    private fun showSnackbar(@StringRes content: Int) {
+        Snackbar.make(group_setting_root_layout, content, Snackbar.LENGTH_LONG).show()
     }
 }
