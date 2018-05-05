@@ -13,7 +13,7 @@ import org.plzhelpus.smartcabinet_android.R
  * 그룹 목록을 관리하는 어뎁터
  */
 class GroupRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>,
-                               private val mListener: MainActivity?) : RecyclerView.Adapter<GroupRecyclerViewAdapter.ViewHolder>(){
+                               private val mListener: RecyclerViewOnClickListener<DocumentSnapshot>?) : RecyclerView.Adapter<GroupRecyclerViewAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -22,14 +22,15 @@ class GroupRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>,
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.mItem = mValues[position]
-        holder.mView.group_list_group_name.text = mValues[position].id
-
-        holder.mView.setOnClickListener{
-            if (null != mListener) {
-                // Notify the active callbacks interface (the activity, if the
-                // fragment is attached to one) that an item has been selected.
-                mListener.onGroupListItemClicked(holder.mItem!!)
+        mValues[position].let { item ->
+            holder.mView.run {
+                tag = item
+                group_list_group_name.text = item.id
+                setOnClickListener{
+                    mListener?.run{
+                        onListItemClicked(item)
+                    }
+                }
             }
         }
     }
@@ -46,8 +47,6 @@ class GroupRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>,
     }
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        var mItem: DocumentSnapshot? = null
-
         override fun toString(): String {
             return super.toString() + " '" + mView.group_list_group_name + "'"
         }

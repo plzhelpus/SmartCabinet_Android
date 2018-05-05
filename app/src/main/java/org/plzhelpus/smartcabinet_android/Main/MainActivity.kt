@@ -45,7 +45,8 @@ import java.util.*
  */
 
 class MainActivity : AppCompatActivity(),
-        FirebaseAuth.AuthStateListener {
+        FirebaseAuth.AuthStateListener,
+        RecyclerViewOnClickListener<DocumentSnapshot> {
     private var mGroupListListenerRegistration : ListenerRegistration? = null
     private var mCurrentGroupListenerRegistration : ListenerRegistration? = null
     private var mCurrentGroup : DocumentReference? = null
@@ -343,10 +344,7 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    /**
-     * 그룹 목록에서 한 그룹을 선택했을 때, 호출
-     */
-    fun onGroupListItemClicked(item: DocumentSnapshot) {
+    override fun onListItemClicked(item: DocumentSnapshot) {
         changeGroupInfo(item)
         drawer_layout.closeDrawers()
     }
