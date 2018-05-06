@@ -45,6 +45,8 @@ class CabinetFragment : Fragment() {
     }
 
     private fun registerCabinetListListener() {
+        // 해당 뷰가 존재하지 않으면 실행하면 안됨.
+        if(cabinet_list == null) return
         mCurrentCabinetListReference?.let{ currentCabinetListReference ->
             mListenerRegistration?.remove()
             mListenerRegistration = currentCabinetListReference.addSnapshotListener { querySnapshot, firebaseFirestoreException ->

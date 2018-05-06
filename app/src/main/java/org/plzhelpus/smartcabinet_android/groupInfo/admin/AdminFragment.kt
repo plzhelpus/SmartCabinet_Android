@@ -45,6 +45,8 @@ class AdminFragment : Fragment() {
     }
 
     private fun registerAdminListListener() {
+        // 해당 뷰가 존재하지 않으면 실행하면 안됨.
+        if(admin_list == null) return
         mCurrentAdminListReference?.let{ currentAdminListReference ->
             mListenerRegistration?.remove()
             mListenerRegistration = currentAdminListReference.addSnapshotListener { querySnapshot, firebaseFirestoreException ->

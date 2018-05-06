@@ -45,6 +45,8 @@ class MemberFragment : Fragment(){
     }
 
     private fun registerMemberListListener() {
+        // 해당 뷰가 존재하지 않으면 실행하면 안됨.
+        if(member_list == null) return
         mCurrentMemberListReference?.let{ currentMemberListReference ->
             mListenerRegistration?.remove()
             mListenerRegistration = currentMemberListReference.addSnapshotListener { querySnapshot, firebaseFirestoreException ->

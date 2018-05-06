@@ -160,7 +160,6 @@ class MainActivity : AppCompatActivity(),
         mCurrentGroup = groupListItemDocumentSnapshot.getDocumentReference(GROUP_REF).apply {
             (group_pager.adapter as GroupInfoFragmentPagerAdapter).updateGroupInfo(this)
         }
-        group_info_group_name.text = groupListItemDocumentSnapshot.getString(GROUP_NAME)
         registerCurrentGroup()
     }
 
@@ -179,6 +178,9 @@ class MainActivity : AppCompatActivity(),
      * 현재 보고 있는 그룹에 대한 정보의 변경사항을 계속 받아오게 함.
      */
     private fun registerCurrentGroup() {
+        // 해당 뷰가 존재하지 않으면 실행하면 안됨.
+        if(group_info_owner_email == null ||
+                group_info_group_name == null) return
         mCurrentGroup?.let{ currentGroup ->
             // 다른 그룹에 대한 변경사항 리스너 등록을 해제해야 함.
             mCurrentGroupListenerRegistration?.remove()
@@ -192,6 +194,7 @@ class MainActivity : AppCompatActivity(),
                 // 문서스냅샷이 엉뚱한 곳을 가리키지 않았을 경우,
                 if (documentSnapshot.exists()){
                     Log.d(TAG, "Current group - data found")
+                    group_info_group_name.text = documentSnapshot.getString(GROUP_NAME)
                     group_info_owner_email.text = documentSnapshot.getString(OWNER_EMAIL)
                 } else {
                     Log.d(TAG, "Current group data: null")
@@ -204,6 +207,8 @@ class MainActivity : AppCompatActivity(),
      * 그룹 목록의 변경을 듣는 리스너를 등록함
      */
     private fun registerGroupList(user: FirebaseUser, firstSeenGroupName: String? = null) {
+        // 해당 뷰가 존재하지 않으면 실행하면 안됨.
+        if(group_list == null) return
         // 기존에 있다면 지워야 함.
         mGroupListListenerRegistration?.remove()
         // 그룹 목록이 Firestore의 변경 사항을 받게 등록함.
