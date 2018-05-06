@@ -13,6 +13,6 @@
         android:layout_marginStart="16dp"
         android:layout_weight="1"
         android:ems="10"
-        android:hint="@string/add_member_input"
+        android:hint="@string/add_member_email_input"
         android:inputType="textEmailAddress" />
 </LinearLayout>

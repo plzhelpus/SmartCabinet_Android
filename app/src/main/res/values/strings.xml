@@ -51,9 +51,18 @@
     <string name="group_list_is_empty">Group list is empty</string>
     <string name="group_list_refresh_failed">Refreshing group list failed</string>
 
+    // dialog_create_group
+    <string name="create_group_dialog_title">Create new group</string>
+    <string name="create_group_group_name_input">Name</string>
+    <string name="create_group_cabinet_id_input">Cabinet ID</string>
+    <string name="create_group_cabinet_key_input">Serial key</string>
+    <string name="create_group_cabinet_description_input">Description(Optional)</string>
+    <string name="create_group_positive_button">Create</string>
+    <string name="create_group_negative_button">Cancel</string>
+
     // dialog_add_member
     <string name="add_member_dialog_title">Add new member</string>
-    <string name="add_member_input">Email</string>
+    <string name="add_member_email_input">Email</string>
     <string name="add_member_positive_button">Add</string>
     <string name="add_member_negative_button">Cancel</string>
 
