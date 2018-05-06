@@ -51,29 +51,19 @@
     <string name="group_list_is_empty">Group list is empty</string>
     <string name="group_list_refresh_failed">Refreshing group list failed</string>
 
-    // activity_new_cabinet
-    <string name="new_cabinet_title">You have a new cabinet</string>
-    <string name="add_to_existed_group_text">Are you want to add this cabinet to your group?</string>
-    <string name="add_to_exisetd_group_button">Add</string>
-    <string name="create_new_group_text">Are you want to create new group?</string>
-    <string name="create_new_group_button">Create</string>
-
-    // fragment_create_group
-    <string name="group_name_input_text">New group name</string>
-    <string name="group_name_input">Name</string>
-    <string name="cabinet_description_input_text">Cabinet description (optional)</string>
-    <string name="cabinet_description_input">Description</string>
-    <string name="create_group_submit_button_text">Create</string>
-
-    // fragment_add_to_group
-    <string name="group_name_spinner_text">Group name</string>
-    <string name="add_to_group_button_text">Add</string>
-
     // dialog_add_member
     <string name="add_member_dialog_title">Add new member</string>
     <string name="add_member_input">Email</string>
-    <string name="add_member_alert_positive_button">Add</string>
-    <string name="add_member_alert_negative_button">Cancel</string>
+    <string name="add_member_positive_button">Add</string>
+    <string name="add_member_negative_button">Cancel</string>
+
+    // dialog_add_cabinet
+    <string name="add_cabinet_dialog_title">Add new cabinet</string>
+    <string name="add_cabinet_id_input">Cabinet ID</string>
+    <string name="add_cabinet_key_input">Serial key</string>
+    <string name="add_cabinet_description_input">Description(Optional)</string>
+    <string name="add_cabinet_positive_button">Add</string>
+    <string name="add_cabinet_negative_button">Cancel</string>
 
     // settings_group
     <string name="settings_group_owner_title">Owner</string>

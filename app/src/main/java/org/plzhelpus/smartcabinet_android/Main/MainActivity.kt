@@ -126,7 +126,7 @@ class MainActivity : AppCompatActivity(),
      */
     private fun createNewGroup() {
         // startActivity(NewCabinetActivity.createIntent(this))
-        // TODO : Recatoring
+        // TODO : 그룹 추가 버튼으로 변경
         val RPI3ADDRESS = "B8:27:EB:21:B6:12"
         val mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         val MY_UUID_SECURE = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
@@ -328,11 +328,11 @@ class MainActivity : AppCompatActivity(),
                 val builder: AlertDialog.Builder = AlertDialog.Builder(this)
                 builder.setTitle(R.string.add_member_dialog_title)
                         .setView(R.layout.dialog_add_member)
-                        .setPositiveButton(R.string.add_member_alert_positive_button, {
+                        .setPositiveButton(R.string.add_member_positive_button, {
                             dialog, id ->
 
                         })
-                        .setNegativeButton(R.string.add_member_alert_negative_button, {
+                        .setNegativeButton(R.string.add_member_negative_button, {
                             dialog, id ->
                         }).show()
 
