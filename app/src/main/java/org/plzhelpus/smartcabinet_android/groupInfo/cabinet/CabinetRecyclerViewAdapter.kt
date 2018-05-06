@@ -67,13 +67,13 @@ class CabinetRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>) : 
                             }
                             R.id.cabinet_menu_edit_description -> {
                                 Log.d(TAG, "cabinet_menu_edit_description")
+                                val editCabinetDialog = LayoutInflater.from(context).inflate(R.layout.dialog_edit_cabinet, null)
                                 AlertDialog.Builder(context)
                                         .setTitle(R.string.edit_cabinet_dialog_title)
-                                        .setView(R.layout.dialog_edit_cabinet)
+                                        .setView(editCabinetDialog)
                                         .setPositiveButton(R.string.edit_cabinet_positive_button, {
                                             dialog, id ->
-                                            // TODO 다이얼로그에 입력한 텍스트를 받아올 수 있는지 확인 필요
-                                            item.reference.update(DESCRIPTION, edit_cabinet_description_input.text.toString())
+                                            item.reference.update(DESCRIPTION, editCabinetDialog.edit_cabinet_description_input.text.toString())
                                                     .addOnSuccessListener {
                                                         Log.d(TAG, "Edit cabinet description successfully")
                                                     }
