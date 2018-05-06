@@ -125,37 +125,18 @@ class MainActivity : AppCompatActivity(),
      * 사물함에 요청
      */
     private fun createNewGroup() {
-        // startActivity(NewCabinetActivity.createIntent(this))
-        // TODO : 그룹 추가 버튼으로 변경
-        val RPI3ADDRESS = "B8:27:EB:21:B6:12"
-        val mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-        val MY_UUID_SECURE = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
-        val rpiDevice = mBluetoothAdapter.getRemoteDevice(RPI3ADDRESS)
-        val mmSocket: BluetoothSocket
-        val mmInStream: InputStream
-        val mmOutStream: OutputStream
-        var buffer = ByteArray(1024)
+        Log.d(TAG, "Create group button clicked")
+        AlertDialog.Builder(this)
+                .setTitle(R.string.create_group_dialog_title)
+                .setView(R.layout.dialog_create_group)
+                .setPositiveButton(R.string.create_group_positive_button, {
+                    dialog, id ->
+                    // TODO 그룹 추가 구현
+                })
+                .setNegativeButton(R.string.create_group_negative_button, {
+                    dialog, id ->
+                }).show()
 
-        try {
-            mmSocket = rpiDevice.createRfcommSocketToServiceRecord(
-                    MY_UUID_SECURE)
-            mmSocket.connect()
-
-            mmInStream = mmSocket.getInputStream()
-            mmOutStream = mmSocket.getOutputStream()
-
-            mmOutStream.write("TEST".toByteArray())
-
-            val bytes = mmInStream.read(buffer)
-
-            Log.i(TAG, "Get data" + String(buffer))
-
-            mmSocket.close()
-        } catch (e: IOException) {
-            Log.e(TAG, "IOException :", e);
-        }
-
-        Log.d(TAG, "Cabinet request button clicked")
     }
 
 
@@ -330,12 +311,11 @@ class MainActivity : AppCompatActivity(),
                         .setView(R.layout.dialog_add_member)
                         .setPositiveButton(R.string.add_member_positive_button, {
                             dialog, id ->
-
+                            // TODO 멤버 추가 구현
                         })
                         .setNegativeButton(R.string.add_member_negative_button, {
                             dialog, id ->
                         }).show()
-
                 return true
             }
             R.id.action_settings -> {
