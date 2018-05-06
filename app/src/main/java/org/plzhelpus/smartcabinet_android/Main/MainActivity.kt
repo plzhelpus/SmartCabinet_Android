@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     /**
-     * 사물함에 요청
+     * 새 그룹을 생성함
      */
     private fun createNewGroup() {
         Log.d(TAG, "Create group button clicked")
