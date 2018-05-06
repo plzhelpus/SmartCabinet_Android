@@ -48,8 +48,8 @@ class AdminFragment : Fragment() {
         mCurrentAdminListReference?.let{ currentAdminListReference ->
             mListenerRegistration?.remove()
             mListenerRegistration = currentAdminListReference.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                firebaseFirestoreException?.run{
-                    Log.w(TAG, "Admin list - Listen failed.", this)
+                firebaseFirestoreException?.let { exception ->
+                    Log.w(TAG, "Admin list - Listen failed.", exception)
                     return@addSnapshotListener
                 }
 

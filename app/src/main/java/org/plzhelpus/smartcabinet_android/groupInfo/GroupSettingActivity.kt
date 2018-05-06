@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
+import android.support.v7.app.AlertDialog
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
@@ -40,30 +41,35 @@ class GroupSettingActivity : AppCompatActivity() {
         intent.getStringExtra(GROUP_REF)?.let{ mGroupRef = FirebaseFirestore.getInstance().document(it) }
 
         settings_leave_group.setOnClickListener {
+            // TODO 그룹 소유자면 탈퇴 불가능
             Log.d(TAG, "leave group clicked")
-            FirebaseAuth.getInstance().currentUser?.let{ user ->
-                mGroupRef?.let{ groupRef ->
-                    FirebaseFirestore.getInstance()
-                            .collection(USERS)
-                            .document(user.uid)
-                            .collection(PARTICIPATED_GROUP)
-                            .document(groupRef.id).let{ groupDocInParticipatedGroup ->
-                        groupDocInParticipatedGroup.delete()
-                                .addOnSuccessListener {
-                                    Log.d(TAG, "Leave group successfully")
-                                    finish()
-                                }
-                                .addOnFailureListener {
-                                    Log.d(TAG, "Leave group failed")
-                                    showSnackbar(R.string.leave_group_failed)
-                                }
-                    }
-                }
-
-            }
-
-
-
+            AlertDialog.Builder(this)
+                    .setTitle(R.string.leave_group_dialog_title)
+                    .setPositiveButton(R.string.leave_group_positive_button, {
+                        dialog, id ->
+                        FirebaseAuth.getInstance().currentUser?.let { user ->
+                            mGroupRef?.let { groupRef ->
+                                FirebaseFirestore.getInstance()
+                                        .collection(USERS)
+                                        .document(user.uid)
+                                        .collection(PARTICIPATED_GROUP)
+                                        .document(groupRef.id).let { groupDocInParticipatedGroup ->
+                                            groupDocInParticipatedGroup.delete()
+                                                    .addOnSuccessListener {
+                                                        Log.d(TAG, "Leave group successfully")
+                                                        finish()
+                                                    }
+                                                    .addOnFailureListener { exception ->
+                                                        Log.w(TAG, "Leave group failed", exception)
+                                                        showSnackbar(R.string.leave_group_failed)
+                                                    }
+                                        }
+                            }
+                        }
+                    })
+                    .setNegativeButton(R.string.alert_dialog_cancel, {
+                        dialog, id ->
+                    }).show()
         }
         settings_demote_self.setOnClickListener {
             Log.d(TAG, "demote self clicked")
@@ -71,19 +77,27 @@ class GroupSettingActivity : AppCompatActivity() {
         }
         settings_delete_group.setOnClickListener {
             Log.d(TAG, "delete group clicked")
-            mGroupRef?.let{ groupRef ->
-                    groupRef.delete()
-                            .addOnSuccessListener {
-                                Log.d(TAG, "Delete group successfully")
-                                finish()
-                            }
-                            .addOnFailureListener { exception ->
-                                Log.d(TAG, "Error deleting document", exception)
-                                showSnackbar(R.string.delete_group_failed)
-                            }
-            }
-
+            AlertDialog.Builder(this)
+                    .setTitle(R.string.delete_group_dialog_title)
+                    .setPositiveButton(R.string.delete_group_positive_button, {
+                        dialog, id ->
+                        mGroupRef?.let{ groupRef ->
+                            groupRef.delete()
+                                    .addOnSuccessListener {
+                                        Log.d(TAG, "Delete group successfully")
+                                        finish()
+                                    }
+                                    .addOnFailureListener { exception ->
+                                        Log.w(TAG, "Error deleting document", exception)
+                                        showSnackbar(R.string.delete_group_failed)
+                                    }
+                        }
+                    })
+                    .setNegativeButton(R.string.alert_dialog_cancel, {
+                        dialog, id ->
+                    }).show()
         }
+
     }
 
     /**

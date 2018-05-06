@@ -6,6 +6,8 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="alert_dialog_ok">OK</string>
+    <string name="alert_dialog_cancel">Cancel</string>
     // MainActivity
     <string name="group_not_visible">This group is not visible now.</string>
     <string name="no_email">No email</string>
@@ -44,8 +46,7 @@
     <string name="delete_account_with_no_group_text">Do you want to delete your account now?</string>
     <string name="delete_account_with_no_group_button">Delete</string>
     <string name="delete_account_alert_text">Are you really want to delete your account?</string>
-    <string name="delete_account_alert_positive_button">Yes</string>
-    <string name="delete_account_alert_negative_button">No</string>
+    <string name="delete_account_alert_positive_button">Delete</string>
     <string name="delete_account_failed">Delete account failed</string>
 
     // NoGroupActivity
@@ -59,13 +60,11 @@
     <string name="create_group_cabinet_key_input">Serial key</string>
     <string name="create_group_cabinet_description_input">Description(Optional)</string>
     <string name="create_group_positive_button">Create</string>
-    <string name="create_group_negative_button">Cancel</string>
 
     // dialog_add_member
     <string name="add_member_dialog_title">Add new member</string>
     <string name="add_member_email_input">Email</string>
     <string name="add_member_positive_button">Add</string>
-    <string name="add_member_negative_button">Cancel</string>
 
     // dialog_add_cabinet
     <string name="add_cabinet_dialog_title">Add new cabinet</string>
@@ -73,7 +72,6 @@
     <string name="add_cabinet_key_input">Serial key</string>
     <string name="add_cabinet_description_input">Description(Optional)</string>
     <string name="add_cabinet_positive_button">Add</string>
-    <string name="add_cabinet_negative_button">Cancel</string>
 
     // settings_group
     <string name="settings_group_owner_title">Owner</string>
@@ -82,25 +80,40 @@
     <string name="settings_delete_group">Delete group</string>
     <string name="settings_leave_group">Leave group</string>
     <string name="settings_demote_self">Demote self</string>
-    <string name="delete_group_failed">Delete group failed</string>
+    <string name="leave_group_dialog_title">Leave this group?</string>
+    <string name="leave_group_positive_button">Leave</string>
+    <string name="delete_group_dialog_title">Delete this group?</string>
+    <string name="delete_group_positive_button">Delete</string>
     <string name="leave_group_failed">Leave group failed</string>
+    <string name="delete_group_failed">Delete group failed</string>
 
     // menu.cabinet
     <string name="cabinet_menu_open">Open</string>
     <string name="cabinet_menu_edit_description">Edit description</string>
     <string name="cabinet_menu_delete">Delete</string>
+    <string name="delete_cabinet_dialog_title">Delete this cabinet?</string>
+    <string name="delete_cabinet_positive_button">Delete</string>
     <string name="cabinet_popup_memu_button">Menu</string>
+
+    // dialog_edit_cabinet
+    <string name="edit_cabinet_dialog_title">Edit cabinet</string>
+    <string name="edit_cabinet_description_input">Description</string>
+    <string name="edit_cabinet_positive_button">Edit</string>
 
     // menu.member
     <string name="member_menu_delete">Delete</string>
     <string name="member_menu_promote_to_admin">Promote</string>
     <string name="member_menu_delegate_owner">Delegate owner</string>
+    <string name="delete_member_dialog_title">Delete this member?</string>
+    <string name="delete_member_positive_button">Delete</string>
     <string name="member_popup_menu_button">Menu</string>
 
     // menu.admin
     <string name="admin_menu_delete">Delete</string>
     <string name="admin_menu_delegate_owner">Delegate owner</string>
     <string name="admin_menu_demote_to_member">Demote</string>
+    <string name="delete_admin_dialog_title">Delete this admin?</string>
+    <string name="delete_admin_positive_button">Delete</string>
     <string name="admin_popup_menu_button">Menu</string>
 
     // GroupInfoFragmentPagerAdapter

@@ -1,5 +1,6 @@
 package org.plzhelpus.smartcabinet_android.groupInfo.member
 
+import android.support.v7.app.AlertDialog
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
@@ -39,14 +40,31 @@ class MemberRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>) : R
                         when(it.itemId){
                             R.id.member_menu_promote_to_admin -> {
                                 Log.d(TAG, "member_menu_promote_to_admin")
+                                // TODO 일반 회원 권한 변경 버튼 구현
                                 true
                             }
                             R.id.member_menu_delegate_owner -> {
                                 Log.d(TAG, "member_menu_delegate_owner")
+                                // TODO 회원에게 소유권 양도 버튼 구현
                                 true
                             }
                             R.id.member_menu_delete -> {
                                 Log.d(TAG, "member_menu_delete")
+                                AlertDialog.Builder(context)
+                                        .setTitle(R.string.delete_member_dialog_title)
+                                        .setPositiveButton(R.string.delete_member_positive_button, {
+                                            dialog, id ->
+                                            item.reference.delete()
+                                                    .addOnSuccessListener {
+                                                        Log.d(TAG, "Delete member successfully - ${item.getString(EMAIL)}")
+                                                    }
+                                                    .addOnFailureListener { exception ->
+                                                        Log.w(TAG, "Delete member failed - ${item.getString(EMAIL)}", exception)
+                                                    }
+                                        })
+                                        .setNegativeButton(R.string.alert_dialog_cancel, {
+                                            dialog, id ->
+                                        }).show()
                                 true
                             }
                             else -> false

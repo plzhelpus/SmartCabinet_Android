@@ -1,5 +1,6 @@
 package org.plzhelpus.smartcabinet_android.groupInfo.admin
 
+import android.support.v7.app.AlertDialog
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
@@ -41,14 +42,32 @@ class AdminRecyclerViewAdapter(
                         when(it.itemId){
                             R.id.admin_menu_demote_to_member -> {
                                 Log.d(TAG, "admin_menu_demote_to_member")
+                                // TODO 관리자 권한 낮추는 버튼 구현
                                 true
                             }
                             R.id.admin_menu_delegate_owner -> {
                                 Log.d(TAG, "admin_menu_delegate_owner")
+                                // TODO 관리자에게 소유권 넘기는 버튼 구현
                                 true
                             }
                             R.id.admin_menu_delete -> {
                                 Log.d(TAG, "admin_menu_delete")
+                                AlertDialog.Builder(context)
+                                        .setTitle(R.string.delete_admin_dialog_title)
+                                        .setPositiveButton(R.string.delete_admin_positive_button, {
+                                            dialog, id ->
+                                            item.reference.delete()
+                                                    .addOnSuccessListener {
+                                                        Log.d(TAG, "Delete admin successfully - ${item.getString(EMAIL)}")
+                                                    }
+                                                    .addOnFailureListener { exception ->
+                                                        Log.w(TAG, "Delete admin failed - ${item.getString(EMAIL)}", exception)
+                                                    }
+                                        })
+                                        .setNegativeButton(R.string.alert_dialog_cancel, {
+                                            dialog, id ->
+                                        }).show()
+
                                 true
                             }
                             else -> false

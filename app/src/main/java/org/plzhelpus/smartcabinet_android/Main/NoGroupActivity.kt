@@ -47,7 +47,7 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
                         dialog, id ->
                         // TODO 그룹 추가 구현
                     })
-                    .setNegativeButton(R.string.create_group_negative_button, {
+                    .setNegativeButton(R.string.alert_dialog_cancel, {
                         dialog, id ->
                     }).show()
         }
@@ -93,7 +93,7 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
             AlertDialog.Builder(this)
                     .setMessage(R.string.delete_account_alert_text)
                     .setPositiveButton(R.string.delete_account_alert_positive_button, { _, _ -> deleteAccount() })
-                    .setNegativeButton(R.string.delete_account_alert_negative_button, null)
+                    .setNegativeButton(R.string.alert_dialog_cancel, null)
                     .show()
         }
     }

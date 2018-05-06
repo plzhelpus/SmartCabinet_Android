@@ -48,8 +48,8 @@ class CabinetFragment : Fragment() {
         mCurrentCabinetListReference?.let{ currentCabinetListReference ->
             mListenerRegistration?.remove()
             mListenerRegistration = currentCabinetListReference.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                firebaseFirestoreException?.run{
-                    Log.w(TAG, "Cabinet list - Listen failed.", this)
+                firebaseFirestoreException?.let{exception ->
+                    Log.w(TAG, "Cabinet list - Listen failed.", exception)
                     return@addSnapshotListener
                 }
 

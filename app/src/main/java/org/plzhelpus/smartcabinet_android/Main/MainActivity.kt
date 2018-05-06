@@ -1,7 +1,5 @@
 package org.plzhelpus.smartcabinet_android.main
 
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
@@ -32,9 +30,6 @@ import org.plzhelpus.smartcabinet_android.*
 import org.plzhelpus.smartcabinet_android.groupInfo.GroupSettingActivity
 import org.plzhelpus.smartcabinet_android.auth.AuthUiActivity
 import org.plzhelpus.smartcabinet_android.groupInfo.GroupInfoFragmentPagerAdapter
-import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
 import java.util.*
 
 
@@ -133,7 +128,7 @@ class MainActivity : AppCompatActivity(),
                     dialog, id ->
                     // TODO 그룹 추가 구현
                 })
-                .setNegativeButton(R.string.create_group_negative_button, {
+                .setNegativeButton(R.string.alert_dialog_cancel, {
                     dialog, id ->
                 }).show()
 
@@ -189,8 +184,8 @@ class MainActivity : AppCompatActivity(),
             mCurrentGroupListenerRegistration?.remove()
             // 그룹 문서의 변경사항을 받게 함.
             mCurrentGroupListenerRegistration = currentGroup.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                firebaseFirestoreException?.let {
-                    Log.w(TAG, "Current group - Listen failed.", it)
+                firebaseFirestoreException?.let { exception ->
+                    Log.w(TAG, "Current group - Listen failed.", exception)
                     return@addSnapshotListener
                 }
 
@@ -214,8 +209,8 @@ class MainActivity : AppCompatActivity(),
         // 그룹 목록이 Firestore의 변경 사항을 받게 등록함.
         mDb.collection(USERS).document(user.uid).collection(PARTICIPATED_GROUP).run{
             mGroupListListenerRegistration = addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                firebaseFirestoreException?.let{
-                    Log.w(TAG, "Participated group - Listen failed.", it)
+                firebaseFirestoreException?.let{ exception ->
+                    Log.w(TAG, "Participated group - Listen failed.", exception)
                     return@addSnapshotListener
                 }
 
@@ -237,10 +232,10 @@ class MainActivity : AppCompatActivity(),
                                     }
                                 } ?: let{
                                     // 만약 처음 보여주어야 할 그룹이 정해져 있다면 해당 그룹으로 변경함
-                                    firstSeenGroupName?.let{
+                                    firstSeenGroupName?.let{ firstSeenGroupName ->
                                         // 만약 해당 그룹이 그룹 목록에 존재하면 그 그룹으로 변경함
                                         param.find { document ->
-                                            document.getString(GROUP_NAME) == it
+                                            document.getString(GROUP_NAME) == firstSeenGroupName
                                         }?.let{ findResult ->
                                             return findResult
                                         }
@@ -313,7 +308,7 @@ class MainActivity : AppCompatActivity(),
                             dialog, id ->
                             // TODO 사물함 추가 구현
                         })
-                        .setNegativeButton(R.string.add_cabinet_negative_button, {
+                        .setNegativeButton(R.string.alert_dialog_cancel, {
                             dialog, id ->
                         }).show()
                 return true
@@ -326,7 +321,7 @@ class MainActivity : AppCompatActivity(),
                             dialog, id ->
                             // TODO 멤버 추가 구현
                         })
-                        .setNegativeButton(R.string.add_member_negative_button, {
+                        .setNegativeButton(R.string.alert_dialog_cancel, {
                             dialog, id ->
                         }).show()
                 return true

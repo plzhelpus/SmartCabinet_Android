@@ -36,5 +36,5 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/create_group_cabinet_description_input"
-        android:inputType="textPersonName" />
+        android:inputType="text" />
 </LinearLayout>

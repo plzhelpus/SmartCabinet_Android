@@ -48,8 +48,8 @@ class MemberFragment : Fragment(){
         mCurrentMemberListReference?.let{ currentMemberListReference ->
             mListenerRegistration?.remove()
             mListenerRegistration = currentMemberListReference.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                firebaseFirestoreException?.run{
-                    Log.w(TAG, "Member list - Listen failed.", this)
+                firebaseFirestoreException?.let{exception ->
+                    Log.w(TAG, "Member list - Listen failed.", exception)
                     return@addSnapshotListener
                 }
 
