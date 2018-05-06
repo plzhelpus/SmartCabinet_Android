@@ -98,9 +98,9 @@ class MainActivity : AppCompatActivity(),
             registerGroupList(currentUser, intent.getStringExtra(FIRST_SEEN_GROUP))
         } ?: run { switchToSignInUI() }
 
-        // 사물함 요청 버튼 구현
-        cabinet_request_button.setOnClickListener{
-            requestCabinet()
+        // 네비게이션 드로어에 그룹 추가 버튼 구현
+        create_new_group_button.setOnClickListener{
+            createNewGroup()
         }
 
         // 네비게이션 드로어에 사용자 로그아웃 버튼 구현
@@ -124,7 +124,7 @@ class MainActivity : AppCompatActivity(),
     /**
      * 사물함에 요청
      */
-    private fun requestCabinet() {
+    private fun createNewGroup() {
         // startActivity(NewCabinetActivity.createIntent(this))
         // TODO : Recatoring
         val RPI3ADDRESS = "B8:27:EB:21:B6:12"
