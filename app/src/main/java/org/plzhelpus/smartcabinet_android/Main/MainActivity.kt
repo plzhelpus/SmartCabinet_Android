@@ -305,6 +305,19 @@ class MainActivity : AppCompatActivity(),
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.action_add_cabinet -> {
+                AlertDialog.Builder(this)
+                        .setTitle(R.string.add_cabinet_dialog_title)
+                        .setView(R.layout.dialog_add_cabinet)
+                        .setPositiveButton(R.string.add_cabinet_positive_button, {
+                            dialog, id ->
+                            // TODO 사물함 추가 구현
+                        })
+                        .setNegativeButton(R.string.add_cabinet_negative_button, {
+                            dialog, id ->
+                        }).show()
+                return true
+            }
             R.id.action_add_member -> {
                 val builder: AlertDialog.Builder = AlertDialog.Builder(this)
                 builder.setTitle(R.string.add_member_dialog_title)

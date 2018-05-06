@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_add_cabinet"
+        android:icon="@drawable/ic_lock_outline_white_18dp"
+        android:title="@string/action_add_cabinet"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/action_add_member"
         android:icon="@drawable/ic_person_add_white_18dp"
         android:title="@string/action_add_member"

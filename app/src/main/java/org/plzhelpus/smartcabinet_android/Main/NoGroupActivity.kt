@@ -39,7 +39,17 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
         mAuth = FirebaseAuth.getInstance()
 
         being_new_owner_button.setOnClickListener{
-            // TODO 연결 버튼과 같이 설정
+            Log.d(TAG, "Create group button clicked")
+            AlertDialog.Builder(this)
+                    .setTitle(R.string.create_group_dialog_title)
+                    .setView(R.layout.dialog_create_group)
+                    .setPositiveButton(R.string.create_group_positive_button, {
+                        dialog, id ->
+                        // TODO 그룹 추가 구현
+                    })
+                    .setNegativeButton(R.string.create_group_negative_button, {
+                        dialog, id ->
+                    }).show()
         }
 
         already_member_but_not_found_group_button.setOnClickListener{

@@ -11,6 +11,7 @@
     <string name="no_email">No email</string>
 
     // Menu
+    <string name="action_add_cabinet">Add cabinet</string>
     <string name="action_settings">Settings</string>
     <string name="action_add_member">Add member</string>
 
@@ -35,7 +36,7 @@
 
     // activity_no_group
     <string name="no_group_title">You are not paticipating any group</string>
-    <string name="being_new_owner_text">Are you have new cabinet?</string>
+    <string name="being_new_owner_text">Do you want to create new group? (Cabinet needed)</string>
     <string name="already_member_but_not_found_group_text">Aren\'t your groups visible?</string>
     <string name="group_list_refresh_button_text">Refresh</string>
     <string name="no_group_sign_out_text">Are you want to sign out?</string>
