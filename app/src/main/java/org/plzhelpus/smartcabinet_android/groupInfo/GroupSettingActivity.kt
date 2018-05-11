@@ -11,8 +11,8 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.android.synthetic.main.activity_group_setting.*
-import kotlinx.android.synthetic.main.settings_group_admin.*
 import kotlinx.android.synthetic.main.settings_group_member.*
 import kotlinx.android.synthetic.main.settings_group_owner.*
 import org.plzhelpus.smartcabinet_android.*
@@ -41,29 +41,35 @@ class GroupSettingActivity : AppCompatActivity() {
         intent.getStringExtra(GROUP_REF)?.let{ mGroupRef = FirebaseFirestore.getInstance().document(it) }
 
         settings_leave_group.setOnClickListener {
-            // TODO 그룹 소유자면 탈퇴 불가능
+
+            // TODO 테스트 필요
             Log.d(TAG, "leave group clicked")
             AlertDialog.Builder(this)
                     .setTitle(R.string.leave_group_dialog_title)
-                    .setPositiveButton(R.string.leave_group_positive_button, {
-                        dialog, id ->
+                    .setPositiveButton(R.string.leave_group_positive_button, { dialog, id ->
                         FirebaseAuth.getInstance().currentUser?.let { user ->
                             mGroupRef?.let { groupRef ->
-                                FirebaseFirestore.getInstance()
-                                        .collection(USERS)
-                                        .document(user.uid)
-                                        .collection(PARTICIPATED_GROUP)
-                                        .document(groupRef.id).let { groupDocInParticipatedGroup ->
-                                            groupDocInParticipatedGroup.delete()
-                                                    .addOnSuccessListener {
-                                                        Log.d(TAG, "Leave group successfully")
-                                                        finish()
-                                                    }
-                                                    .addOnFailureListener { exception ->
-                                                        Log.w(TAG, "Leave group failed", exception)
-                                                        showSnackbar(R.string.leave_group_failed)
-                                                    }
-                                        }
+                                FirebaseFirestore.getInstance().runTransaction { transaction ->
+                                    val adminDocument = transaction.get(groupRef.collection(ADMIN_REF).document(user.uid))
+                                    if (adminDocument.exists()) {
+                                        transaction.delete(adminDocument.getDocumentReference(USER_REF).collection(PARTICIPATED_GROUP).document(groupRef.id))
+                                        transaction.delete(adminDocument.reference)
+                                        return@runTransaction
+                                    }
+                                    val memberDocument = transaction.get(groupRef.collection(MEMBER_REF).document(user.uid))
+                                    if (memberDocument.exists()) {
+                                        transaction.delete(memberDocument.getDocumentReference(USER_REF).collection(PARTICIPATED_GROUP).document(groupRef.id))
+                                        transaction.delete(memberDocument.reference)
+                                        return@runTransaction
+                                    }
+                                    throw FirebaseFirestoreException("You are neither a member nor an admin in this group.", FirebaseFirestoreException.Code.ABORTED)
+                                }.addOnSuccessListener {
+                                    Log.d(TAG, "Leave group success")
+                                }.addOnFailureListener { exception ->
+                                    Log.w(TAG, "Leave group failed", exception)
+                                    showSnackbar(R.string.leave_group_failed)
+                                }
+
                             }
                         }
                     })
@@ -72,6 +78,8 @@ class GroupSettingActivity : AppCompatActivity() {
                     }).show()
         }
         settings_delete_group.setOnClickListener {
+            // TODO 테스트 필요
+            // TODO 그룹 문서를 삭제했을 때 트리거되는 클라우드 함수 구현 필요
             Log.d(TAG, "delete group clicked")
             AlertDialog.Builder(this)
                     .setTitle(R.string.delete_group_dialog_title)
