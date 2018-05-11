@@ -216,6 +216,7 @@ class MainActivity : AppCompatActivity(),
             mGroupListListenerRegistration = addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                 firebaseFirestoreException?.let{ exception ->
                     Log.w(TAG, "Participated group - Listen failed.", exception)
+                    handleNoGroups()
                     return@addSnapshotListener
                 }
 
