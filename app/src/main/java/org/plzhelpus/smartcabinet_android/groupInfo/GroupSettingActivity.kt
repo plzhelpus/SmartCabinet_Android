@@ -71,10 +71,6 @@ class GroupSettingActivity : AppCompatActivity() {
                         dialog, id ->
                     }).show()
         }
-        settings_demote_self.setOnClickListener {
-            Log.d(TAG, "demote self clicked")
-            // TODO 서버에서 해야 함
-        }
         settings_delete_group.setOnClickListener {
             Log.d(TAG, "delete group clicked")
             AlertDialog.Builder(this)

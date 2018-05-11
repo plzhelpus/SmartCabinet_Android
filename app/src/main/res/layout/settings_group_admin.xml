@@ -17,20 +17,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/settings_demote_self"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:paddingBottom="16dp"
-        android:paddingEnd="@dimen/text_margin"
-        android:paddingStart="@dimen/text_margin"
-        android:paddingTop="16dp"
-        android:text="@string/settings_demote_self"
-        android:textColor="#000"
-        android:textSize="18sp"
-        android:background="?android:attr/selectableItemBackground"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/settings_group_admin_title" />
 </android.support.constraint.ConstraintLayout>
