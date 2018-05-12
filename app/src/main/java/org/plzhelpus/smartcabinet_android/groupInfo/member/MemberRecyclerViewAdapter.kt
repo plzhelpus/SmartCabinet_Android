@@ -1,6 +1,5 @@
 package org.plzhelpus.smartcabinet_android.groupInfo.member
 
-import android.support.v7.app.AlertDialog
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView

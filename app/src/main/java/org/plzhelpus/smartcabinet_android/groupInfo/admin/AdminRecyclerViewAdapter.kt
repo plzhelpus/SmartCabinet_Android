@@ -1,6 +1,5 @@
 package org.plzhelpus.smartcabinet_android.groupInfo.admin
 
-import android.support.v7.app.AlertDialog
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
@@ -9,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
 import org.plzhelpus.smartcabinet_android.R
 import kotlinx.android.synthetic.main.admin.view.*
 import org.plzhelpus.smartcabinet_android.EMAIL

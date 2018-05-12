@@ -22,6 +22,11 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.dialog_edit_cabinet.view.*
+import kotlinx.android.synthetic.main.nav_drawer.*
+import kotlinx.android.synthetic.main.nav_header_main.*
 import org.plzhelpus.smartcabinet_android.*
 import org.plzhelpus.smartcabinet_android.groupInfo.GroupSettingActivity
 import org.plzhelpus.smartcabinet_android.auth.AuthUiActivity

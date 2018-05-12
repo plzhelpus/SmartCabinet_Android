@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.android.synthetic.main.cabinet_list.*
 import org.plzhelpus.smartcabinet_android.R
@@ -37,7 +38,7 @@ class CabinetFragment : Fragment() {
         if (view is RecyclerView) {
             view.run{
                 layoutManager = LinearLayoutManager(context)
-                adapter = CabinetRecyclerViewAdapter(ArrayList())
+                adapter = CabinetRecyclerViewAdapter(ArrayList(), activity as CabinetListItemHandler<DocumentSnapshot>)
                 setHasFixedSize(true)
             }
         }

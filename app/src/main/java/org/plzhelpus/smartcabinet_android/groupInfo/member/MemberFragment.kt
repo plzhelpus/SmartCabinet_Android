@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.android.synthetic.main.member_list.*
 import org.plzhelpus.smartcabinet_android.R
@@ -37,7 +38,7 @@ class MemberFragment : Fragment(){
         if (view is RecyclerView) {
             view.run {
                 layoutManager = LinearLayoutManager(context)
-                adapter = MemberRecyclerViewAdapter(ArrayList())
+                adapter = MemberRecyclerViewAdapter(ArrayList(), activity as MemberListItemHandler<DocumentSnapshot>)
                 setHasFixedSize(true)
             }
         }
