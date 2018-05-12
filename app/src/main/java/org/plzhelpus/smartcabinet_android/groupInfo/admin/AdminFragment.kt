@@ -13,6 +13,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.android.synthetic.main.admin_list.*
 import org.plzhelpus.smartcabinet_android.R
+import org.plzhelpus.smartcabinet_android.main.MainActivity
 
 /**
  * 그룹 관리자 목록을 보여주는 프래그먼트
@@ -53,6 +54,8 @@ class AdminFragment : Fragment() {
             mListenerRegistration = currentAdminListReference.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                 firebaseFirestoreException?.let { exception ->
                     Log.w(TAG, "Admin list - Listen failed.", exception)
+                    // TODO 테스트 필요
+                    (activity as MainActivity).showSnackbar(R.string.cannot_load_list)
                     return@addSnapshotListener
                 }
 

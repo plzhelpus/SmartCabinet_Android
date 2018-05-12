@@ -18,10 +18,7 @@ import android.support.design.widget.Snackbar
 import android.support.annotation.StringRes
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.dialog_edit_cabinet.view.*
@@ -545,7 +542,7 @@ class MainActivity : AppCompatActivity(),
     /**
      * 스낵바 출력
      */
-    private fun showSnackbar(@StringRes errorMessageRes: Int) {
+    fun showSnackbar(@StringRes errorMessageRes: Int) {
         Snackbar.make(main_root_layout, errorMessageRes, Snackbar.LENGTH_LONG).show()
     }
 }

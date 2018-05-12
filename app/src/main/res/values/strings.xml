@@ -11,6 +11,7 @@
     // MainActivity
     <string name="group_not_visible">This group is not visible now.</string>
     <string name="no_email">No email</string>
+    <string name="cannot_load_list">Can\'t load list</string>
 
     // Menu
     <string name="action_add_cabinet">Add cabinet</string>

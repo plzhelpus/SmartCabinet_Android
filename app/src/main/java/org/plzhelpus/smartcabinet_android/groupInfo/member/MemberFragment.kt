@@ -13,6 +13,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.android.synthetic.main.member_list.*
 import org.plzhelpus.smartcabinet_android.R
+import org.plzhelpus.smartcabinet_android.main.MainActivity
 
 /**
  * 그룹 일반 회원 목록을 보여주는 프래그먼트
@@ -53,6 +54,8 @@ class MemberFragment : Fragment(){
             mListenerRegistration = currentMemberListReference.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                 firebaseFirestoreException?.let{exception ->
                     Log.w(TAG, "Member list - Listen failed.", exception)
+                    // TODO 테스트 필요 
+                    (activity as MainActivity).showSnackbar(R.string.cannot_load_list)
                     return@addSnapshotListener
                 }
 
