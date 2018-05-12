@@ -40,9 +40,10 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
 
         being_new_owner_button.setOnClickListener{
             Log.d(TAG, "Create group button clicked")
+            val createGroupDialog = layoutInflater.inflate(R.layout.dialog_create_group, null)
             AlertDialog.Builder(this)
                     .setTitle(R.string.create_group_dialog_title)
-                    .setView(R.layout.dialog_create_group)
+                    .setView(createGroupDialog)
                     .setPositiveButton(R.string.create_group_positive_button, {
                         dialog, id ->
                         // TODO 그룹 추가 구현

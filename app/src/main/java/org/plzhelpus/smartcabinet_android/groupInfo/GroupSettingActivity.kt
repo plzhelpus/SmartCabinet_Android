@@ -65,6 +65,7 @@ class GroupSettingActivity : AppCompatActivity() {
                                     throw FirebaseFirestoreException("You are neither a member nor an admin in this group.", FirebaseFirestoreException.Code.ABORTED)
                                 }.addOnSuccessListener {
                                     Log.d(TAG, "Leave group success")
+                                    finish()
                                 }.addOnFailureListener { exception ->
                                     Log.w(TAG, "Leave group failed", exception)
                                     showSnackbar(R.string.leave_group_failed)

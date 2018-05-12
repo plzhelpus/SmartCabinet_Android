@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.firestore.DocumentSnapshot
+import kotlinx.android.synthetic.main.group.view.*
 import org.plzhelpus.smartcabinet_android.GROUP_NAME
 import org.plzhelpus.smartcabinet_android.R
 

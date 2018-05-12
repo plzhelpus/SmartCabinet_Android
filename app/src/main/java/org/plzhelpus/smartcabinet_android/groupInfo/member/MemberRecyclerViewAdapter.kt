@@ -44,7 +44,7 @@ class MemberRecyclerViewAdapter(
                                 mHandler.promoteMemberToAdmin(item)
                                 true
                             }
-                            R.id.member_menu_delegate_owner -> {
+                            R.id.member_menu_delegate_ownership -> {
                                 Log.d(TAG, "member_menu_delegate_owner")
                                 mHandler.delegateOwnershipToMember(item)
                                 true

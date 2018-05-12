@@ -47,7 +47,7 @@ class AdminRecyclerViewAdapter(
                             }
                             R.id.admin_menu_delegate_ownership -> {
                                 Log.d(TAG, "admin_menu_delegate_ownership")
-                                mHandler.delegateOwnerToAdmin(item)
+                                mHandler.delegateOwnershipToAdmin(item)
                                 true
                             }
                             R.id.admin_menu_delete -> {
