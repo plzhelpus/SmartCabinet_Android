@@ -110,7 +110,7 @@
 
     // menu.admin
     <string name="admin_menu_delete">Delete</string>
-    <string name="admin_menu_delegate_owner">Delegate owner</string>
+    <string name="admin_menu_delegate_ownership">Delegate ownership</string>
     <string name="admin_menu_demote_to_member">Demote</string>
     <string name="delete_admin_dialog_title">Delete this admin?</string>
     <string name="delete_admin_positive_button">Delete</string>

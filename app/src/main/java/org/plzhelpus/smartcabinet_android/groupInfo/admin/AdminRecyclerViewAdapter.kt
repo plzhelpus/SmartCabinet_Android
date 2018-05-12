@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
 import org.plzhelpus.smartcabinet_android.R
 import kotlinx.android.synthetic.main.admin.view.*
 import org.plzhelpus.smartcabinet_android.EMAIL
@@ -17,7 +18,8 @@ import org.plzhelpus.smartcabinet_android.EMAIL
  * 그룹 관리자 목록을 관리하는 어뎁터
  */
 class AdminRecyclerViewAdapter(
-        private val mValues: List<DocumentSnapshot>)
+        private val mValues: List<DocumentSnapshot>,
+        private val mHandler: AdminListItemHandler<DocumentSnapshot>)
     : RecyclerView.Adapter<AdminRecyclerViewAdapter.ViewHolder>() {
 
     companion object {
@@ -42,32 +44,17 @@ class AdminRecyclerViewAdapter(
                         when(it.itemId){
                             R.id.admin_menu_demote_to_member -> {
                                 Log.d(TAG, "admin_menu_demote_to_member")
-                                // TODO 관리자 권한 낮추는 버튼 구현
+                                mHandler.demoteAdminToMember(item)
                                 true
                             }
-                            R.id.admin_menu_delegate_owner -> {
-                                Log.d(TAG, "admin_menu_delegate_owner")
-                                // TODO 관리자에게 소유권 넘기는 버튼 구현
+                            R.id.admin_menu_delegate_ownership -> {
+                                Log.d(TAG, "admin_menu_delegate_ownership")
+                                mHandler.delegateOwnerToAdmin(item)
                                 true
                             }
                             R.id.admin_menu_delete -> {
                                 Log.d(TAG, "admin_menu_delete")
-                                AlertDialog.Builder(context)
-                                        .setTitle(R.string.delete_admin_dialog_title)
-                                        .setPositiveButton(R.string.delete_admin_positive_button, {
-                                            dialog, id ->
-                                            item.reference.delete()
-                                                    .addOnSuccessListener {
-                                                        Log.d(TAG, "Delete admin successfully - ${item.getString(EMAIL)}")
-                                                    }
-                                                    .addOnFailureListener { exception ->
-                                                        Log.w(TAG, "Delete admin failed - ${item.getString(EMAIL)}", exception)
-                                                    }
-                                        })
-                                        .setNegativeButton(R.string.alert_dialog_cancel, {
-                                            dialog, id ->
-                                        }).show()
-
+                                mHandler.deleteAdmin(item)
                                 true
                             }
                             else -> false

@@ -10,14 +10,10 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.app_bar_main.*
 import android.text.TextUtils
 import android.util.Log
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseUser
-import kotlinx.android.synthetic.main.nav_drawer.*
-import kotlinx.android.synthetic.main.nav_header_main.*
 import android.support.design.widget.Snackbar
 import android.support.annotation.StringRes
 import android.support.v7.app.AlertDialog
@@ -30,6 +26,9 @@ import org.plzhelpus.smartcabinet_android.*
 import org.plzhelpus.smartcabinet_android.groupInfo.GroupSettingActivity
 import org.plzhelpus.smartcabinet_android.auth.AuthUiActivity
 import org.plzhelpus.smartcabinet_android.groupInfo.GroupInfoFragmentPagerAdapter
+import org.plzhelpus.smartcabinet_android.groupInfo.admin.AdminListItemHandler
+import org.plzhelpus.smartcabinet_android.groupInfo.cabinet.CabinetListItemHandler
+import org.plzhelpus.smartcabinet_android.groupInfo.member.MemberListItemHandler
 import java.util.*
 
 
@@ -41,7 +40,10 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(),
         FirebaseAuth.AuthStateListener,
-        RecyclerViewOnListItemClickListener<DocumentSnapshot> {
+        GroupListItemHandler<DocumentSnapshot>,
+        AdminListItemHandler<DocumentSnapshot>,
+        CabinetListItemHandler<DocumentSnapshot>,
+        MemberListItemHandler<DocumentSnapshot> {
     private var mGroupListListenerRegistration : ListenerRegistration? = null
     private var mCurrentGroupListenerRegistration : ListenerRegistration? = null
     private var mCurrentGroup : DocumentReference? = null
@@ -340,9 +342,106 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    override fun onListItemClicked(item: DocumentSnapshot) {
+    override fun onGroupListItemClicked(item: DocumentSnapshot) {
         changeGroupInfo(item)
         drawer_layout.closeDrawers()
+    }
+
+    override fun demoteAdminToMember(item: DocumentSnapshot) {
+        // TODO 관리자 권한 낮추는 버튼 구현
+    }
+
+    override fun delegateOwnerToAdmin(item: DocumentSnapshot) {
+        // TODO 관리자에게 소유권 넘기는 버튼 구현
+    }
+
+    override fun deleteAdmin(item: DocumentSnapshot) {
+        // TODO 삭제 점검
+        AlertDialog.Builder(this)
+                .setTitle(R.string.delete_admin_dialog_title)
+                .setPositiveButton(R.string.delete_admin_positive_button, {
+                    dialog, id ->
+                    item.reference.delete()
+                            .addOnSuccessListener {
+                                Log.d(TAG, "Delete admin successfully - ${item.getString(EMAIL)}")
+                            }
+                            .addOnFailureListener { exception ->
+                                Log.w(TAG, "Delete admin failed - ${item.getString(EMAIL)}", exception)
+                            }
+                })
+                .setNegativeButton(R.string.alert_dialog_cancel, {
+                    dialog, id ->
+                }).show()
+    }
+
+    override fun openCabinet(item: DocumentSnapshot) {
+        // TODO 사물함 열림 버튼 구현
+    }
+
+    override fun deleteCabinet(item: DocumentSnapshot) {
+        // TODO 삭제 점검
+        AlertDialog.Builder(this)
+                .setTitle(R.string.delete_cabinet_dialog_title)
+                .setPositiveButton(R.string.delete_cabinet_positive_button, {
+                    dialog, id ->
+                    item.reference.delete()
+                            .addOnSuccessListener {
+                                Log.d(TAG, "Delete cabinet successfully - ${item.id}")
+                            }
+                            .addOnFailureListener {exception ->
+                                Log.w(TAG, "Delete cabinet failed - ${item.id}", exception)
+                            }
+                })
+                .setNegativeButton(R.string.alert_dialog_cancel, {
+                    dialog, id ->
+                }).show()
+    }
+
+    override fun editCabinetDescription(item: DocumentSnapshot) {
+        val editCabinetDialog = layoutInflater.inflate(R.layout.dialog_edit_cabinet, null)
+        AlertDialog.Builder(this)
+                .setTitle(R.string.edit_cabinet_dialog_title)
+                .setView(editCabinetDialog)
+                .setPositiveButton(R.string.edit_cabinet_positive_button, {
+                    dialog, id ->
+                    item.reference.update(DESCRIPTION, editCabinetDialog.edit_cabinet_description_input.text.toString())
+                            .addOnSuccessListener {
+                                Log.d(TAG, "Edit cabinet description successfully")
+                            }
+                            .addOnFailureListener {exception ->
+                                Log.w(TAG, "Edit cabinet description failed", exception)
+                            }
+                })
+                .setNegativeButton(R.string.alert_dialog_cancel, {
+                    dialog, id ->
+                }).show()
+    }
+
+    override fun promoteMemberToAdmin(item: DocumentSnapshot) {
+        // TODO 일반 회원 권한 변경 버튼 구현
+    }
+
+    override fun delegateOwnershipToMember(item: DocumentSnapshot) {
+        // TODO 회원에게 소유권 양도 버튼 구현
+    }
+
+    override fun deleteMember(item: DocumentSnapshot) {
+        // TODO 삭제 점검
+        AlertDialog.Builder(this)
+                .setTitle(R.string.delete_member_dialog_title)
+                .setPositiveButton(R.string.delete_member_positive_button, {
+                    dialog, id ->
+                    item.reference.delete()
+                            .addOnSuccessListener {
+                                Log.d(TAG, "Delete member successfully - ${item.getString(EMAIL)}")
+                            }
+                            .addOnFailureListener { exception ->
+                                Log.w(TAG, "Delete member failed - ${item.getString(EMAIL)}", exception)
+                            }
+                })
+                .setNegativeButton(R.string.alert_dialog_cancel, {
+                    dialog, id ->
+                }).show()
     }
 
     /**

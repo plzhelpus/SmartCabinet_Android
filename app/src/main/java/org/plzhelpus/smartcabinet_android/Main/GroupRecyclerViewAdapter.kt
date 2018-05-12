@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.firestore.DocumentSnapshot
-import kotlinx.android.synthetic.main.group.view.*
 import org.plzhelpus.smartcabinet_android.GROUP_NAME
 import org.plzhelpus.smartcabinet_android.R
 
@@ -14,7 +13,7 @@ import org.plzhelpus.smartcabinet_android.R
  * 그룹 목록을 관리하는 어뎁터
  */
 class GroupRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>,
-                               private val mListener: RecyclerViewOnListItemClickListener<DocumentSnapshot>?) : RecyclerView.Adapter<GroupRecyclerViewAdapter.ViewHolder>(){
+                               private val mListener: GroupListItemHandler<DocumentSnapshot>?) : RecyclerView.Adapter<GroupRecyclerViewAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -29,7 +28,7 @@ class GroupRecyclerViewAdapter(private val mValues: List<DocumentSnapshot>,
                 group_list_group_name.text = item.getString(GROUP_NAME)
                 setOnClickListener{
                     mListener?.run{
-                        onListItemClicked(item)
+                        onGroupListItemClicked(item)
                     }
                 }
             }
