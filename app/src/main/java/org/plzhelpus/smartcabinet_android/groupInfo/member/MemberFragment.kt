@@ -54,7 +54,7 @@ class MemberFragment : Fragment(){
             mListenerRegistration = currentMemberListReference.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                 firebaseFirestoreException?.let{exception ->
                     Log.w(TAG, "Member list - Listen failed.", exception)
-                    // TODO 테스트 필요 
+                    // TODO 테스트 필요
                     (activity as MainActivity).showSnackbar(R.string.cannot_load_list)
                     return@addSnapshotListener
                 }

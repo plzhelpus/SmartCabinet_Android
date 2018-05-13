@@ -27,10 +27,11 @@ class GroupSettingActivity : AppCompatActivity() {
 
     companion object {
         private val TAG = "GroupSettingsActivity"
+        private val GROUP_ID = "GROUP_ID"
 
         fun createIntent(context: Context, groupRef : String): Intent{
             val startIntent: Intent = Intent()
-            startIntent.putExtra(GROUP_REF, groupRef)
+            startIntent.putExtra(GROUP_ID, groupRef)
             return startIntent.setClass(context, GroupSettingActivity::class.java)
         }
     }
@@ -38,7 +39,7 @@ class GroupSettingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group_setting)
-        intent.getStringExtra(GROUP_REF)?.let{ mGroupRef = FirebaseFirestore.getInstance().document(it) }
+        intent.getStringExtra(GROUP_ID)?.let{ mGroupRef = FirebaseFirestore.getInstance().collection(GROUPS).document(it) }
 
         settings_leave_group.setOnClickListener {
 
