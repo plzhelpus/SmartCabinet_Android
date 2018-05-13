@@ -340,7 +340,7 @@ class MainActivity : AppCompatActivity(),
                 return true
             }
             R.id.action_settings -> {
-                mCurrentGroup?.let{startActivity(GroupSettingActivity.createIntent(this, it.path))}
+                mCurrentGroup?.let{startActivity(GroupSettingActivity.createIntent(this, it.id))}
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -412,9 +412,9 @@ class MainActivity : AppCompatActivity(),
                         transaction.delete(item.reference)
                         return@runTransaction
                     }.addOnSuccessListener {
-                        Log.d(TAG, "Delete admin successfully - ${item.getString(EMAIL)}")
+                        Log.d(TAG, "Delete admin successfully")
                     }.addOnFailureListener { exception ->
-                        Log.w(TAG, "Delete admin failed - ${item.getString(EMAIL)}", exception)
+                        Log.w(TAG, "Delete admin failed", exception)
                         showSnackbar(R.string.delete_admin_failed)
                     }
                 })
@@ -435,10 +435,10 @@ class MainActivity : AppCompatActivity(),
                     dialog, id ->
                     item.reference.delete()
                             .addOnSuccessListener {
-                                Log.d(TAG, "Delete cabinet successfully - ${item.id}")
+                                Log.d(TAG, "Delete cabinet successfully ")
                             }
                             .addOnFailureListener {exception ->
-                                Log.w(TAG, "Delete cabinet failed - ${item.id}", exception)
+                                Log.w(TAG, "Delete cabinet failed", exception)
                                 showSnackbar(R.string.delete_cabinet_failed)
                             }
                 })
@@ -528,9 +528,9 @@ class MainActivity : AppCompatActivity(),
                         transaction.delete(item.reference)
                         return@runTransaction
                     }.addOnSuccessListener {
-                        Log.d(TAG, "Delete member successfully - ${item.getString(EMAIL)}")
+                        Log.d(TAG, "Delete member successfully")
                     }.addOnFailureListener { exception ->
-                        Log.w(TAG, "Delete member failed - ${item.getString(EMAIL)}", exception)
+                        Log.w(TAG, "Delete member failed", exception)
                         showSnackbar(R.string.delete_member_failed)
                     }
                 })
