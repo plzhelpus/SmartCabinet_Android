@@ -61,11 +61,13 @@
     <string name="create_group_cabinet_key_input">Serial key</string>
     <string name="create_group_cabinet_description_input">Description(Optional)</string>
     <string name="create_group_positive_button">Create</string>
+    <string name="create_group_failed">Create group failed</string>
 
     // dialog_add_member
     <string name="add_member_dialog_title">Add new member</string>
     <string name="add_member_email_input">Email</string>
     <string name="add_member_positive_button">Add</string>
+    <string name="add_member_failed">Add member failed</string>
 
     // dialog_add_cabinet
     <string name="add_cabinet_dialog_title">Add new cabinet</string>
@@ -73,6 +75,7 @@
     <string name="add_cabinet_key_input">Serial key</string>
     <string name="add_cabinet_description_input">Description(Optional)</string>
     <string name="add_cabinet_positive_button">Add</string>
+    <string name="add_cabinet_failed">Add cabinet failed</string>
 
     // settings_group
     <string name="settings_group_owner_title">Owner</string>
@@ -90,6 +93,7 @@
 
     // menu.cabinet
     <string name="cabinet_menu_open_close">Open/Close</string>
+    <string name="open_close_cabinet_failed">Open/Close cabinet failed</string>
     <string name="cabinet_menu_edit_description">Edit description</string>
     <string name="cabinet_menu_delete">Delete</string>
     <string name="delete_cabinet_dialog_title">Delete this cabinet?</string>

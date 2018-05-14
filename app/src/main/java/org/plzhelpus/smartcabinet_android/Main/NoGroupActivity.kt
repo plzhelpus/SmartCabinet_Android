@@ -12,6 +12,8 @@ import android.support.v7.app.AlertDialog
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.functions.FirebaseFunctions
+import kotlinx.android.synthetic.main.dialog_create_group.view.*
 import org.plzhelpus.smartcabinet_android.PARTICIPATED_GROUP
 import org.plzhelpus.smartcabinet_android.R
 import org.plzhelpus.smartcabinet_android.USERS
@@ -23,6 +25,7 @@ import org.plzhelpus.smartcabinet_android.auth.AuthUiActivity
 class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
 
     private lateinit var mAuth : FirebaseAuth
+    private lateinit var mFunctions : FirebaseFunctions
 
     companion object {
         private val TAG = "NoGroupActivity"
@@ -37,6 +40,7 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
         setContentView(R.layout.activity_no_group)
 
         mAuth = FirebaseAuth.getInstance()
+        mFunctions = FirebaseFunctions.getInstance()
 
         being_new_owner_button.setOnClickListener{
             Log.d(TAG, "Create group button clicked")
@@ -46,7 +50,21 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
                     .setView(createGroupDialog)
                     .setPositiveButton(R.string.create_group_positive_button, {
                         dialog, id ->
-                        // TODO 그룹 추가 구현
+                        // TODO 테스트
+                        val data : MutableMap<String, Any?> = HashMap()
+                        data.put("groupName", createGroupDialog.create_group_group_name_input.text.toString())
+                        data.put("cabinetId", createGroupDialog.create_group_cabinet_id_input.text.toString())
+                        data.put("serialKey", createGroupDialog.create_group_cabinet_key_input.text.toString())
+                        mFunctions.getHttpsCallable("createGroup")
+                                .call(data)
+                                .addOnSuccessListener {
+                                    Log.d(TAG, "Create group successfully")
+                                    // TODO 만약 기회가 된다면 새로 생성된 그룹으로 변경해줘야 함.
+                                }
+                                .addOnFailureListener {exception ->
+                                    Log.w(TAG, "Create group failed", exception)
+                                    showSnackbar(R.string.create_group_failed)
+                                }
                     })
                     .setNegativeButton(R.string.alert_dialog_cancel, {
                         dialog, id ->

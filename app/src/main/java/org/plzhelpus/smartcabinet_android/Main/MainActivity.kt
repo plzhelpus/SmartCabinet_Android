@@ -19,8 +19,12 @@ import android.support.annotation.StringRes
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import com.google.firebase.firestore.*
+import com.google.firebase.functions.FirebaseFunctions
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.dialog_add_cabinet.view.*
+import kotlinx.android.synthetic.main.dialog_add_member.view.*
+import kotlinx.android.synthetic.main.dialog_create_group.view.*
 import kotlinx.android.synthetic.main.dialog_edit_cabinet.view.*
 import kotlinx.android.synthetic.main.nav_drawer.*
 import kotlinx.android.synthetic.main.nav_header_main.*
@@ -32,6 +36,7 @@ import org.plzhelpus.smartcabinet_android.groupInfo.admin.AdminListItemHandler
 import org.plzhelpus.smartcabinet_android.groupInfo.cabinet.CabinetListItemHandler
 import org.plzhelpus.smartcabinet_android.groupInfo.member.MemberListItemHandler
 import java.util.*
+import kotlin.collections.HashMap
 
 
 /**
@@ -51,6 +56,7 @@ class MainActivity : AppCompatActivity(),
     private var mCurrentGroup : DocumentReference? = null
     private lateinit var mAuth : FirebaseAuth
     private lateinit var mDb : FirebaseFirestore
+    private lateinit var mFunctions : FirebaseFunctions
 
     companion object {
         private val TAG = "MainActivity"
@@ -70,6 +76,7 @@ class MainActivity : AppCompatActivity(),
         setSupportActionBar(toolbar)
         mAuth = FirebaseAuth.getInstance()
         mDb = FirebaseFirestore.getInstance()
+        mFunctions = FirebaseFunctions.getInstance()
 
         // 네비게이션 드로어 설정
         ActionBarDrawerToggle(
@@ -131,7 +138,21 @@ class MainActivity : AppCompatActivity(),
                 .setView(createGroupDialog)
                 .setPositiveButton(R.string.create_group_positive_button, {
                     dialog, id ->
-                    // TODO 그룹 추가 구현
+                    // TODO 테스트
+                    val data : MutableMap<String, Any?> = HashMap()
+                    data.put("groupName", createGroupDialog.create_group_group_name_input.text.toString())
+                    data.put("cabinetId", createGroupDialog.create_group_cabinet_id_input.text.toString())
+                    data.put("serialKey", createGroupDialog.create_group_cabinet_key_input.text.toString())
+                    mFunctions.getHttpsCallable("createGroup")
+                            .call(data)
+                            .addOnSuccessListener {
+                                Log.d(TAG, "Create group successfully")
+                                // TODO 만약 기회가 된다면 새로 생성된 그룹으로 변경해줘야 함.
+                            }
+                            .addOnFailureListener {exception ->
+                                Log.w(TAG, "Create group failed", exception)
+                                showSnackbar(R.string.create_group_failed)
+                            }
                 })
                 .setNegativeButton(R.string.alert_dialog_cancel, {
                     dialog, id ->
@@ -313,31 +334,60 @@ class MainActivity : AppCompatActivity(),
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_add_cabinet -> {
-                val addCabinetDialog = layoutInflater.inflate(R.layout.dialog_add_cabinet, null)
-                AlertDialog.Builder(this)
-                        .setTitle(R.string.add_cabinet_dialog_title)
-                        .setView(addCabinetDialog)
-                        .setPositiveButton(R.string.add_cabinet_positive_button, {
-                            dialog, id ->
-                            // TODO 사물함 추가 구현
-                        })
-                        .setNegativeButton(R.string.alert_dialog_cancel, {
-                            dialog, id ->
-                        }).show()
+                mCurrentGroup?.let{ currentGroup ->
+                    val addCabinetDialog = layoutInflater.inflate(R.layout.dialog_add_cabinet, null)
+                    AlertDialog.Builder(this)
+                            .setTitle(R.string.add_cabinet_dialog_title)
+                            .setView(addCabinetDialog)
+                            .setPositiveButton(R.string.add_cabinet_positive_button, {
+                                dialog, id ->
+                                // TODO 테스트
+                                val data : MutableMap<String, Any?> = HashMap()
+                                data.put("groupId", currentGroup.id)
+                                data.put("cabinetId", addCabinetDialog.add_cabinet_id_input.text.toString())
+                                data.put("serialKey", addCabinetDialog.add_cabinet_key_input.text.toString())
+                                mFunctions.getHttpsCallable("addCabinetInGroup")
+                                        .call(data)
+                                        .addOnSuccessListener {
+                                            Log.d(TAG, "Add cabinet successfully")
+                                        }
+                                        .addOnFailureListener {exception ->
+                                            Log.w(TAG, "Add cabinet failed", exception)
+                                            showSnackbar(R.string.add_cabinet_failed)
+                                        }
+                            })
+                            .setNegativeButton(R.string.alert_dialog_cancel, {
+                                dialog, id ->
+                            }).show()
+                }
                 return true
             }
             R.id.action_add_member -> {
-                val addMemberDialog = layoutInflater.inflate(R.layout.dialog_add_member, null)
-                val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-                builder.setTitle(R.string.add_member_dialog_title)
-                        .setView(addMemberDialog)
-                        .setPositiveButton(R.string.add_member_positive_button, {
-                            dialog, id ->
-                            // TODO 멤버 추가 구현
-                        })
-                        .setNegativeButton(R.string.alert_dialog_cancel, {
-                            dialog, id ->
-                        }).show()
+                mCurrentGroup?.let{ currentGroup ->
+                    val addMemberDialog = layoutInflater.inflate(R.layout.dialog_add_member, null)
+                    val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+                    builder.setTitle(R.string.add_member_dialog_title)
+                            .setView(addMemberDialog)
+                            .setPositiveButton(R.string.add_member_positive_button, {
+                                dialog, id ->
+                                // TODO 테스트
+                                val data : MutableMap<String, Any?> = HashMap()
+                                data.put("groupId", currentGroup.id)
+                                data.put("email", addMemberDialog.add_member_email_input.text.toString())
+                                mFunctions.getHttpsCallable("addMemberInGroup")
+                                        .call(data)
+                                        .addOnSuccessListener {
+                                            Log.d(TAG, "Add member successfully")
+                                        }
+                                        .addOnFailureListener {exception ->
+                                            Log.w(TAG, "Add member failed", exception)
+                                            showSnackbar(R.string.add_member_failed)
+                                        }
+                            })
+                            .setNegativeButton(R.string.alert_dialog_cancel, {
+                                dialog, id ->
+                            }).show()
+                }
                 return true
             }
             R.id.action_settings -> {
@@ -428,8 +478,18 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun openOrCloseCabinet(item: DocumentSnapshot) {
-        // TODO 사물함 열림 버튼 구현
-
+        // TODO 테스트
+        val data : MutableMap<String, Any?> = HashMap()
+        data.put("cabinetId", item.id)
+        mFunctions.getHttpsCallable("openOrCloseCabinet")
+                .call(data)
+                .addOnSuccessListener {
+                    Log.d(TAG, "Open/close cabinet successfully")
+                }
+                .addOnFailureListener { exception ->
+                    Log.w(TAG, "Open/Close cabinet failed", exception)
+                    showSnackbar(R.string.open_close_cabinet_failed)
+                }
     }
 
     override fun deleteCabinet(item: DocumentSnapshot) {
