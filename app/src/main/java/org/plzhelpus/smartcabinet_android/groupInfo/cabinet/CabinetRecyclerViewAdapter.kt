@@ -43,7 +43,7 @@ class CabinetRecyclerViewAdapter(
                         when(it.itemId){
                             R.id.cabinet_menu_open_close -> {
                                 Log.d(TAG, "cabinet_menu_open")
-                                mHandler.openCabinet(item)
+                                mHandler.openOrCloseCabinet(item)
                                 true
                             }
                             R.id.cabinet_menu_delete -> {

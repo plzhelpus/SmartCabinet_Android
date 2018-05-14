@@ -1,7 +1,7 @@
 // https://github.com/firebase/FirebaseUI-Android#dependencies 에 따라 반드시 Firebase와 FirebaseUI
 // 는 버전이 같아야 함.
-def firebaseVersion = '12.0.1'
-def firebaseUIVersion = '3.3.0'
+def firebaseVersion = '15.0.0'
+def firebaseUIVersion = '3.3.1'
 
 apply plugin: 'com.android.application'
 
@@ -35,30 +35,25 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     implementation 'com.android.support:support-v4:26.1.0'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     // Firebase analytics
     implementation "com.google.firebase:firebase-core:$firebaseVersion"
     // Firebase auth
     // implementation "com.google.firebase:firebase-auth:$firebaseVersion"
-    // Firebase cloud messaging
-    implementation "com.google.firebase:firebase-messaging:$firebaseVersion"
-
-    // FirebaseUI for Firebase Realtime Database
-    implementation "com.firebaseui:firebase-ui-database:$firebaseUIVersion"
-    // FirebaseUI for Cloud Firestore
-    implementation "com.firebaseui:firebase-ui-firestore:$firebaseUIVersion"
+    // Firebase firestore
+    implementation "com.google.firebase:firebase-firestore:$firebaseVersion"
+    // Firebase cloud function
+    implementation "com.google.firebase:firebase-functions:$firebaseVersion"
     // FirebaseUI for Firebase Auth
     implementation "com.firebaseui:firebase-ui-auth:$firebaseUIVersion"
-    // FirebaseUI for Cloud Storage
-    implementation "com.firebaseui:firebase-ui-storage:$firebaseUIVersion"
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -50,28 +50,29 @@ class GroupSettingActivity : AppCompatActivity() {
                     .setPositiveButton(R.string.leave_group_positive_button, { dialog, id ->
                         FirebaseAuth.getInstance().currentUser?.let { user ->
                             mGroupRef?.let { groupRef ->
-                                FirebaseFirestore.getInstance().runTransaction { transaction ->
-                                    val adminDocument = transaction.get(groupRef.collection(ADMIN_REF).document(user.uid))
-                                    if (adminDocument.exists()) {
-                                        transaction.delete(adminDocument.getDocumentReference(USER_REF).collection(PARTICIPATED_GROUP).document(groupRef.id))
-                                        transaction.delete(adminDocument.reference)
-                                        return@runTransaction
+                                FirebaseFirestore.getInstance().let{ db->
+                                    db.runTransaction { transaction ->
+                                        val adminDocument = transaction.get(groupRef.collection(ADMIN_REF).document(user.uid))
+                                        if (adminDocument.exists()) {
+                                            transaction.delete(db.collection(USERS).document(user.uid).collection(PARTICIPATED_GROUP).document(groupRef.id))
+                                            transaction.delete(adminDocument.reference)
+                                            return@runTransaction
+                                        }
+                                        val memberDocument = transaction.get(groupRef.collection(MEMBER_REF).document(user.uid))
+                                        if (memberDocument.exists()) {
+                                            transaction.delete(db.collection(USERS).document(user.uid).collection(PARTICIPATED_GROUP).document(groupRef.id))
+                                            transaction.delete(memberDocument.reference)
+                                            return@runTransaction
+                                        }
+                                        throw FirebaseFirestoreException("You are neither a member nor an admin in this group.", FirebaseFirestoreException.Code.ABORTED)
+                                    }.addOnSuccessListener {
+                                        Log.d(TAG, "Leave group success")
+                                        finish()
+                                    }.addOnFailureListener { exception ->
+                                        Log.w(TAG, "Leave group failed", exception)
+                                        showSnackbar(R.string.leave_group_failed)
                                     }
-                                    val memberDocument = transaction.get(groupRef.collection(MEMBER_REF).document(user.uid))
-                                    if (memberDocument.exists()) {
-                                        transaction.delete(memberDocument.getDocumentReference(USER_REF).collection(PARTICIPATED_GROUP).document(groupRef.id))
-                                        transaction.delete(memberDocument.reference)
-                                        return@runTransaction
-                                    }
-                                    throw FirebaseFirestoreException("You are neither a member nor an admin in this group.", FirebaseFirestoreException.Code.ABORTED)
-                                }.addOnSuccessListener {
-                                    Log.d(TAG, "Leave group success")
-                                    finish()
-                                }.addOnFailureListener { exception ->
-                                    Log.w(TAG, "Leave group failed", exception)
-                                    showSnackbar(R.string.leave_group_failed)
                                 }
-
                             }
                         }
                     })

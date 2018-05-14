@@ -160,12 +160,13 @@ class MainActivity : AppCompatActivity(),
      * 보여주고 있는 그룹을 변경함.
      */
     private fun changeGroupInfo(groupListItemDocumentSnapshot : DocumentSnapshot) {
-        Log.d(TAG, "Changing group now")
-        Log.d(TAG, "document snapshot - ${groupListItemDocumentSnapshot.data}")
-        mCurrentGroup = groupListItemDocumentSnapshot.getDocumentReference(GROUP_REF).apply {
-            (group_pager.adapter as GroupInfoFragmentPagerAdapter).updateGroupInfo(this)
+        groupListItemDocumentSnapshot.getDocumentReference(GROUP_REF)?.let { newCurrentGroup ->
+            Log.d(TAG, "Changing group now")
+            Log.d(TAG, "document snapshot - ${groupListItemDocumentSnapshot.data}")
+            (group_pager.adapter as GroupInfoFragmentPagerAdapter).updateGroupInfo(newCurrentGroup)
+            mCurrentGroup = newCurrentGroup
+            registerCurrentGroup()
         }
-        registerCurrentGroup()
     }
 
     /**
@@ -197,7 +198,7 @@ class MainActivity : AppCompatActivity(),
                 }
 
                 // 문서스냅샷이 엉뚱한 곳을 가리키지 않았을 경우,
-                if (documentSnapshot.exists()){
+                if (documentSnapshot != null && documentSnapshot.exists()){
                     Log.d(TAG, "Current group - data found")
                     group_info_group_name.text = documentSnapshot.getString(GROUP_NAME)
                     group_info_owner_email.text = documentSnapshot.getString(OWNER_EMAIL)
@@ -354,81 +355,85 @@ class MainActivity : AppCompatActivity(),
 
     override fun demoteAdminToMember(item: DocumentSnapshot) {
         // TODO 테스트
-        mDb.runTransaction{ transaction ->
-            val memberRef = item.reference.parent.parent.collection(MEMBER_REF)
-            val data : MutableMap<String, Any> = HashMap()
-            data.put(EMAIL, item.getString(EMAIL))
-            data.put(USER_REF, item.getDocumentReference(USER_REF))
-            transaction.set(memberRef.document(item.id), data)
-            transaction.delete(item.reference)
-            return@runTransaction
-        }.addOnSuccessListener{
-            Log.d(TAG, "demote admin to member successfully")
-        }.addOnFailureListener{ exception ->
-            Log.w(TAG, "demote admin to member failure", exception)
-            showSnackbar(R.string.demote_to_member_failed)
+        item.reference.parent.parent?.collection(MEMBER_REF)?.let{ memberRef ->
+            mDb.runTransaction { transaction ->
+                val data: MutableMap<String, Any?> = HashMap()
+                data.put(EMAIL, item.getString(EMAIL))
+                data.put(USER_REF, item.getDocumentReference(USER_REF))
+                transaction.set(memberRef.document(item.id), data)
+                transaction.delete(item.reference)
+                return@runTransaction
+            }.addOnSuccessListener {
+                Log.d(TAG, "demote admin to member successfully")
+            }.addOnFailureListener { exception ->
+                Log.w(TAG, "demote admin to member failure", exception)
+                showSnackbar(R.string.demote_to_member_failed)
+            }
         }
     }
 
     override fun delegateOwnershipToAdmin(item: DocumentSnapshot) {
         // TODO 테스트
-        AlertDialog.Builder(this)
-                .setTitle(R.string.delegate_ownership_dialog_title)
-                .setPositiveButton(R.string.delegate_ownership_positive_button, { dialog, id ->
-                    mDb.runTransaction{ transaction ->
-                        val groupRef = item.reference.parent.parent
-                        val groupDocument = transaction.get(groupRef)
-                        val oldOwnerData : MutableMap<String, Any> = HashMap()
-                        val ownerRef = groupDocument.getDocumentReference(OWNER_REF)
-                        oldOwnerData.put(EMAIL, groupDocument.getString(OWNER_EMAIL))
-                        oldOwnerData.put(USER_REF, ownerRef)
-                        val newOwnerData : MutableMap<String, Any> = HashMap()
-                        newOwnerData.put(OWNER_EMAIL, item.getString(EMAIL))
-                        newOwnerData.put(OWNER_REF, item.getDocumentReference(USER_REF))
-                        transaction.set(groupRef.collection(ADMIN_REF).document(ownerRef.id), oldOwnerData)
-                        transaction.delete(item.reference)
-                        transaction.update(groupRef, newOwnerData)
-                        return@runTransaction
-                    }.addOnSuccessListener{
-                        Log.d(TAG, "delegate ownership to admin successfully")
-                    }.addOnFailureListener{ exception ->
-                        Log.w(TAG, "delegate ownership to admin failure")
-                        showSnackbar(R.string.delegate_ownership_failed)
-                    }
-                })
-                .setNegativeButton(R.string.alert_dialog_cancel, { dialog, id ->
-                }).show()
+        item.reference.parent.parent?.let{ groupRef ->
+            AlertDialog.Builder(this)
+                    .setTitle(R.string.delegate_ownership_dialog_title)
+                    .setPositiveButton(R.string.delegate_ownership_positive_button, { dialog, id ->
+                        mDb.runTransaction{ transaction ->
+                            val groupDocument = transaction.get(groupRef)
+                            val oldOwnerData : MutableMap<String, Any?> = HashMap()
+                            val ownerRef = groupDocument.getDocumentReference(OWNER_REF) ?: throw FirebaseFirestoreException("owner_ref is null", FirebaseFirestoreException.Code.ABORTED)
+                            oldOwnerData.put(EMAIL, groupDocument.getString(OWNER_EMAIL))
+                            oldOwnerData.put(USER_REF, ownerRef)
+                            val newOwnerData : MutableMap<String, Any?> = HashMap()
+                            newOwnerData.put(OWNER_EMAIL, item.getString(EMAIL))
+                            newOwnerData.put(OWNER_REF, item.getDocumentReference(USER_REF))
+                            transaction.set(groupRef.collection(ADMIN_REF).document(ownerRef.id), oldOwnerData)
+                            transaction.delete(item.reference)
+                            transaction.update(groupRef, newOwnerData)
+                            return@runTransaction
+                        }.addOnSuccessListener{
+                            Log.d(TAG, "delegate ownership to admin successfully")
+                        }.addOnFailureListener{ exception ->
+                            Log.w(TAG, "delegate ownership to admin failure")
+                            showSnackbar(R.string.delegate_ownership_failed)
+                        }
+                    })
+                    .setNegativeButton(R.string.alert_dialog_cancel, { dialog, id ->
+                    }).show()
+        }
     }
 
     override fun deleteAdmin(item: DocumentSnapshot) {
         // TODO 테스트
-        AlertDialog.Builder(this)
-                .setTitle(R.string.delete_admin_dialog_title)
-                .setPositiveButton(R.string.delete_admin_positive_button, {
-                    dialog, id ->
-                    mDb.runTransaction {transaction ->
-                        val groupId = item.reference.parent.parent.id
-                        transaction.delete(item.getDocumentReference(USER_REF).collection(PARTICIPATED_GROUP).document(groupId))
-                        transaction.delete(item.reference)
-                        return@runTransaction
-                    }.addOnSuccessListener {
-                        Log.d(TAG, "Delete admin successfully")
-                    }.addOnFailureListener { exception ->
-                        Log.w(TAG, "Delete admin failed", exception)
-                        showSnackbar(R.string.delete_admin_failed)
-                    }
-                })
-                .setNegativeButton(R.string.alert_dialog_cancel, {
-                    dialog, id ->
-                }).show()
+        item.reference.parent.parent?.let{ groupRef ->
+            AlertDialog.Builder(this)
+                    .setTitle(R.string.delete_admin_dialog_title)
+                    .setPositiveButton(R.string.delete_admin_positive_button, {
+                        dialog, id ->
+                        mDb.runTransaction {transaction ->
+                            transaction.delete(mDb.collection(USERS).document(item.id).collection(PARTICIPATED_GROUP).document(groupRef.id))
+                            transaction.delete(item.reference)
+                            return@runTransaction
+                        }.addOnSuccessListener {
+                            Log.d(TAG, "Delete admin successfully")
+                        }.addOnFailureListener { exception ->
+                            Log.w(TAG, "Delete admin failed", exception)
+                            showSnackbar(R.string.delete_admin_failed)
+                        }
+                    })
+                    .setNegativeButton(R.string.alert_dialog_cancel, {
+                        dialog, id ->
+                    }).show()
+        }
     }
 
-    override fun openCabinet(item: DocumentSnapshot) {
+    override fun openOrCloseCabinet(item: DocumentSnapshot) {
         // TODO 사물함 열림 버튼 구현
+
     }
 
     override fun deleteCabinet(item: DocumentSnapshot) {
-        // TODO 사물함만 삭제하면 됨. 사물함 문서에서 group_ref를 수정하는 클라우드 함수 필요
+        // TODO 사물함 문서에서 group_ref를 수정하는 클라우드 함수 필요
         AlertDialog.Builder(this)
                 .setTitle(R.string.delete_cabinet_dialog_title)
                 .setPositiveButton(R.string.delete_cabinet_positive_button, {
@@ -470,73 +475,77 @@ class MainActivity : AppCompatActivity(),
 
     override fun promoteMemberToAdmin(item: DocumentSnapshot) {
         // TODO 테스트
-        mDb.runTransaction{ transaction ->
-            val adminRef = item.reference.parent.parent.collection(ADMIN_REF)
-            val data : MutableMap<String, Any> = HashMap()
-            data.put(EMAIL, item.getString(EMAIL))
-            data.put(USER_REF, item.getDocumentReference(USER_REF))
-            transaction.set(adminRef.document(item.id), data)
-            transaction.delete(item.reference)
-            return@runTransaction
-        }.addOnSuccessListener{
-            Log.d(TAG, "promote member to admin successfully")
-        }.addOnFailureListener{ exception ->
-            Log.w(TAG, "promote member to admin failure", exception)
-            showSnackbar(R.string.promote_to_admin_failed)
+        item.reference.parent.parent?.let{ groupRef ->
+            mDb.runTransaction{ transaction ->
+                val adminRef = groupRef.collection(ADMIN_REF)
+                val data : MutableMap<String, Any?> = HashMap()
+                data.put(EMAIL, item.getString(EMAIL))
+                data.put(USER_REF, item.getDocumentReference(USER_REF))
+                transaction.set(adminRef.document(item.id), data)
+                transaction.delete(item.reference)
+                return@runTransaction
+            }.addOnSuccessListener{
+                Log.d(TAG, "promote member to admin successfully")
+            }.addOnFailureListener{ exception ->
+                Log.w(TAG, "promote member to admin failure", exception)
+                showSnackbar(R.string.promote_to_admin_failed)
+            }
         }
     }
 
     override fun delegateOwnershipToMember(item: DocumentSnapshot) {
         // TODO 테스트
-        AlertDialog.Builder(this)
-                .setTitle(R.string.delegate_ownership_dialog_title)
-                .setPositiveButton(R.string.delegate_ownership_positive_button, { dialog, id ->
-                    mDb.runTransaction{ transaction ->
-                        val groupRef = item.reference.parent.parent
-                        val groupDocument = transaction.get(groupRef)
-                        val oldOwnerData : MutableMap<String, Any> = HashMap()
-                        val ownerRef = groupDocument.getDocumentReference(OWNER_REF)
-                        oldOwnerData.put(EMAIL, groupDocument.getString(OWNER_EMAIL))
-                        oldOwnerData.put(USER_REF, ownerRef)
-                        val newOwnerData : MutableMap<String, Any> = HashMap()
-                        newOwnerData.put(OWNER_EMAIL, item.getString(EMAIL))
-                        newOwnerData.put(OWNER_REF, item.getDocumentReference(USER_REF))
-                        transaction.set(groupRef.collection(ADMIN_REF).document(ownerRef.id), oldOwnerData)
-                        transaction.delete(item.reference)
-                        transaction.update(groupRef, newOwnerData)
-                        return@runTransaction
-                    }.addOnSuccessListener{
-                        Log.d(TAG, "delegate ownership to member successfully")
-                    }.addOnFailureListener{ exception ->
-                        Log.w(TAG, "delegate ownership to member failure")
-                        showSnackbar(R.string.delegate_ownership_failed)
-                    }
-                })
-                .setNegativeButton(R.string.alert_dialog_cancel, { dialog, id ->
-                }).show()
+        item.reference.parent.parent?.let{ groupRef ->
+            AlertDialog.Builder(this)
+                    .setTitle(R.string.delegate_ownership_dialog_title)
+                    .setPositiveButton(R.string.delegate_ownership_positive_button, { dialog, id ->
+                        mDb.runTransaction{ transaction ->
+                            val groupDocument = transaction.get(groupRef)
+                            val oldOwnerData : MutableMap<String, Any?> = HashMap()
+                            val ownerRef = groupDocument.getDocumentReference(OWNER_REF) ?: throw FirebaseFirestoreException("owner_ref is null", FirebaseFirestoreException.Code.ABORTED)
+                            oldOwnerData.put(EMAIL, groupDocument.getString(OWNER_EMAIL))
+                            oldOwnerData.put(USER_REF, ownerRef)
+                            val newOwnerData : MutableMap<String, Any?> = HashMap()
+                            newOwnerData.put(OWNER_EMAIL, item.getString(EMAIL))
+                            newOwnerData.put(OWNER_REF, item.getDocumentReference(USER_REF))
+                            transaction.set(groupRef.collection(ADMIN_REF).document(ownerRef.id), oldOwnerData)
+                            transaction.delete(item.reference)
+                            transaction.update(groupRef, newOwnerData)
+                            return@runTransaction
+                        }.addOnSuccessListener{
+                            Log.d(TAG, "delegate ownership to member successfully")
+                        }.addOnFailureListener{ exception ->
+                            Log.w(TAG, "delegate ownership to member failure")
+                            showSnackbar(R.string.delegate_ownership_failed)
+                        }
+                    })
+                    .setNegativeButton(R.string.alert_dialog_cancel, { dialog, id ->
+                    }).show()
+        }
     }
 
     override fun deleteMember(item: DocumentSnapshot) {
         // TODO 테스트
-        AlertDialog.Builder(this)
-                .setTitle(R.string.delete_member_dialog_title)
-                .setPositiveButton(R.string.delete_member_positive_button, {
-                    dialog, id ->
-                    mDb.runTransaction {transaction ->
-                        val groupId = item.reference.parent.parent.id
-                        transaction.delete(item.getDocumentReference(USER_REF).collection(PARTICIPATED_GROUP).document(groupId))
-                        transaction.delete(item.reference)
-                        return@runTransaction
-                    }.addOnSuccessListener {
-                        Log.d(TAG, "Delete member successfully")
-                    }.addOnFailureListener { exception ->
-                        Log.w(TAG, "Delete member failed", exception)
-                        showSnackbar(R.string.delete_member_failed)
-                    }
-                })
-                .setNegativeButton(R.string.alert_dialog_cancel, {
-                    dialog, id ->
-                }).show()
+        item.reference.parent.parent?.let{ groupRef ->
+            AlertDialog.Builder(this)
+                    .setTitle(R.string.delete_member_dialog_title)
+                    .setPositiveButton(R.string.delete_member_positive_button, {
+                        dialog, id ->
+                        mDb.runTransaction {transaction ->
+                            transaction.delete(mDb.collection(USERS).document(item.id).collection(PARTICIPATED_GROUP).document(groupRef.id))
+                            transaction.delete(item.reference)
+                            return@runTransaction
+                        }.addOnSuccessListener {
+                            Log.d(TAG, "Delete member successfully")
+                        }.addOnFailureListener { exception ->
+                            Log.w(TAG, "Delete member failed", exception)
+                            showSnackbar(R.string.delete_member_failed)
+                        }
+                    })
+                    .setNegativeButton(R.string.alert_dialog_cancel, {
+                        dialog, id ->
+                    }).show()
+        }
     }
 
     /**
