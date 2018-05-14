@@ -89,7 +89,7 @@
     <string name="delete_group_failed">Delete group failed</string>
 
     // menu.cabinet
-    <string name="cabinet_menu_open">Open</string>
+    <string name="cabinet_menu_open_close">Open/Close</string>
     <string name="cabinet_menu_edit_description">Edit description</string>
     <string name="cabinet_menu_delete">Delete</string>
     <string name="delete_cabinet_dialog_title">Delete this cabinet?</string>

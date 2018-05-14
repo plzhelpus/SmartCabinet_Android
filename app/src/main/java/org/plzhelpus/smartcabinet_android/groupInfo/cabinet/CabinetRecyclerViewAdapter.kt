@@ -41,7 +41,7 @@ class CabinetRecyclerViewAdapter(
                     popupMenu.inflate(R.menu.cabinet)
                     popupMenu.setOnMenuItemClickListener {
                         when(it.itemId){
-                            R.id.cabinet_menu_open -> {
+                            R.id.cabinet_menu_open_close -> {
                                 Log.d(TAG, "cabinet_menu_open")
                                 mHandler.openCabinet(item)
                                 true
