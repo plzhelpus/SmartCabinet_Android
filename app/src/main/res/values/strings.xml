@@ -77,6 +77,9 @@
     <string name="add_cabinet_positive_button">Add</string>
     <string name="add_cabinet_failed">Add cabinet failed</string>
 
+    // GroupSettingsActivity
+    <string name="title_activity_group_settings">Group Settings</string>
+
     // settings_group
     <string name="settings_group_owner_title">Owner</string>
     <string name="settings_group_admin_title">Admin</string>

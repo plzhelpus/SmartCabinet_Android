@@ -22,6 +22,9 @@
             android:name=".auth.AuthUiActivity"
             android:label="@string/title_activity_auth_ui" />
         <activity android:name=".main.NoGroupActivity" />
-        <activity android:name=".groupInfo.GroupSettingActivity"/>
+        <activity
+            android:name=".groupInfo.GroupSettingActivity"
+            android:label="@string/title_activity_group_settings"
+            />
     </application>
 </manifest>
