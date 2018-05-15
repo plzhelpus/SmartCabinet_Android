@@ -57,6 +57,9 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
                         data.put("serialKey", createGroupDialog.create_group_cabinet_key_input.text.toString())
                         mFunctions.getHttpsCallable("createGroup")
                                 .call(data)
+                                .continueWith {
+                                    // 클라이언트는 서버에서 전송된 값에 대해 아무런 처리를 하지 않음.
+                                }
                                 .addOnSuccessListener {
                                     Log.d(TAG, "Create group successfully")
                                     // TODO 만약 기회가 된다면 새로 생성된 그룹으로 변경해줘야 함.

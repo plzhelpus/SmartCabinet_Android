@@ -145,6 +145,9 @@ class MainActivity : AppCompatActivity(),
                     data.put("serialKey", createGroupDialog.create_group_cabinet_key_input.text.toString())
                     mFunctions.getHttpsCallable("createGroup")
                             .call(data)
+                            .continueWith {
+                                // 클라이언트는 서버에서 전송된 값에 대해 아무런 처리를 하지 않음.
+                            }
                             .addOnSuccessListener {
                                 Log.d(TAG, "Create group successfully")
                                 // TODO 만약 기회가 된다면 새로 생성된 그룹으로 변경해줘야 함.
@@ -348,6 +351,9 @@ class MainActivity : AppCompatActivity(),
                                 data.put("serialKey", addCabinetDialog.add_cabinet_key_input.text.toString())
                                 mFunctions.getHttpsCallable("addCabinetInGroup")
                                         .call(data)
+                                        .continueWith {
+                                            // 클라이언트는 서버에서 전송된 값에 대해 아무런 처리를 하지 않음.
+                                        }
                                         .addOnSuccessListener {
                                             Log.d(TAG, "Add cabinet successfully")
                                         }
@@ -376,6 +382,9 @@ class MainActivity : AppCompatActivity(),
                                 data.put("email", addMemberDialog.add_member_email_input.text.toString())
                                 mFunctions.getHttpsCallable("addMemberInGroup")
                                         .call(data)
+                                        .continueWith {
+                                            // 클라이언트는 서버에서 전송된 값에 대해 아무런 처리를 하지 않음.
+                                        }
                                         .addOnSuccessListener {
                                             Log.d(TAG, "Add member successfully")
                                         }
@@ -483,6 +492,9 @@ class MainActivity : AppCompatActivity(),
         data.put("cabinetId", item.id)
         mFunctions.getHttpsCallable("openOrCloseCabinet")
                 .call(data)
+                .continueWith {
+                    // 클라이언트는 서버에서 전송된 값에 대해 아무런 처리를 하지 않음.
+                }
                 .addOnSuccessListener {
                     Log.d(TAG, "Open/close cabinet successfully")
                 }
