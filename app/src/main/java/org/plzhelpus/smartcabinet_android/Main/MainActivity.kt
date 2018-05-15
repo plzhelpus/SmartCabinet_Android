@@ -141,8 +141,6 @@ class MainActivity : AppCompatActivity(),
                     // TODO 테스트
                     val data : MutableMap<String, Any?> = HashMap()
                     data.put("groupName", createGroupDialog.create_group_group_name_input.text.toString())
-                    data.put("cabinetId", createGroupDialog.create_group_cabinet_id_input.text.toString())
-                    data.put("serialKey", createGroupDialog.create_group_cabinet_key_input.text.toString())
                     mFunctions.getHttpsCallable("createGroup")
                             .call(data)
                             .continueWith {
