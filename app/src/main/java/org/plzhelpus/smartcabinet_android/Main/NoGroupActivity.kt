@@ -55,8 +55,8 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
                         data.put("groupName", createGroupDialog.create_group_group_name_input.text.toString())
                         mFunctions.getHttpsCallable("createGroup")
                                 .call(data)
-                                .continueWith {
-                                    // 클라이언트는 서버에서 전송된 값에 대해 아무런 처리를 하지 않음.
+                                .continueWith { task ->
+                                    task.result.data
                                 }
                                 .addOnSuccessListener {
                                     Log.d(TAG, "Create group successfully")
