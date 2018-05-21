@@ -38,8 +38,8 @@
     <string name="not_sign_in">Not sign in</string>
 
     // activity_no_group
-    <string name="no_group_title">You are not paticipating any group</string>
-    <string name="being_new_owner_text">Do you want to create new group? (Cabinet needed)</string>
+    <string name="no_group_title">You are not participated any group</string>
+    <string name="being_new_owner_text">Do you want to create new group?</string>
     <string name="already_member_but_not_found_group_text">Aren\'t your groups visible?</string>
     <string name="group_list_refresh_button_text">Refresh</string>
     <string name="no_group_sign_out_text">Are you want to sign out?</string>
