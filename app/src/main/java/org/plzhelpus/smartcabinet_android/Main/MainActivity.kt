@@ -342,7 +342,6 @@ class MainActivity : AppCompatActivity(),
                             .setView(addCabinetDialog)
                             .setPositiveButton(R.string.add_cabinet_positive_button, {
                                 dialog, id ->
-                                // TODO 테스트
                                 val data : MutableMap<String, Any?> = HashMap()
                                 data.put("groupId", currentGroup.id)
                                 data.put("cabinetId", addCabinetDialog.add_cabinet_id_input.text.toString())
@@ -503,7 +502,6 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun deleteCabinet(item: DocumentSnapshot) {
-        // TODO 사물함 문서에서 group_ref를 수정하는 클라우드 함수 필요
         AlertDialog.Builder(this)
                 .setTitle(R.string.delete_cabinet_dialog_title)
                 .setPositiveButton(R.string.delete_cabinet_positive_button, {
