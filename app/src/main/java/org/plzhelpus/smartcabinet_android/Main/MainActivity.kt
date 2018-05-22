@@ -107,6 +107,7 @@ class MainActivity : AppCompatActivity(),
         // 네비게이션 드로어에 그룹 추가 버튼 구현
         create_new_group_button.setOnClickListener{
             createNewGroup()
+            drawer_layout.closeDrawers()
         }
 
         // 네비게이션 드로어에 사용자 로그아웃 버튼 구현
