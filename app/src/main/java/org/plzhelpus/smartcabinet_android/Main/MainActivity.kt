@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity(),
                             startActivity(AuthUiActivity.createIntent(this))
                             finish()
                         } else {
-                            Log.w(TAG, "signOut:failure", task.exception)
+                            Log.w(TAG, "signOut:failed", task.exception)
                             showSnackbar(R.string.sign_out_failed)
                         }
                     }
@@ -139,7 +139,6 @@ class MainActivity : AppCompatActivity(),
                 .setView(createGroupDialog)
                 .setPositiveButton(R.string.create_group_positive_button, {
                     dialog, id ->
-                    // TODO 테스트
                     val data : MutableMap<String, Any?> = HashMap()
                     data.put("groupName", createGroupDialog.create_group_group_name_input.text.toString())
                     mFunctions.getHttpsCallable("createGroup")
@@ -410,6 +409,12 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun demoteAdminToMember(item: DocumentSnapshot) {
+        // 자기 자신의 권한을 낮출 수 없음.
+        if(item.id == mAuth.currentUser?.uid){
+            Log.w(TAG, "demote admin to member failed - try to demote myself")
+            showSnackbar(R.string.demote_to_member_failed)
+            return
+        }
         item.reference.parent.parent?.collection(MEMBER_REF)?.let{ memberRef ->
             mDb.runTransaction { transaction ->
                 val data: MutableMap<String, Any?> = HashMap()
@@ -421,7 +426,7 @@ class MainActivity : AppCompatActivity(),
             }.addOnSuccessListener {
                 Log.d(TAG, "demote admin to member successfully")
             }.addOnFailureListener { exception ->
-                Log.w(TAG, "demote admin to member failure", exception)
+                Log.w(TAG, "demote admin to member failed", exception)
                 showSnackbar(R.string.demote_to_member_failed)
             }
         }
@@ -448,7 +453,7 @@ class MainActivity : AppCompatActivity(),
                         }.addOnSuccessListener{
                             Log.d(TAG, "delegate ownership to admin successfully")
                         }.addOnFailureListener{ exception ->
-                            Log.w(TAG, "delegate ownership to admin failure", exception)
+                            Log.w(TAG, "delegate ownership to admin failed", exception)
                             showSnackbar(R.string.delegate_ownership_failed)
                         }
                     })
@@ -458,12 +463,17 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun deleteAdmin(item: DocumentSnapshot) {
-        // TODO 테스트
         item.reference.parent.parent?.let{ groupRef ->
             AlertDialog.Builder(this)
                     .setTitle(R.string.delete_admin_dialog_title)
                     .setPositiveButton(R.string.delete_admin_positive_button, {
                         dialog, id ->
+                        // 자기 자신을 삭제할 수 없음
+                        if(item.id == mAuth.currentUser?.uid){
+                            Log.w(TAG, "Delete admin failed - try to delete myself")
+                            showSnackbar(R.string.delete_admin_failed)
+                            return@setPositiveButton
+                        }
                         mDb.runTransaction {transaction ->
                             transaction.delete(mDb.collection(USERS).document(item.id).collection(PARTICIPATED_GROUP).document(groupRef.id))
                             transaction.delete(item.reference)
@@ -552,7 +562,7 @@ class MainActivity : AppCompatActivity(),
             }.addOnSuccessListener{
                 Log.d(TAG, "promote member to admin successfully")
             }.addOnFailureListener{ exception ->
-                Log.w(TAG, "promote member to admin failure", exception)
+                Log.w(TAG, "promote member to admin failed", exception)
                 showSnackbar(R.string.promote_to_admin_failed)
             }
         }
@@ -579,7 +589,7 @@ class MainActivity : AppCompatActivity(),
                         }.addOnSuccessListener{
                             Log.d(TAG, "delegate ownership to member successfully")
                         }.addOnFailureListener{ exception ->
-                            Log.w(TAG, "delegate ownership to member failure", exception)
+                            Log.w(TAG, "delegate ownership to member failed", exception)
                             showSnackbar(R.string.delegate_ownership_failed)
                         }
                     })
@@ -589,12 +599,17 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun deleteMember(item: DocumentSnapshot) {
-        // TODO 테스트
         item.reference.parent.parent?.let{ groupRef ->
             AlertDialog.Builder(this)
                     .setTitle(R.string.delete_member_dialog_title)
                     .setPositiveButton(R.string.delete_member_positive_button, {
                         dialog, id ->
+                        // 자기 자신을 삭제할 수 없음
+                        if(item.id == mAuth.currentUser?.uid){
+                            Log.w(TAG, "Delete member failed - try to delete myself")
+                            showSnackbar(R.string.delete_member_failed)
+                            return@setPositiveButton
+                        }
                         mDb.runTransaction {transaction ->
                             transaction.delete(mDb.collection(USERS).document(item.id).collection(PARTICIPATED_GROUP).document(groupRef.id))
                             transaction.delete(item.reference)

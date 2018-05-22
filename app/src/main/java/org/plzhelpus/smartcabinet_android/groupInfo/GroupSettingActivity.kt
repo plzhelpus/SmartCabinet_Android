@@ -82,7 +82,6 @@ class GroupSettingActivity : AppCompatActivity() {
         }
         settings_delete_group.setOnClickListener {
             // TODO 테스트 필요
-            // TODO 클라우드 함수가 그룹 문서 내의 하위컬렉션과 모든 사용자들의 소속된 그룹에서 해당 그룹을 삭제해줘야 함
             Log.d(TAG, "delete group clicked")
             AlertDialog.Builder(this)
                     .setTitle(R.string.delete_group_dialog_title)
