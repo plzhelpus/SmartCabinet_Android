@@ -37,7 +37,7 @@ class AdminRecyclerViewAdapter(
                 admin_email.text = item.getString(EMAIL)
                 admin_popup_menu_button.setOnClickListener{
                     val popupMenu =  PopupMenu(context, admin_popup_menu_button)
-                    popupMenu.inflate(R.menu.member)
+                    popupMenu.inflate(R.menu.admin)
                     popupMenu.setOnMenuItemClickListener {
                         when(it.itemId){
                             R.id.admin_menu_demote_to_member -> {
