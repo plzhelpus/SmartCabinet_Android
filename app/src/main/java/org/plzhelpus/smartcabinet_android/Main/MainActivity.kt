@@ -374,7 +374,6 @@ class MainActivity : AppCompatActivity(),
                             .setView(addMemberDialog)
                             .setPositiveButton(R.string.add_member_positive_button, {
                                 dialog, id ->
-                                // TODO 테스트
                                 val data : MutableMap<String, Any?> = HashMap()
                                 data.put("groupId", currentGroup.id)
                                 data.put("email", addMemberDialog.add_member_email_input.text.toString())
@@ -411,7 +410,6 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun demoteAdminToMember(item: DocumentSnapshot) {
-        // TODO 테스트
         item.reference.parent.parent?.collection(MEMBER_REF)?.let{ memberRef ->
             mDb.runTransaction { transaction ->
                 val data: MutableMap<String, Any?> = HashMap()
@@ -430,7 +428,6 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun delegateOwnershipToAdmin(item: DocumentSnapshot) {
-        // TODO 테스트
         item.reference.parent.parent?.let{ groupRef ->
             AlertDialog.Builder(this)
                     .setTitle(R.string.delegate_ownership_dialog_title)
@@ -451,7 +448,7 @@ class MainActivity : AppCompatActivity(),
                         }.addOnSuccessListener{
                             Log.d(TAG, "delegate ownership to admin successfully")
                         }.addOnFailureListener{ exception ->
-                            Log.w(TAG, "delegate ownership to admin failure")
+                            Log.w(TAG, "delegate ownership to admin failure", exception)
                             showSnackbar(R.string.delegate_ownership_failed)
                         }
                     })
@@ -543,7 +540,6 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun promoteMemberToAdmin(item: DocumentSnapshot) {
-        // TODO 테스트
         item.reference.parent.parent?.let{ groupRef ->
             mDb.runTransaction{ transaction ->
                 val adminRef = groupRef.collection(ADMIN_REF)
@@ -563,7 +559,6 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun delegateOwnershipToMember(item: DocumentSnapshot) {
-        // TODO 테스트
         item.reference.parent.parent?.let{ groupRef ->
             AlertDialog.Builder(this)
                     .setTitle(R.string.delegate_ownership_dialog_title)
@@ -584,7 +579,7 @@ class MainActivity : AppCompatActivity(),
                         }.addOnSuccessListener{
                             Log.d(TAG, "delegate ownership to member successfully")
                         }.addOnFailureListener{ exception ->
-                            Log.w(TAG, "delegate ownership to member failure")
+                            Log.w(TAG, "delegate ownership to member failure", exception)
                             showSnackbar(R.string.delegate_ownership_failed)
                         }
                     })
