@@ -11,7 +11,7 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.functions.FirebaseFunctions
 import kotlinx.android.synthetic.main.activity_group_setting.*
 import kotlinx.android.synthetic.main.settings_group_member.*
 import kotlinx.android.synthetic.main.settings_group_owner.*
@@ -23,13 +23,14 @@ import org.plzhelpus.smartcabinet_android.*
  */
 class GroupSettingActivity : AppCompatActivity() {
 
-    private var mGroupRef : DocumentReference? = null
+    private var mGroupRef: DocumentReference? = null
+    private lateinit var mFunctions: FirebaseFunctions
 
     companion object {
         private val TAG = "GroupSettingsActivity"
         private val GROUP_ID = "GROUP_ID"
 
-        fun createIntent(context: Context, groupRef : String): Intent{
+        fun createIntent(context: Context, groupRef: String): Intent {
             val startIntent: Intent = Intent()
             startIntent.putExtra(GROUP_ID, groupRef)
             return startIntent.setClass(context, GroupSettingActivity::class.java)
@@ -39,8 +40,8 @@ class GroupSettingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group_setting)
-        intent.getStringExtra(GROUP_ID)?.let{ mGroupRef = FirebaseFirestore.getInstance().collection(GROUPS).document(it) }
-
+        intent.getStringExtra(GROUP_ID)?.let { mGroupRef = FirebaseFirestore.getInstance().collection(GROUPS).document(it) }
+        mFunctions = FirebaseFunctions.getInstance()
         settings_leave_group.setOnClickListener {
 
             // TODO 테스트 필요
@@ -50,34 +51,26 @@ class GroupSettingActivity : AppCompatActivity() {
                     .setPositiveButton(R.string.leave_group_positive_button, { dialog, id ->
                         FirebaseAuth.getInstance().currentUser?.let { user ->
                             mGroupRef?.let { groupRef ->
-                                FirebaseFirestore.getInstance().let{ db->
-                                    db.runTransaction { transaction ->
-                                        val adminDocument = transaction.get(groupRef.collection(ADMIN_REF).document(user.uid))
-                                        if (adminDocument.exists()) {
-                                            transaction.delete(db.collection(USERS).document(user.uid).collection(PARTICIPATED_GROUP).document(groupRef.id))
-                                            transaction.delete(adminDocument.reference)
-                                            return@runTransaction
+                                val data: MutableMap<String, Any?> = HashMap()
+                                data.put("groupId", groupRef.id)
+                                mFunctions
+                                        .getHttpsCallable("leaveGroup")
+                                        .call(data)
+                                        .continueWith { task ->
+                                            task.result.data
                                         }
-                                        val memberDocument = transaction.get(groupRef.collection(MEMBER_REF).document(user.uid))
-                                        if (memberDocument.exists()) {
-                                            transaction.delete(db.collection(USERS).document(user.uid).collection(PARTICIPATED_GROUP).document(groupRef.id))
-                                            transaction.delete(memberDocument.reference)
-                                            return@runTransaction
+                                        .addOnSuccessListener {
+                                            Log.d(TAG, "Leave group success")
+                                            finish()
+                                        }.addOnFailureListener { exception ->
+                                            Log.w(TAG, "Leave group failed", exception)
+                                            showSnackbar(R.string.leave_group_failed)
                                         }
-                                        throw FirebaseFirestoreException("You are neither a member nor an admin in this group.", FirebaseFirestoreException.Code.ABORTED)
-                                    }.addOnSuccessListener {
-                                        Log.d(TAG, "Leave group success")
-                                        finish()
-                                    }.addOnFailureListener { exception ->
-                                        Log.w(TAG, "Leave group failed", exception)
-                                        showSnackbar(R.string.leave_group_failed)
-                                    }
-                                }
+                                return@setPositiveButton
                             }
                         }
                     })
-                    .setNegativeButton(R.string.alert_dialog_cancel, {
-                        dialog, id ->
+                    .setNegativeButton(R.string.alert_dialog_cancel, { dialog, id ->
                     }).show()
         }
         settings_delete_group.setOnClickListener {
@@ -85,9 +78,8 @@ class GroupSettingActivity : AppCompatActivity() {
             Log.d(TAG, "delete group clicked")
             AlertDialog.Builder(this)
                     .setTitle(R.string.delete_group_dialog_title)
-                    .setPositiveButton(R.string.delete_group_positive_button, {
-                        dialog, id ->
-                        mGroupRef?.let{ groupRef ->
+                    .setPositiveButton(R.string.delete_group_positive_button, { dialog, id ->
+                        mGroupRef?.let { groupRef ->
                             groupRef.delete()
                                     .addOnSuccessListener {
                                         Log.d(TAG, "Delete group successfully")
@@ -99,8 +91,7 @@ class GroupSettingActivity : AppCompatActivity() {
                                     }
                         }
                     })
-                    .setNegativeButton(R.string.alert_dialog_cancel, {
-                        dialog, id ->
+                    .setNegativeButton(R.string.alert_dialog_cancel, { dialog, id ->
                     }).show()
         }
 
