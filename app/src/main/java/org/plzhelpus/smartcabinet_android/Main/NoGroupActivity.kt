@@ -50,7 +50,6 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
                     .setView(createGroupDialog)
                     .setPositiveButton(R.string.create_group_positive_button, {
                         dialog, id ->
-                        // TODO 테스트
                         val data : MutableMap<String, Any?> = HashMap()
                         data.put("groupName", createGroupDialog.create_group_group_name_input.text.toString())
                         mFunctions.getHttpsCallable("createGroup")
@@ -61,6 +60,8 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
                                 .addOnSuccessListener {
                                     Log.d(TAG, "Create group successfully")
                                     // TODO 만약 기회가 된다면 새로 생성된 그룹으로 변경해줘야 함.
+                                    startActivity(MainActivity.createIntent(this))
+                                    finish()
                                 }
                                 .addOnFailureListener {exception ->
                                     Log.w(TAG, "Create group failed", exception)

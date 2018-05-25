@@ -43,8 +43,6 @@ class GroupSettingActivity : AppCompatActivity() {
         intent.getStringExtra(GROUP_ID)?.let { mGroupRef = FirebaseFirestore.getInstance().collection(GROUPS).document(it) }
         mFunctions = FirebaseFunctions.getInstance()
         settings_leave_group.setOnClickListener {
-
-            // TODO 테스트 필요
             Log.d(TAG, "leave group clicked")
             AlertDialog.Builder(this)
                     .setTitle(R.string.leave_group_dialog_title)
@@ -74,7 +72,6 @@ class GroupSettingActivity : AppCompatActivity() {
                     }).show()
         }
         settings_delete_group.setOnClickListener {
-            // TODO 테스트 필요
             Log.d(TAG, "delete group clicked")
             AlertDialog.Builder(this)
                     .setTitle(R.string.delete_group_dialog_title)

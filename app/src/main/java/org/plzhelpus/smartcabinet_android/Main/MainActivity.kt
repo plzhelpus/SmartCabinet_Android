@@ -492,7 +492,6 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun openOrCloseCabinet(item: DocumentSnapshot) {
-        // TODO 테스트
         val data : MutableMap<String, Any?> = HashMap()
         data.put("cabinetId", item.id)
         mFunctions.getHttpsCallable("openOrCloseCabinet")
