@@ -118,8 +118,7 @@ class MainActivity : AppCompatActivity(),
                     .signOut(this)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            startActivity(AuthUiActivity.createIntent(this))
-                            finish()
+                            switchToSignInUI()
                         } else {
                             Log.w(TAG, "signOut:failed", task.exception)
                             showSnackbar(R.string.sign_out_failed)
@@ -529,12 +528,14 @@ class MainActivity : AppCompatActivity(),
 
     override fun editCabinetDescription(item: DocumentSnapshot) {
         val editCabinetDialog = layoutInflater.inflate(R.layout.dialog_edit_cabinet, null)
-        AlertDialog.Builder(this)
-                .setTitle(R.string.edit_cabinet_dialog_title)
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        builder.setTitle(R.string.edit_cabinet_dialog_title)
                 .setView(editCabinetDialog)
                 .setPositiveButton(R.string.edit_cabinet_positive_button, {
                     dialog, id ->
-                    item.reference.update(DESCRIPTION, editCabinetDialog.edit_cabinet_description_input.text.toString())
+                    val data : MutableMap<String, Any?> = HashMap()
+                    data.put(DESCRIPTION, editCabinetDialog.edit_cabinet_description_input.text.toString())
+                    item.reference.update(data)
                             .addOnSuccessListener {
                                 Log.d(TAG, "Edit cabinet description successfully")
                             }
