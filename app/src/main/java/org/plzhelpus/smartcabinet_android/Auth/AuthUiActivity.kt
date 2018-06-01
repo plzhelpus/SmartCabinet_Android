@@ -73,6 +73,9 @@ class AuthUiActivity : AppCompatActivity() {
             // 로그인 실패
             if(response.error?.errorCode == ErrorCodes.NO_NETWORK) {
                 showSnackbar(R.string.no_internet_connection)
+            } else if(response.error?.message == "Code: 12501, message: 12501: "){
+                // 계정 선택 창을 취소할 때 보이는 에러 메세지인데 정확히 무슨 오류인지는 확인 안됨.
+                showSnackbar(R.string.sign_in_cancelled)
             } else {
                 showSnackbar(R.string.unknown_error)
                 Log.e(TAG, "Sign-in error: ", response.error)
