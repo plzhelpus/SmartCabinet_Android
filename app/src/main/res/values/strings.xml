@@ -49,6 +49,8 @@
     <string name="delete_account_alert_text">Are you really want to delete your account?</string>
     <string name="delete_account_alert_positive_button">Delete</string>
     <string name="delete_account_failed">Delete account failed</string>
+    <string name="need_reauthentication_title">Please sign in again</string>
+    <string name="need_reauthentication_content">Deleting account needs recent authentication.</string>
 
     // NoGroupActivity
     <string name="group_list_is_empty">Group list is empty</string>

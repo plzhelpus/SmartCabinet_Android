@@ -11,6 +11,7 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.functions.FirebaseFunctions
 import kotlinx.android.synthetic.main.dialog_create_group.view.*
@@ -128,6 +129,14 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
                         handleNotSignIn()
                     } else {
                         Log.w(TAG, "Delete account failed - ", task.exception)
+                        if(task.exception is FirebaseAuthRecentLoginRequiredException){
+                            AlertDialog.Builder(this)
+                                    .setTitle(R.string.need_reauthentication_title)
+                                    .setMessage(R.string.need_reauthentication_content)
+                                    .setPositiveButton(R.string.alert_dialog_ok, {_, _ -> })
+                                    .show()
+                            return@addOnCompleteListener
+                        }
                         showSnackbar(R.string.delete_account_failed)
                     }
                 }
