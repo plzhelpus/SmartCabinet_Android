@@ -101,10 +101,9 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
                     .signOut(this)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            startActivity(AuthUiActivity.createIntent(this))
-                            finish()
+                            handleNotSignIn()
                         } else {
-                            Log.w(TAG, "signOut:failure", task.exception)
+                            Log.w(TAG, "Sign out failed - ", task.exception)
                             showSnackbar(R.string.sign_out_failed)
                         }
                     }
@@ -126,9 +125,9 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
                 .delete(this)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        startActivity(AuthUiActivity.createIntent(this))
-                        finish()
+                        handleNotSignIn()
                     } else {
+                        Log.w(TAG, "Delete account failed - ", task.exception)
                         showSnackbar(R.string.delete_account_failed)
                     }
                 }
