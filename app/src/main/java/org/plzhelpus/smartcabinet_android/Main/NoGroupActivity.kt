@@ -13,7 +13,9 @@ import android.text.TextUtils
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.functions.FirebaseFunctions
 import kotlinx.android.synthetic.main.dialog_create_group.view.*
 import org.plzhelpus.smartcabinet_android.PARTICIPATED_GROUP
@@ -26,7 +28,10 @@ import org.plzhelpus.smartcabinet_android.auth.AuthUiActivity
  */
 class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
 
+    private var mGroupListListenerRegistration : ListenerRegistration? = null
+
     private lateinit var mAuth : FirebaseAuth
+    private lateinit var mDb : FirebaseFirestore
     private lateinit var mFunctions : FirebaseFunctions
 
     companion object {
@@ -42,6 +47,7 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
         setContentView(R.layout.activity_no_group)
 
         mAuth = FirebaseAuth.getInstance()
+        mDb = FirebaseFirestore.getInstance()
         mFunctions = FirebaseFunctions.getInstance()
 
         being_new_owner_button.setOnClickListener{
@@ -81,28 +87,14 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
         }
 
         already_member_but_not_found_group_button.setOnClickListener{
-            val currentUser = mAuth.currentUser
-            val db = FirebaseFirestore.getInstance()
-            val collectionReference = db.collection(USERS).document(currentUser!!.uid).collection(PARTICIPATED_GROUP)
-            collectionReference.get().addOnCompleteListener {
-                if (it.isSuccessful) {
-                    val querySnapshot = it.result
-                    // 그룹 목록이 없다면
-                    if (querySnapshot.isEmpty) {
-                        showSnackbar(R.string.group_list_is_empty)
-                    } else {
-                        startActivity(MainActivity.createIntent(this))
-                        finish()
-                    }
-                } else {
-                        Log.d(TAG, "get group list failed - ", it.exception)
-                        showSnackbar(R.string.group_list_refresh_failed)
-                }
+            mAuth.currentUser?.run{
+                registerGroupList(this)
             }
         }
 
         no_group_sign_out_button.setOnClickListener{
             // AuthUI가 로그아웃하는 중에 리스너를 트리거할 수 있기 때문에 미리 해제함.
+            mGroupListListenerRegistration?.remove()
             mAuth.removeAuthStateListener(this)
             AuthUI.getInstance()
                     .signOut(this)
@@ -112,6 +104,7 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
                         } else {
                             Log.w(TAG, "Sign out failed - ", task.exception)
                             showSnackbar(R.string.sign_out_failed)
+                            mAuth.addAuthStateListener(this)
                         }
                     }
         }
@@ -127,6 +120,7 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
 
     private fun deleteAccount() {
         // AuthUI가 계정을 삭제하는 중에 리스너를 트리거할 수 있기 때문에 미리 해제함.
+        mGroupListListenerRegistration?.remove()
         mAuth.removeAuthStateListener(this)
         AuthUI.getInstance()
                 .delete(this)
@@ -144,6 +138,7 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
                             return@addOnCompleteListener
                         }
                         showSnackbar(R.string.delete_account_failed)
+                        mAuth.addAuthStateListener(this)
                     }
                 }
     }
@@ -162,6 +157,7 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
 
     override fun onStop() {
         super.onStop()
+        mGroupListListenerRegistration?.remove()
         mAuth.removeAuthStateListener(this)
     }
 
@@ -172,6 +168,33 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
             Log.w(TAG, "Auth has changed")
             handleNotSignIn()
             return
+        }
+        registerGroupList(user)
+    }
+
+    /**
+     * 그룹 목록의 변경을 듣는 리스너를 등록함
+     */
+    private fun registerGroupList(user: FirebaseUser) {
+        // 기존에 있다면 지워야 함.
+        mGroupListListenerRegistration?.remove()
+        // 그룹 목록이 Firestore의 변경 사항을 받게 등록함.
+        mDb.collection(USERS).document(user.uid).collection(PARTICIPATED_GROUP).run{
+            mGroupListListenerRegistration = addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                firebaseFirestoreException?.let{ exception ->
+                    Log.w(TAG, "Participated group - Listen failed.", exception)
+                    return@addSnapshotListener
+                }
+                querySnapshot?.let { participatedGroupsSnapshot ->
+                    Log.d(TAG, "Participated group - data found")
+                    if (!participatedGroupsSnapshot.isEmpty) {
+                        startActivity(MainActivity.createIntent(this@NoGroupActivity))
+                        finish()
+                    }
+                }?. run {
+                    Log.d(TAG, "Participated group - data null")
+                }
+            }
         }
 
     }

@@ -114,9 +114,9 @@ class MainActivity : AppCompatActivity(),
         // 네비게이션 드로어에 사용자 로그아웃 버튼 구현
         user_sign_out_button.setOnClickListener {
             // AuthUI가 로그아웃하는 중에 리스너를 트리거할 수 있기 때문에 미리 해제함.
-            mAuth.removeAuthStateListener(this)
             mGroupListListenerRegistration?.remove()
             mCurrentGroupListenerRegistration?.remove()
+            mAuth.removeAuthStateListener(this)
             AuthUI.getInstance()
                     .signOut(this)
                     .addOnCompleteListener { task ->
@@ -125,6 +125,7 @@ class MainActivity : AppCompatActivity(),
                         } else {
                             Log.w(TAG, "signOut:failed", task.exception)
                             showSnackbar(R.string.sign_out_failed)
+                            mAuth.addAuthStateListener(this)
                         }
                     }
         }
@@ -298,7 +299,6 @@ class MainActivity : AppCompatActivity(),
                 }
             }
         }
-
     }
 
     override fun onBackPressed() {
@@ -330,9 +330,9 @@ class MainActivity : AppCompatActivity(),
 
     override fun onStop() {
         super.onStop()
-        mAuth.removeAuthStateListener(this)
         mGroupListListenerRegistration?.remove()
         mCurrentGroupListenerRegistration?.remove()
+        mAuth.removeAuthStateListener(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
