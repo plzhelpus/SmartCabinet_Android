@@ -63,12 +63,14 @@
     <string name="create_group_cabinet_key_input">Serial key</string>
     <string name="create_group_cabinet_description_input">Description(Optional)</string>
     <string name="create_group_positive_button">Create</string>
+    <string name="create_group_successfully">Create group successfully</string>
     <string name="create_group_failed">Create group failed</string>
 
     // dialog_add_member
     <string name="add_member_dialog_title">Add new member</string>
     <string name="add_member_email_input">Email</string>
     <string name="add_member_positive_button">Add</string>
+    <string name="add_member_successfully">Add member successfully</string>
     <string name="add_member_failed">Add member failed</string>
 
     // dialog_add_cabinet
@@ -77,6 +79,7 @@
     <string name="add_cabinet_key_input">Serial key</string>
     <string name="add_cabinet_description_input">Description(Optional)</string>
     <string name="add_cabinet_positive_button">Add</string>
+    <string name="add_cabinet_successfully">Add cabinet successfully</string>
     <string name="add_cabinet_failed">Add cabinet failed</string>
 
     // GroupSettingsActivity
@@ -98,11 +101,13 @@
 
     // menu.cabinet
     <string name="cabinet_menu_open_close">Open/Close</string>
+    <string name="open_close_cabinet_successfully">Open/close cabinet successfully</string>
     <string name="open_close_cabinet_failed">Open/Close cabinet failed</string>
     <string name="cabinet_menu_edit_description">Edit description</string>
     <string name="cabinet_menu_delete">Delete</string>
     <string name="delete_cabinet_dialog_title">Delete this cabinet?</string>
     <string name="delete_cabinet_positive_button">Delete</string>
+    <string name="delete_cabinet_successfully">Delete cabinet successfully</string>
     <string name="delete_cabinet_failed">Delete cabinet failed</string>
     <string name="cabinet_popup_memu_button">Menu</string>
 
@@ -110,11 +115,13 @@
     <string name="edit_cabinet_dialog_title">Edit cabinet</string>
     <string name="edit_cabinet_description_input">Description</string>
     <string name="edit_cabinet_positive_button">Edit</string>
+    <string name="edit_cabinet_successfully">Edit cabinet successfully</string>
     <string name="edit_cabinet_failed">Edit cabinet failed</string>
 
     // delegate ownership
     <string name="delegate_ownership_dialog_title">Delegate the ownership?</string>
     <string name="delegate_ownership_positive_button">Delegate</string>
+    <string name="delegate_ownership_successfully">Delegate ownership successfully</string>
     <string name="delegate_ownership_failed">Delegate ownership failed</string>
 
     // menu.member
@@ -123,7 +130,9 @@
     <string name="member_menu_delegate_ownership">Delegate ownership</string>
     <string name="delete_member_dialog_title">Delete this member?</string>
     <string name="delete_member_positive_button">Delete</string>
+    <string name="delete_member_successfully">Delete member successfully</string>
     <string name="delete_member_failed">Delete member failed</string>
+    <string name="promote_to_admin_successfully">Promote to admin successfully</string>
     <string name="promote_to_admin_failed">Promote to admin failed</string>
     <string name="member_popup_menu_button">Menu</string>
 
@@ -131,9 +140,11 @@
     <string name="admin_menu_delete">Delete</string>
     <string name="admin_menu_delegate_ownership">Delegate ownership</string>
     <string name="admin_menu_demote_to_member">Demote</string>
+    <string name="demote_to_member_successfully">Demote admin to member successfully</string>
     <string name="demote_to_member_failed">Demote to member failed</string>
     <string name="delete_admin_dialog_title">Delete this admin?</string>
     <string name="delete_admin_positive_button">Delete</string>
+    <string name="delete_admin_successfully">Delete admin successfully</string>
     <string name="delete_admin_failed">Delete admin failed</string>
     <string name="admin_popup_menu_button">Menu</string>
 

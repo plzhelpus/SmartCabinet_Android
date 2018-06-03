@@ -151,6 +151,7 @@ class MainActivity : AppCompatActivity(),
                             }
                             .addOnSuccessListener {
                                 Log.d(TAG, "Create group successfully")
+                                showSnackbar(R.string.create_group_successfully)
                                 // TODO 만약 기회가 된다면 새로 생성된 그룹으로 변경해줘야 함.
                             }
                             .addOnFailureListener {exception ->
@@ -357,6 +358,7 @@ class MainActivity : AppCompatActivity(),
                                         }
                                         .addOnSuccessListener {
                                             Log.d(TAG, "Add cabinet successfully")
+                                            showSnackbar(R.string.add_cabinet_successfully)
                                         }
                                         .addOnFailureListener {exception ->
                                             Log.w(TAG, "Add cabinet failed", exception)
@@ -387,6 +389,7 @@ class MainActivity : AppCompatActivity(),
                                         }
                                         .addOnSuccessListener {
                                             Log.d(TAG, "Add member successfully")
+                                            showSnackbar(R.string.add_member_successfully)
                                         }
                                         .addOnFailureListener {exception ->
                                             Log.w(TAG, "Add member failed", exception)
@@ -429,6 +432,7 @@ class MainActivity : AppCompatActivity(),
                 return@runTransaction
             }.addOnSuccessListener {
                 Log.d(TAG, "demote admin to member successfully")
+                showSnackbar(R.string.demote_to_member_successfully)
             }.addOnFailureListener { exception ->
                 Log.w(TAG, "demote admin to member failed", exception)
                 showSnackbar(R.string.demote_to_member_failed)
@@ -456,6 +460,7 @@ class MainActivity : AppCompatActivity(),
                             return@runTransaction
                         }.addOnSuccessListener{
                             Log.d(TAG, "delegate ownership to admin successfully")
+                            showSnackbar(R.string.delegate_ownership_successfully)
                         }.addOnFailureListener{ exception ->
                             Log.w(TAG, "delegate ownership to admin failed", exception)
                             showSnackbar(R.string.delegate_ownership_failed)
@@ -484,6 +489,7 @@ class MainActivity : AppCompatActivity(),
                             return@runTransaction
                         }.addOnSuccessListener {
                             Log.d(TAG, "Delete admin successfully")
+                            showSnackbar(R.string.delete_admin_successfully)
                         }.addOnFailureListener { exception ->
                             Log.w(TAG, "Delete admin failed", exception)
                             showSnackbar(R.string.delete_admin_failed)
@@ -505,6 +511,7 @@ class MainActivity : AppCompatActivity(),
                 }
                 .addOnSuccessListener {
                     Log.d(TAG, "Open/close cabinet successfully")
+                    showSnackbar(R.string.open_close_cabinet_successfully)
                 }
                 .addOnFailureListener { exception ->
                     Log.w(TAG, "Open/Close cabinet failed", exception)
@@ -519,7 +526,8 @@ class MainActivity : AppCompatActivity(),
                     dialog, id ->
                     item.reference.delete()
                             .addOnSuccessListener {
-                                Log.d(TAG, "Delete cabinet successfully ")
+                                Log.d(TAG, "Delete cabinet successfully")
+                                showSnackbar(R.string.delete_cabinet_successfully)
                             }
                             .addOnFailureListener {exception ->
                                 Log.w(TAG, "Delete cabinet failed", exception)
@@ -543,6 +551,7 @@ class MainActivity : AppCompatActivity(),
                     item.reference.update(data)
                             .addOnSuccessListener {
                                 Log.d(TAG, "Edit cabinet description successfully")
+                                showSnackbar(R.string.edit_cabinet_successfully)
                             }
                             .addOnFailureListener {exception ->
                                 Log.w(TAG, "Edit cabinet description failed", exception)
@@ -566,6 +575,8 @@ class MainActivity : AppCompatActivity(),
                 return@runTransaction
             }.addOnSuccessListener{
                 Log.d(TAG, "promote member to admin successfully")
+                showSnackbar(R.string.promote_to_admin_successfully)
+
             }.addOnFailureListener{ exception ->
                 Log.w(TAG, "promote member to admin failed", exception)
                 showSnackbar(R.string.promote_to_admin_failed)
@@ -593,6 +604,7 @@ class MainActivity : AppCompatActivity(),
                             return@runTransaction
                         }.addOnSuccessListener{
                             Log.d(TAG, "delegate ownership to member successfully")
+                            showSnackbar(R.string.delegate_ownership_successfully)
                         }.addOnFailureListener{ exception ->
                             Log.w(TAG, "delegate ownership to member failed", exception)
                             showSnackbar(R.string.delegate_ownership_failed)
@@ -621,6 +633,7 @@ class MainActivity : AppCompatActivity(),
                             return@runTransaction
                         }.addOnSuccessListener {
                             Log.d(TAG, "Delete member successfully")
+                            showSnackbar(R.string.delete_member_successfully)
                         }.addOnFailureListener { exception ->
                             Log.w(TAG, "Delete member failed", exception)
                             showSnackbar(R.string.delete_member_failed)
