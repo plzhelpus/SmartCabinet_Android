@@ -138,7 +138,7 @@ class MainActivity : AppCompatActivity(),
                 .setView(createGroupDialog)
                 .setPositiveButton(R.string.create_group_positive_button, {
                     dialog, id ->
-                    if (createGroupDialog?.create_group_group_name_input?.text == null){
+                    if (TextUtils.isEmpty(createGroupDialog?.create_group_group_name_input?.text)){
                         Log.w(TAG, "Create group failed")
                         showSnackbar(R.string.create_group_failed)
                         return@setPositiveButton
@@ -348,6 +348,13 @@ class MainActivity : AppCompatActivity(),
                             .setView(addCabinetDialog)
                             .setPositiveButton(R.string.add_cabinet_positive_button, {
                                 dialog, id ->
+                                if(TextUtils.isEmpty(addCabinetDialog?.add_cabinet_id_input?.text) ||
+                                        TextUtils.isEmpty(addCabinetDialog?.add_cabinet_key_input?.text))
+                                {
+                                    Log.w(TAG, "Add cabinet failed")
+                                    showSnackbar(R.string.add_cabinet_failed)
+                                    return@setPositiveButton
+                                }
                                 val data : MutableMap<String, Any?> = HashMap()
                                 data.put("groupId", currentGroup.id)
                                 data.put("cabinetId", addCabinetDialog?.add_cabinet_id_input?.text.toString())
@@ -380,6 +387,11 @@ class MainActivity : AppCompatActivity(),
                             .setView(addMemberDialog)
                             .setPositiveButton(R.string.add_member_positive_button, {
                                 dialog, id ->
+                                if(TextUtils.isEmpty(addMemberDialog?.add_member_email_input?.text)){
+                                    Log.w(TAG, "Add member failed")
+                                    showSnackbar(R.string.add_member_failed)
+                                    return@setPositiveButton
+                                }
                                 val data : MutableMap<String, Any?> = HashMap()
                                 data.put("groupId", currentGroup.id)
                                 data.put("email", addMemberDialog?.add_member_email_input?.text.toString())

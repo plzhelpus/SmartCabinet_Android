@@ -9,6 +9,7 @@ import kotlinx.android.synthetic.main.activity_no_group.*
 import com.firebase.ui.auth.AuthUI
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
+import android.text.TextUtils
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException
@@ -51,7 +52,7 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
                     .setView(createGroupDialog)
                     .setPositiveButton(R.string.create_group_positive_button, {
                         dialog, id ->
-                        if (createGroupDialog?.create_group_group_name_input?.text == null){
+                        if (TextUtils.isEmpty(createGroupDialog?.create_group_group_name_input?.text)){
                             Log.w(TAG, "Create group failed")
                             showSnackbar(R.string.create_group_failed)
                             return@setPositiveButton
