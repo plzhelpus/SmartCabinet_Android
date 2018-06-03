@@ -29,6 +29,7 @@ import kotlinx.android.synthetic.main.dialog_edit_cabinet.view.*
 import kotlinx.android.synthetic.main.nav_drawer.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 import org.plzhelpus.smartcabinet_android.*
+import org.plzhelpus.smartcabinet_android.R
 import org.plzhelpus.smartcabinet_android.groupInfo.GroupSettingActivity
 import org.plzhelpus.smartcabinet_android.auth.AuthUiActivity
 import org.plzhelpus.smartcabinet_android.groupInfo.GroupInfoFragmentPagerAdapter
@@ -114,6 +115,8 @@ class MainActivity : AppCompatActivity(),
         user_sign_out_button.setOnClickListener {
             // AuthUI가 로그아웃하는 중에 리스너를 트리거할 수 있기 때문에 미리 해제함.
             mAuth.removeAuthStateListener(this)
+            mGroupListListenerRegistration?.remove()
+            mCurrentGroupListenerRegistration?.remove()
             AuthUI.getInstance()
                     .signOut(this)
                     .addOnCompleteListener { task ->
