@@ -141,6 +141,7 @@ class MainActivity : AppCompatActivity(),
                     if (createGroupDialog?.create_group_group_name_input?.text == null){
                         Log.w(TAG, "Create group failed")
                         showSnackbar(R.string.create_group_failed)
+                        return@setPositiveButton
                     }
                     val data : MutableMap<String, Any?> = HashMap()
                     data.put("groupName", createGroupDialog.create_group_group_name_input.text.toString())
