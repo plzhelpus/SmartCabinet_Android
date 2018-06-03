@@ -138,6 +138,10 @@ class MainActivity : AppCompatActivity(),
                 .setView(createGroupDialog)
                 .setPositiveButton(R.string.create_group_positive_button, {
                     dialog, id ->
+                    if (createGroupDialog?.create_group_group_name_input?.text == null){
+                        Log.w(TAG, "Create group failed")
+                        showSnackbar(R.string.create_group_failed)
+                    }
                     val data : MutableMap<String, Any?> = HashMap()
                     data.put("groupName", createGroupDialog.create_group_group_name_input.text.toString())
                     mFunctions.getHttpsCallable("createGroup")
@@ -308,6 +312,7 @@ class MainActivity : AppCompatActivity(),
             registerGroupList(currentUser)
             updateUserInfoUI(currentUser)
         } ?: run {
+            Log.w(TAG, "Auth has changed")
             switchToSignInUI()
         }
     }
@@ -343,8 +348,8 @@ class MainActivity : AppCompatActivity(),
                                 dialog, id ->
                                 val data : MutableMap<String, Any?> = HashMap()
                                 data.put("groupId", currentGroup.id)
-                                data.put("cabinetId", addCabinetDialog.add_cabinet_id_input.text.toString())
-                                data.put("serialKey", addCabinetDialog.add_cabinet_key_input.text.toString())
+                                data.put("cabinetId", addCabinetDialog?.add_cabinet_id_input?.text.toString())
+                                data.put("serialKey", addCabinetDialog?.add_cabinet_key_input?.text.toString())
                                 mFunctions.getHttpsCallable("addCabinetInGroup")
                                         .call(data)
                                         .continueWith { task ->
@@ -374,7 +379,7 @@ class MainActivity : AppCompatActivity(),
                                 dialog, id ->
                                 val data : MutableMap<String, Any?> = HashMap()
                                 data.put("groupId", currentGroup.id)
-                                data.put("email", addMemberDialog.add_member_email_input.text.toString())
+                                data.put("email", addMemberDialog?.add_member_email_input?.text.toString())
                                 mFunctions.getHttpsCallable("addMemberInGroup")
                                         .call(data)
                                         .continueWith { task ->
@@ -534,7 +539,7 @@ class MainActivity : AppCompatActivity(),
                 .setPositiveButton(R.string.edit_cabinet_positive_button, {
                     dialog, id ->
                     val data : MutableMap<String, Any?> = HashMap()
-                    data.put(DESCRIPTION, editCabinetDialog.edit_cabinet_description_input.text.toString())
+                    data.put(DESCRIPTION, editCabinetDialog?.edit_cabinet_description_input?.text.toString())
                     item.reference.update(data)
                             .addOnSuccessListener {
                                 Log.d(TAG, "Edit cabinet description successfully")

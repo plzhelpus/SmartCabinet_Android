@@ -51,6 +51,10 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
                     .setView(createGroupDialog)
                     .setPositiveButton(R.string.create_group_positive_button, {
                         dialog, id ->
+                        if (createGroupDialog?.create_group_group_name_input?.text == null){
+                            Log.w(TAG, "Create group failed")
+                            showSnackbar(R.string.create_group_failed)
+                        }
                         val data : MutableMap<String, Any?> = HashMap()
                         data.put("groupName", createGroupDialog.create_group_group_name_input.text.toString())
                         mFunctions.getHttpsCallable("createGroup")
@@ -163,6 +167,7 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
         val user = firebaseAuth.currentUser
         Log.d(TAG, "login - " + (user?.uid ?: "null"))
         if(user == null){
+            Log.w(TAG, "Auth has changed")
             handleNotSignIn()
             return
         }
