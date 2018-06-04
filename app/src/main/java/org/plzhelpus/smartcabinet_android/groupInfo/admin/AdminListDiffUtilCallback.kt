@@ -14,7 +14,7 @@ class AdminListDiffUtilCallback (
         private val mNewDocuments : List<DocumentSnapshot>) : DiffUtil.Callback() {
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return mOldDocuments[oldItemPosition].id == mNewDocuments[newItemPosition].id
+        return mOldDocuments[oldItemPosition].reference == mNewDocuments[newItemPosition].reference
     }
 
     override fun getOldListSize(): Int {
