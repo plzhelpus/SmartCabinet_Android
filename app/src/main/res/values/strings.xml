@@ -42,7 +42,7 @@
     <string name="being_new_owner_text">Do you want to create new group?</string>
     <string name="already_member_but_not_found_group_text">Aren\'t your groups visible?</string>
     <string name="group_list_refresh_button_text">Refresh</string>
-    <string name="no_group_sign_out_text">Are you want to sign out?</string>
+    <string name="no_group_sign_out_text">Do you want to sign out?</string>
     <string name="user_sign_out_button_text">Sign out</string>
     <string name="delete_account_with_no_group_text">Do you want to delete your account now?</string>
     <string name="delete_account_with_no_group_button">Delete</string>
