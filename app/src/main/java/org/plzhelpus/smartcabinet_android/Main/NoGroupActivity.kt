@@ -73,8 +73,6 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
                                 .addOnSuccessListener {
                                     Log.d(TAG, "Create group successfully")
                                     // TODO 만약 기회가 된다면 새로 생성된 그룹으로 변경해줘야 함.
-                                    startActivity(MainActivity.createIntent(this))
-                                    finish()
                                 }
                                 .addOnFailureListener {exception ->
                                     Log.w(TAG, "Create group failed", exception)

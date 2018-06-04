@@ -61,7 +61,7 @@ class MemberFragment : Fragment(){
 
                 querySnapshot?.run{
                     Log.d(TAG, "Member list found")
-                    (member_list.adapter as MemberRecyclerViewAdapter).updateList(documents)
+                    (member_list?.adapter as MemberRecyclerViewAdapter).updateList(documents)
                 }?.let{
                     Log.d(TAG, "Member list null")
                 }

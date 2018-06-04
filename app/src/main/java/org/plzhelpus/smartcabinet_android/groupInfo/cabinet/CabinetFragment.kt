@@ -61,7 +61,7 @@ class CabinetFragment : Fragment() {
 
                 querySnapshot?.run{
                     Log.d(TAG, "Cabinet list found")
-                    (cabinet_list.adapter as CabinetRecyclerViewAdapter).updateList(documents)
+                    (cabinet_list?.adapter as CabinetRecyclerViewAdapter).updateList(documents)
                 }?.let{
                     Log.d(TAG, "Cabinet list null")
                 }
