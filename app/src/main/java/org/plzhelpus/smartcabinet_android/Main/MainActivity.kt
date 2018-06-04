@@ -580,6 +580,12 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun promoteMemberToAdmin(item: DocumentSnapshot) {
+        // 자기 자신의 권한을 높힐 수 없음.
+        if(item.id == mAuth.currentUser?.uid){
+            Log.w(TAG, "promote member to admin failed - try to promote myself")
+            showSnackbar(R.string.promote_to_admin_failed)
+            return
+        }
         item.reference.parent.parent?.let{ groupRef ->
             mDb.runTransaction{ transaction ->
                 val adminRef = groupRef.collection(ADMIN_REF)
