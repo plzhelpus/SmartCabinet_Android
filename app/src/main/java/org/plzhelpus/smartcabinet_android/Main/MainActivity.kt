@@ -390,7 +390,8 @@ class MainActivity : AppCompatActivity(),
                             .setView(addMemberDialog)
                             .setPositiveButton(R.string.add_member_positive_button, {
                                 dialog, id ->
-                                if(TextUtils.isEmpty(addMemberDialog?.add_member_email_input?.text)){
+                                if(TextUtils.isEmpty(addMemberDialog?.add_member_email_input?.text) ||
+                                        (addMemberDialog.add_member_email_input.text.toString() == mAuth.currentUser?.email)){
                                     Log.w(TAG, "Add member failed")
                                     showSnackbar(R.string.add_member_failed)
                                     return@setPositiveButton
@@ -461,6 +462,11 @@ class MainActivity : AppCompatActivity(),
             AlertDialog.Builder(this)
                     .setTitle(R.string.delegate_ownership_dialog_title)
                     .setPositiveButton(R.string.delegate_ownership_positive_button, { dialog, id ->
+                        if(item.id == mAuth.currentUser?.uid){
+                            Log.w(TAG, "delegate ownership to admin failed")
+                            showSnackbar(R.string.delegate_ownership_failed)
+                            return@setPositiveButton
+                        }
                         mDb.runTransaction{ transaction ->
                             val groupDocument = transaction.get(groupRef)
                             val oldOwnerData : MutableMap<String, Any?> = HashMap()
@@ -611,6 +617,11 @@ class MainActivity : AppCompatActivity(),
             AlertDialog.Builder(this)
                     .setTitle(R.string.delegate_ownership_dialog_title)
                     .setPositiveButton(R.string.delegate_ownership_positive_button, { dialog, id ->
+                        if(item.id == mAuth.currentUser?.uid){
+                            Log.w(TAG, "delegate ownership to member failed")
+                            showSnackbar(R.string.delegate_ownership_failed)
+                            return@setPositiveButton
+                        }
                         mDb.runTransaction{ transaction ->
                             val groupDocument = transaction.get(groupRef)
                             val oldOwnerData : MutableMap<String, Any?> = HashMap()
