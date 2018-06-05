@@ -61,7 +61,7 @@ class AdminFragment : Fragment() {
 
                 querySnapshot?.run{
                     Log.d(TAG, "Admin list found")
-                    (admin_list?.adapter as AdminRecyclerViewAdapter).updateList(documents)
+                    (admin_list?.adapter as AdminRecyclerViewAdapter?)?.updateList(documents)
                 }?.let{
                     Log.d(TAG, "Admin list null")
                 }

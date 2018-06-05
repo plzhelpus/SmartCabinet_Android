@@ -51,7 +51,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/group_list_barrier"
-        tools:context="org.plzhelpus.smartcabinet_android.Main.MainActivity"
+        tools:context="org.plzhelpus.smartcabinet_android.main.MainActivity"
         tools:listitem="@layout/member">
 
     </android.support.v7.widget.RecyclerView>

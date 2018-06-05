@@ -148,7 +148,7 @@ class MainActivity : AppCompatActivity(),
                         return@setPositiveButton
                     }
                     val data : MutableMap<String, Any?> = HashMap()
-                    data.put("groupName", createGroupDialog.create_group_group_name_input.text.toString())
+                    data.put("groupName", createGroupDialog?.create_group_group_name_input?.text.toString())
                     mFunctions.getHttpsCallable("createGroup")
                             .call(data)
                             .continueWith { task ->
@@ -194,7 +194,7 @@ class MainActivity : AppCompatActivity(),
         groupListItemDocumentSnapshot.getDocumentReference(GROUP_REF)?.let { newCurrentGroup ->
             Log.d(TAG, "Changing group now")
             Log.d(TAG, "document snapshot - ${groupListItemDocumentSnapshot.data}")
-            (group_pager?.adapter as GroupInfoFragmentPagerAdapter).updateGroupInfo(newCurrentGroup)
+            (group_pager?.adapter as GroupInfoFragmentPagerAdapter?)?.updateGroupInfo(newCurrentGroup)
             mCurrentGroup = newCurrentGroup
             registerCurrentGroup()
         }
@@ -207,7 +207,9 @@ class MainActivity : AppCompatActivity(),
         if(TextUtils.isEmpty(user?.email)){
             user_email.setText(R.string.no_email)
         } else {
-            user_email?.text = user?.email // TextUtils.isEmpty가 user.email의 null 확인도 함.
+            user_email?.apply{
+                this.text = user?.email // TextUtils.isEmpty가 user.email의 null 확인도 함.
+            }
         }
     }
 
@@ -231,8 +233,12 @@ class MainActivity : AppCompatActivity(),
                 // 문서스냅샷이 엉뚱한 곳을 가리키지 않았을 경우,
                 if (documentSnapshot != null && documentSnapshot.exists()){
                     Log.d(TAG, "Current group - data found")
-                    group_info_group_name?.text = documentSnapshot.getString(GROUP_NAME)
-                    group_info_owner_email?.text = documentSnapshot.getString(OWNER_EMAIL)
+                    group_info_group_name?.apply{
+                        this.text = documentSnapshot.getString(GROUP_NAME)
+                    }
+                    group_info_owner_email?.apply{
+                        this.text = documentSnapshot.getString(OWNER_EMAIL)
+                    }
                 } else {
                     Log.d(TAG, "Current group data: null")
                 }
@@ -259,7 +265,7 @@ class MainActivity : AppCompatActivity(),
 
                 querySnapshot?.let { participatedGroupsSnapshot ->
                     Log.d(TAG, "Participated group - data found")
-                    (group_list?.adapter as GroupRecyclerViewAdapter).updateList(participatedGroupsSnapshot.documents)
+                    (group_list?.adapter as GroupRecyclerViewAdapter?)?.updateList(participatedGroupsSnapshot.documents)
                     if (participatedGroupsSnapshot.isEmpty) {
                         handleNoGroups()
                     } else {
@@ -391,7 +397,7 @@ class MainActivity : AppCompatActivity(),
                             .setPositiveButton(R.string.add_member_positive_button, {
                                 dialog, id ->
                                 if(TextUtils.isEmpty(addMemberDialog?.add_member_email_input?.text) ||
-                                        (addMemberDialog.add_member_email_input.text.toString() == mAuth.currentUser?.email)){
+                                        (addMemberDialog?.add_member_email_input?.text.toString() == mAuth.currentUser?.email)){
                                     Log.w(TAG, "Add member failed")
                                     showSnackbar(R.string.add_member_failed)
                                     return@setPositiveButton
