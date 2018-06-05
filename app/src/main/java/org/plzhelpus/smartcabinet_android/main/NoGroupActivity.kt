@@ -64,7 +64,7 @@ class NoGroupActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
                             return@setPositiveButton
                         }
                         val data : MutableMap<String, Any?> = HashMap()
-                        data.put("groupName", createGroupDialog.create_group_group_name_input.text.toString())
+                        data.put("groupName", createGroupDialog?.create_group_group_name_input?.text.toString())
                         mFunctions.getHttpsCallable("createGroup")
                                 .call(data)
                                 .continueWith { task ->
